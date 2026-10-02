@@ -1,0 +1,40 @@
+{
+  "name": "roblox_tycoon",
+  "serveAddress": "127.0.0.1",
+  "servePort": 34872,
+  "tree": {
+    "$className": "DataModel",
+    "$ignoreUnknownInstances": true,
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$ignoreUnknownInstances": true,
+      "TycoonServer": {
+        "$className": "Folder",
+        "$path": "src/server",
+        "$ignoreUnknownInstances": false
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "$ignoreUnknownInstances": true,
+      "TycoonShared": {
+        "$className": "Folder",
+        "$path": "src/shared",
+        "$ignoreUnknownInstances": false
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "$ignoreUnknownInstances": true,
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$ignoreUnknownInstances": true,
+        "TycoonClient": {
+          "$className": "Folder",
+          "$path": "src/client",
+          "$ignoreUnknownInstances": false
+        }
+      }
+    }
+  }
+}

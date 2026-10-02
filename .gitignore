@@ -1,0 +1,23 @@
+# Generated validation builds and local Studio places
+/build/
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+*.rbxlx.lock
+
+# Local tooling, caches, and editor state
+/.rokit/
+/.cache/
+/.vscode/
+/.idea/
+*.sourcemap.json
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini

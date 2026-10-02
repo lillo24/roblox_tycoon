@@ -1,0 +1,48 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Rokit 1.2.0
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'rokit.zip'
+          $destination = Join-Path $env:RUNNER_TEMP 'rokit'
+          Invoke-WebRequest 'https://github.com/rojo-rbx/rokit/releases/download/v1.2.0/rokit-1.2.0-windows-x86_64.zip' -OutFile $archive
+          $expected = 'f9ba1704014ff67d51e8005f605955c7c26d2429a5312a9419dc477fc310e96d'
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
+            throw 'Rokit archive checksum mismatch.'
+          }
+          Expand-Archive $archive -DestinationPath $destination
+          & (Join-Path $destination 'rokit.exe') self-install
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          (Join-Path $env:USERPROFILE '.rokit\bin') >> $env:GITHUB_PATH
+
+      - name: Install pinned tools
+        run: rokit install --no-trust-check
+
+      - name: Check formatting
+        run: stylua --check src
+
+      - name: Lint Luau
+        run: selene src
+
+      - name: Validate Rojo project
+        run: |
+          New-Item -ItemType Directory -Force build | Out-Null
+          rojo build default.project.json --output build/validation.rbxlx
