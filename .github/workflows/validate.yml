@@ -1,8 +1,13 @@
 name: Validate
 
 on:
-  push:
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Validate through PRs; merging does not need a duplicate push run.
+# Every PR reports the same job status. Only Markdown-only PRs skip tool checks;
+# all other changes and manual runs execute the complete suite.
 
 permissions:
   contents: read
@@ -18,8 +23,28 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 2
+
+      - name: Test validation scope
+        run: ./scripts/Test-ValidationScope.ps1
+
+      - name: Select validation scope
+        id: scope
+        run: |
+          $changedFiles = @()
+          if ($env:GITHUB_EVENT_NAME -eq 'pull_request') {
+            # The PR merge commit's first parent is the current base branch.
+            $changedFiles = @(git diff --no-renames --name-only HEAD^1 HEAD)
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          $runChecks = & ./scripts/Get-ValidationScope.ps1 -EventName $env:GITHUB_EVENT_NAME -ChangedFiles $changedFiles
+          "run_checks=$($runChecks.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          if (-not $runChecks) {
+            Write-Output 'Markdown-only PR: skipping tool installation and Luau/build checks.'
+          }
 
       - name: Install Rokit 1.2.0
+        if: steps.scope.outputs.run_checks == 'true'
         run: |
           $archive = Join-Path $env:RUNNER_TEMP 'rokit.zip'
           $destination = Join-Path $env:RUNNER_TEMP 'rokit'
@@ -34,15 +59,19 @@ jobs:
           (Join-Path $env:USERPROFILE '.rokit\bin') >> $env:GITHUB_PATH
 
       - name: Install pinned tools
+        if: steps.scope.outputs.run_checks == 'true'
         run: rokit install --no-trust-check
 
       - name: Check formatting
+        if: steps.scope.outputs.run_checks == 'true'
         run: stylua --check src
 
       - name: Lint Luau
+        if: steps.scope.outputs.run_checks == 'true'
         run: selene src
 
       - name: Validate Rojo project
+        if: steps.scope.outputs.run_checks == 'true'
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
           rojo build default.project.json --output build/validation.rbxlx

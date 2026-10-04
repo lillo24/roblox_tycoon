@@ -92,8 +92,13 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
    [roblox_tycoon] Client bootstrap ready.
    ```
 
-7. Stop the playtest, run the CLI checks below, and commit source/config changes.
+7. Stop the playtest and run the CLI checks below before committing changes.
    Save or publish Studio content separately through Studio as needed.
+
+For implementation work, follow `AGENTS.md`: use an isolated branch/worktree,
+push the branch, and open a PR into `main`. Merge after the relevant CI passes
+and any consequential review decisions are resolved, then clean up the branch
+and task worktree. Do not push implementation changes directly to `main`.
 
 ## Source ownership
 
@@ -129,6 +134,7 @@ stylua src
 Check formatting, lint, and validate the Rojo project:
 
 ```powershell
+./scripts/Test-ValidationScope.ps1
 stylua --check src
 selene src
 New-Item -ItemType Directory -Force build | Out-Null
@@ -137,11 +143,30 @@ rojo build default.project.json --output build/validation.rbxlx
 
 The `build/` directory is ignored. Its place is a disposable CLI validation
 artifact; continue using your Studio-authored working place for development.
-On macOS/Linux, replace `New-Item ...` with `mkdir -p build`.
+On macOS/Linux, replace `New-Item ...` with `mkdir -p build`. Scope-policy tests
+require PowerShell (`pwsh -File ./scripts/Test-ValidationScope.ps1`); use the
+manual full CI run below if PowerShell is unavailable locally.
 
-GitHub Actions runs the same checks on pushes and pull requests, using Rokit 1.2.0
-and the pinned tools. CI downloads Rokit from its official release, verifies the
-archive checksum, and skips interactive trust checks only on the CI runner.
+GitHub Actions validates PRs targeting `main`; it does not duplicate validation
+on branch pushes or the resulting merge push. Every PR reports the same `validate`
+job status. Scope-policy tests always run; tool installation and Luau/build checks
+are skipped only when every changed path is Markdown. Every other change,
+including root/tooling/workflow configuration or a deleted source file, runs the
+complete suite. This keeps future file types covered without workflow path
+filters that could leave a required check pending. See `scripts/README.md` for the
+policy and its tests.
+
+To run the complete suite regardless of changed files, select **Actions > Validate
+> Run workflow** on GitHub, or use the GitHub CLI:
+
+```powershell
+gh workflow run validate.yml --ref main
+```
+
+Use this manual checkpoint for releases, integration checks, CI changes, or
+debugging. The local commands above also run the complete suite. CI uses Rokit
+1.2.0 and the pinned tools, downloads Rokit from its official release, verifies
+the archive checksum, and skips interactive trust checks only on the CI runner.
 It does not deploy or publish the game. Linting/building do not execute scripts or
 perform Luau type analysis; Studio's Script Analysis and playtests remain necessary.
 
@@ -164,7 +189,7 @@ place contains the expected three folders and server/client script classes.
 `rojo serve default.project.json` also started and returned HTTP 200 for its local
 dashboard and API; the temporary server was stopped after checking it. Routing
 container preservation flags and Git's build-output ignore rule were checked.
-The GitHub Actions workflow is configured but has not run remotely.
+Current remote validation results are recorded in PR checks and GitHub Actions.
 
-Wally, packages, gameplay frameworks, persistence, networking, tests, binary assets,
+Wally, packages, gameplay frameworks, persistence, networking, gameplay tests, binary assets,
 Git LFS, and publishing automation are deferred until there is an actual need.
