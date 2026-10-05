@@ -40,8 +40,8 @@ try {
         }
     }
 
-    Invoke-CheckedNative -Command stylua -Arguments @('--check', 'src')
-    Invoke-CheckedNative -Command selene -Arguments @('src')
+    Invoke-CheckedNative -Command stylua -Arguments @('--check', 'src', 'tests')
+    Invoke-CheckedNative -Command selene -Arguments @('src', 'tests')
     New-Item -ItemType Directory -Force -Path $buildDirectory | Out-Null
     Invoke-CheckedNative -Command rojo -Arguments @('build', 'default.project.json', '--output', $buildPath)
 

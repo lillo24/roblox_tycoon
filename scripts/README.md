@@ -12,7 +12,8 @@ It does not contain gameplay code or require additional packages.
   deleted source, root configuration, workflow/tooling, unknown file types,
   mixed changes, and manual checkpoints. A mismatch throws and fails validation.
 - `Validate-Project.ps1` is the full validation entry point. It runs scope tests,
-  formatting, lint, a fresh build at the fixed `build/validation.rbxlx` path, Git
+  formatting/lint of `src` and the unmapped `tests` folder, a fresh build at the
+  fixed `build/validation.rbxlx` path, Git
   tracking/ignore checks, structure assertions, and their regression probes.
   Native exit codes are checked explicitly, including exit 1 for a non-ignored
   canonical snapshot. Linked build directories/files are rejected before writing.
@@ -41,6 +42,10 @@ its own checkout root. A passing CLI check reports a missing authored snapshot a
 **pending**, rather than manufacturing one or claiming a Studio pass. A present
 snapshot must be tracked. Save/reopen/restore and runtime gates remain separately
 required by `place/README.md`.
+
+The standalone gameplay session tests run in Studio against the actual server
+module; CLI/CI formats and lints them but does not execute Luau. See
+[`src/README.md`](../src/README.md) for execution and runtime QA procedures.
 
 On macOS/Linux, these checks need PowerShell (`pwsh -File
 ./scripts/Validate-Project.ps1`). Alternatively, use the manual full GitHub
