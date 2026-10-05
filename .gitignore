@@ -2,6 +2,8 @@
 /build/
 *.rbxl
 *.rbxlx
+# Canonical Studio-authored source only; never write a Rojo build here.
+!/place/tycoon.rbxlx
 *.rbxl.lock
 *.rbxlx.lock
 
