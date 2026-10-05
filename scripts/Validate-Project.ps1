@@ -21,7 +21,8 @@ try {
     # The output is fixed and cannot be redirected onto the authored snapshot.
     $buildDirectory = Join-Path $repositoryRoot 'build'
     $buildPath = Join-Path $buildDirectory 'validation.rbxlx'
-    foreach ($ignoredPath in @('build/validation.rbxlx', 'place/scratch.rbxlx',
+    $sourcemapPath = Join-Path $buildDirectory 'sourcemap.json'
+    foreach ($ignoredPath in @('build/validation.rbxlx', 'build/sourcemap.json', 'build/typecheck-probe.luau', 'place/scratch.rbxlx',
         'place/tycoon.rbxlx.lock', 'place/AutoSaves/tycoon.rbxlx')) {
         Invoke-CheckedNative -Command git -Arguments @('check-ignore', '--no-index', '-q', '--', $ignoredPath)
     }
@@ -31,7 +32,7 @@ try {
     }
 
     # Refuse linked output locations instead of potentially overwriting source.
-    foreach ($outputPath in @($buildDirectory, $buildPath)) {
+    foreach ($outputPath in @($buildDirectory, $buildPath, $sourcemapPath)) {
         if (Test-Path -LiteralPath $outputPath) {
             $outputItem = Get-Item -LiteralPath $outputPath -Force
             if (($outputItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0 -or $outputItem.LinkType) {
@@ -49,13 +50,22 @@ try {
     $project = Get-Content -LiteralPath default.project.json -Raw | ConvertFrom-Json
     ./scripts/Assert-ProjectStructure.ps1 -PlaceXml $placeXml -Project $project -RepositoryRoot $repositoryRoot
     ./scripts/Test-ProjectStructure.ps1
+
+    Invoke-CheckedNative -Command rojo -Arguments @('sourcemap', 'default.project.json', '--output', $sourcemapPath)
+    # Standalone 1.70.1 needs supplied Roblox definitions and the new solver for read-only types.
+    # Keep DataModel strictness off; the regression probes verify API and Rojo module typing anyway.
+    $analysisArguments = @('analyze', '--platform', 'roblox', '--definitions', '@roblox=types/roblox.d.luau',
+        '--sourcemap', 'build/sourcemap.json', '--flag:LuauSolverV2=true', '--no-strict-dm-types')
+    Invoke-CheckedNative -Command luau-lsp -Arguments ($analysisArguments + @('src', 'tests'))
+    ./scripts/Test-LuauAnalysis.ps1 -AnalysisArguments $analysisArguments
+
     if (-not (Test-Path -LiteralPath 'place/tycoon.rbxlx')) {
         Write-Output 'Studio snapshot/restoration gate PENDING: place/tycoon.rbxlx has not been saved from Studio.'
     } else {
         Invoke-CheckedNative -Command git -Arguments @('ls-files', '--error-unmatch', '--', 'place/tycoon.rbxlx')
         Write-Output 'Canonical snapshot is tracked; Studio save/reopen/restore still requires observed evidence.'
     }
-    Write-Output 'CLI checks passed: formatting, lint, fresh build, source ownership, serialized structure, and Git ignore rules. Studio gates are separate.'
+    Write-Output 'CLI checks passed: formatting, lint, fresh build/sourcemap, Luau type analysis and failure probes, source ownership, serialized structure, and Git ignore rules. Studio integration/runtime gates are separate.'
 } finally {
     Pop-Location
 }

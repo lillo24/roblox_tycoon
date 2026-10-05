@@ -77,7 +77,7 @@ grant a purchase. Only `Triggered` is used; see Roblox's
 
 ## Validation and Studio QA
 
-Run `./scripts/Validate-Project.ps1` from the checkout. Formatting/lint covers
+Run `./scripts/Validate-Project.ps1` from the checkout. Formatting/lint/type analysis covers
 `src` and `tests`; the build still owns exactly the original three folders.
 `tests/Session.spec.luau` is deliberately outside the Rojo mapping. It returns a
 function `(Session, Config) -> assertionCount` and exercises capacity, stable
@@ -97,7 +97,7 @@ testModule:Destroy()
 ```
 
 Remove the temporary module even on failure; do not save it or add it to the
-mapping. It is not an autorun script or production test backdoor. CI formats/lints
+mapping. It is not an autorun script or production test backdoor. CI formats/lints/type-checks
 these tests but does not execute Roblox runtime code; observed Studio execution
 is recorded in the gameplay PR.
 
@@ -105,7 +105,9 @@ For runtime QA, open a disposable filesystem copy of `place/tycoon.rbxlx`, conne
 Rojo to this task checkout, and inspect exact synced sources before Play. Observe
 the four unique plots, one assignment, base income, HUD, insufficient-cash attempt,
 one purchase, one booster, increased income, and duplicate rejection. Inspect
-server state directly and Script Analysis separately. Repeat with two clients:
+server state directly. Use Studio Script Analysis for full-place integration,
+Studio-authored scripts, Studio-only diagnostics, or suspected CLI discrepancies;
+ordinary Git/Rojo source type checking is automated by validation. Repeat with two clients:
 different plots, funded non-owner rejection, independent purchases/income, and no
 server/client errors. Disconnect an owner and add another client to verify reset,
 reuse, and fresh cash; an equivalent observed lifecycle test is acceptable when

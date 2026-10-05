@@ -20,6 +20,7 @@ tuning, source responsibilities, and QA](src/README.md).
 | Rojo | 7.7.1 | Synchronize Luau into Studio and validate the mapping |
 | StyLua | 2.5.2 | Format Luau |
 | Selene | 0.32.0 | Lint with Roblox globals and rules |
+| luau-lsp | 1.70.1 | Standalone Luau type analysis with Roblox/Rojo resolution |
 
 Run all project commands from the repository root so Rokit selects these versions.
 
@@ -56,15 +57,16 @@ Clone the repository if needed, then install the pinned tools:
 git clone https://github.com/lillo24/roblox_tycoon.git
 cd roblox_tycoon
 rokit --version
-rokit trust rojo-rbx/rojo johnnymorganz/stylua kampfkarren/selene
+rokit trust rojo-rbx/rojo johnnymorganz/stylua kampfkarren/selene johnnymorganz/luau-lsp
 rokit install
 rojo --version
 stylua --version
 selene --version
+luau-lsp --version
 ```
 
 If you already have the clone, just open its root and start with `rokit --version`.
-The trust command records the three upstream tool repositories explicitly.
+The trust command records the four upstream tool repositories explicitly.
 Installing tools and Selene's first Roblox definition download require internet
 access. Selene uses its normal user cache and periodically refreshes definitions.
 
@@ -149,12 +151,18 @@ Run the same complete validation used in CI:
 
 This runs scope tests, `stylua --check src tests`, `selene src tests`, a fresh
 `rojo build default.project.json --output build/validation.rbxlx`, serialized
-structure/source assertions, regression probes, and Git tracking/ignore checks.
-The output path is fixed under ignored `build/`, and linked output paths are
+structure/source assertions, regression probes, a fresh one-shot Rojo sourcemap,
+`luau-lsp analyze` of **src and tests**, type failure probes, and Git tracking/ignore
+checks. The generated paths are fixed under ignored `build/`, and linked output paths are
 rejected. The canonical Studio file is never a build target. Native failures stop
 validation. A missing authored snapshot is reported as a pending Studio gate.
 On macOS/Linux use `pwsh -File ./scripts/Validate-Project.ps1`; use manual CI below
-if PowerShell is unavailable locally. These checks do not run or type-check Luau.
+if PowerShell is unavailable locally. These checks type-check Luau but do not
+execute gameplay or the standalone Studio session tests.
+
+Type analysis uses the [pinned Roblox definitions](types/README.md), without a
+moving API-definition download. See [exact commands and regression coverage](scripts/README.md).
+Ordinary Git/Rojo source type errors must fail this gate before Studio QA.
 
 GitHub Actions validates PRs targeting `main`; it does not duplicate validation
 on branch pushes or the resulting merge push. Every PR reports the same `validate`
@@ -176,8 +184,14 @@ Use this manual checkpoint for releases, integration checks, CI changes, or
 debugging. The local commands above also run the complete suite. CI uses Rokit
 1.2.0 and the pinned tools, downloads Rokit from its official release, verifies
 the archive checksum, and skips interactive trust checks only on the CI runner.
-It does not deploy or publish the game. Linting/building do not execute scripts or
-perform Luau type analysis; Studio's Script Analysis and playtests remain necessary.
+It does not deploy or publish the game. Type analysis does not execute scripts or
+replace runtime playtests. Studio Script Analysis is an integration check for
+Studio-authored scripts outside Rojo, full-place/live DataModel context, suspected
+analyzer discrepancies, major integration checkpoints, and Studio-only diagnostics.
+Do not request a manual Script Analysis pass after every ordinary `src/` edit
+covered by automated analysis. luau-lsp is not identical to Studio's analyzer;
+the pinned API snapshot's known nullable-property differences are documented in
+`types/README.md`.
 
 ## Initial setup status (2026-10-02)
 
