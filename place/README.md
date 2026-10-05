@@ -31,21 +31,31 @@ recorded in the SETUP-02 PR.
   and play controls over local STDIO (RobloxStudio server 1.0.0). Native Studio
   controls provided plugin connection and the separate Script Analysis check.
   No third-party bridge, public tunnel, or changed security settings were used.
-- The saved authored XML contains 2,699 instances and 21 existing scripts,
-  with no reserved Tycoon folders before sync. All probes used a filesystem copy;
-  the original cloud place and authored snapshot were preserved.
+- The original authored XML contained 2,699 instances and 21 existing scripts,
+  with no reserved Tycoon folders before sync. All probes used a filesystem copy.
+  The user then saved the tested copy from Studio in edit mode; its XML was
+  copied to the canonical path without generating or rewriting scene content.
+  The final save contains 2,704 instances: every original instance and existing
+  script source, plus only the three managed Folders and two bootstraps. Spawn
+  CFrame, size, anchoring, and collision properties are unchanged; no probes remain.
+  Canonical SHA256: `E68D11363B1C2BF10EF37C12EA566F6E8839940F07579BDCE9DBE57FB38C4B49`.
 
 | Studio gate | Observed result |
 | --- | --- |
 | A: initial sync/reconnect, markers, owned-folder reconciliation | Passed: six external Folder markers retained their attributes through initial sync and reconnect; the disposable unknown child inside TycoonServer was removed. Exact classes, unique paths, source, and SpawnLocation properties were verified. |
 | B: saved disk edit and revert reach the correct scripts | Passed: a distinctive saved server print reached the live Script; exact original source returned after reverting only that edit. |
 | C: two solo runs | Passed: each run had exactly one server startup and one client startup in the respective runtime log histories, with no errors observed. |
-| Script Analysis | Passed separately: all-script analysis displayed zero errors, warnings, information, and hints; the current-script-only filter was unchecked. |
+| Script Analysis | Observed by Codex in the earlier native UI session: all-script analysis displayed zero errors, warnings, information, and hints; the current-script-only filter was unchecked. This is separate from MCP runtime evidence. |
 | D: one local server with two clients | Passed: the official StudioTestService launched two clients, Player1 and Player2. The server logged one startup and each client logged one startup; all three context-specific histories contained no errors. The session ended afterward. |
-| E: authored save, reopen, and restore from a clean checkout | Authored XML saved by the user and committed; probe markers removed in edit mode. Tested-scene save/reopen and committed clean-checkout restoration remain pending. |
+| E: authored save, reopen, and restore from a clean checkout | Tested scene saved by the user in edit mode and committed, with serialized content/source verified by CLI. Close/reopen, reconnect, and Studio play from the clean committed checkout remain pending. |
 
 The PR must remain unmerged until gate E and validation of the resulting committed
 head are observed. CLI success alone does not establish readiness for gameplay.
+
+Prefer CLI/CI and supported Studio MCP interfaces for QA. GUI-only steps are
+manual unless the user explicitly authorizes desktop control for the current
+session. Keep user-reported manual results distinct from programmatic checks;
+leave a required unobserved Studio gate pending even when CI passes.
 
 ## Create or preserve the scene
 
