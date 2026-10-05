@@ -1,7 +1,8 @@
 # roblox_tycoon
 
-An early-stage Roblox multiplayer tycoon. This repository currently contains only
-development tooling and two startup scripts; gameplay has not been implemented.
+An early-stage Roblox multiplayer tycoon. This repository contains development
+tooling, two project startup scripts, and a Studio-authored scene with existing
+template content. Tycoon gameplay has not been implemented.
 
 ## Prerequisites
 
@@ -78,9 +79,8 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
 
 1. From the repository root, start `rojo serve default.project.json` and leave the
    terminal running. Stop it with Ctrl+C when finished.
-2. Open `place/tycoon.rbxlx` in Studio once its real authored snapshot is saved.
-   It is currently missing; follow [the Studio handoff](place/README.md) to preserve
-   an existing scene or create a minimal Baseplate and safe spawn.
+2. Open the tracked Studio-authored `place/tycoon.rbxlx` in Studio. Follow
+   [the Studio handoff](place/README.md) for save/restore steps and observed checks.
 3. Open the Rojo plugin and connect to `127.0.0.1:34872`. Review the initial sync
    before accepting it, especially if these folder names already exist.
 4. Confirm the three folders in the mapping below appear in Studio's Explorer.
@@ -121,9 +121,8 @@ levels. It does not map Workspace, StarterGui, terrain, or whole services to dis
 Keep Studio-created content outside the three reserved folders. Their parents are
 only routing containers, with no service properties configured.
 
-Studio-authored non-code content is backed up through the reserved
-`place/tycoon.rbxlx` snapshot **after a real file is saved and committed**. That gate
-is currently pending. Scripts captured in it are copies; re-sync current disk code
+Studio-authored non-code content is backed up through the tracked
+`place/tycoon.rbxlx` snapshot. Scripts captured in it are copies; re-sync current disk code
 when opening an older snapshot. A CLI build contains only the mapped code and
 containers and cannot reconstruct the scene. Never build over the authored path.
 See [save/restore steps and observed Studio gate status](place/README.md).

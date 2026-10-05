@@ -1,8 +1,8 @@
 # Authored place and Studio handoff
 
-`tycoon.rbxlx` is the reserved canonical **Studio-authored** scene source. It is
-currently absent: an ignore exception is not a backup. Save a real scene from
-Studio in edit mode before treating this setup milestone as complete.
+`tycoon.rbxlx` is the canonical **Studio-authored** scene source, saved by the
+user in edit mode. It preserves the existing scene, including its terrain,
+models, safe SpawnLocation, and template scripts. It is not a generated build.
 `build/validation.rbxlx` is disposable code-only output and cannot restore a scene.
 
 This folder owns the scene snapshot and its save/restore procedure. Luau under
@@ -24,25 +24,28 @@ recorded in the SETUP-02 PR.
   `ServerScriptService/TycoonServer/Bootstrap` (Script); the client is
   `StarterPlayer/StarterPlayerScripts/TycoonClient/Bootstrap` (LocalScript).
   All three owned Folder destinations exist once and sources match disk.
-- No Studio executable in the usual installation roots, Roblox installed-app
-  entry, Studio protocol registration, or running Studio process was found.
-  No matching plugin file or official `%LOCALAPPDATA%\Roblox\mcp.bat` launcher
-  was found, and this session exposes no Studio tools. Studio/plugin versions
-  and login are unverified; installation and connection were not attempted.
-- Searches of Documents, Downloads, Desktop, and the local Roblox folder,
-  including ignored files, found only the generated validation place.
-  No authored snapshot, live hierarchy, or runtime observation is claimed.
+- Studio 0.741.19.7411056 and the Rojo 7.7.1 plugin were observed running. The
+  matching plugin was installed with the pinned CLI and loaded in a separate
+  Studio instance opened with the official `EditFile` command-line task.
+- The official `%LOCALAPPDATA%\Roblox\mcp.bat` launcher provided MCP inspection
+  and play controls over local STDIO (RobloxStudio server 1.0.0). Native Studio
+  controls provided plugin connection and the separate Script Analysis check.
+  No third-party bridge, public tunnel, or changed security settings were used.
+- The saved authored XML contains 2,699 instances and 21 existing scripts,
+  with no reserved Tycoon folders before sync. All probes used a filesystem copy;
+  the original cloud place and authored snapshot were preserved.
 
 | Studio gate | Observed result |
 | --- | --- |
-| A: initial sync/reconnect, markers, owned-folder reconciliation | Pending: Studio unavailable |
-| B: saved disk edit and revert reach the correct scripts | Pending: Studio unavailable |
-| C: two solo runs and separate Script Analysis | Pending: Studio unavailable |
-| D: one local server with two clients | Pending: Studio unavailable |
-| E: authored save, reopen, and restore from a clean checkout | Pending: no authored snapshot |
+| A: initial sync/reconnect, markers, owned-folder reconciliation | Passed: six external Folder markers retained their attributes through initial sync and reconnect; the disposable unknown child inside TycoonServer was removed. Exact classes, unique paths, source, and SpawnLocation properties were verified. |
+| B: saved disk edit and revert reach the correct scripts | Passed: a distinctive saved server print reached the live Script; exact original source returned after reverting only that edit. |
+| C: two solo runs | Passed: each run had exactly one server startup and one client startup in the respective runtime log histories, with no errors observed. |
+| Script Analysis | Passed separately: all-script analysis displayed zero errors, warnings, information, and hints; the current-script-only filter was unchecked. |
+| D: one local server with two clients | Passed: the official StudioTestService launched two clients, Player1 and Player2. The server logged one startup and each client logged one startup; all three context-specific histories contained no errors. The session ended afterward. |
+| E: authored save, reopen, and restore from a clean checkout | Authored XML saved by the user and committed; probe markers removed in edit mode. Tested-scene save/reopen and committed clean-checkout restoration remain pending. |
 
-The PR must remain unmerged until these gates and snapshot tracking are observed.
-CLI success does not establish readiness for gameplay.
+The PR must remain unmerged until gate E and validation of the resulting committed
+head are observed. CLI success alone does not establish readiness for gameplay.
 
 ## Create or preserve the scene
 
@@ -86,7 +89,11 @@ See [Roblox place-file documentation](https://create.roblox.com/docs/projects/pl
 - **D:** Select **Server & Clients**, choose **2** clients, and start (F7).
   Inspect the server's Output and each client's Output: one server startup and
   one client startup per client. Forwarded log display is not duplicate execution.
-  End Session afterward. A solo MCP play command does not establish this gate.
+  End Session afterward. Supported automation can instead call
+  `StudioTestService:ExecuteMultiplayerTestAsync(2, testArgs)` in edit mode,
+  inspect each actual server/client instance, and call `EndTest` from that test's
+  server. A solo MCP play command does not establish this gate. See the
+  [StudioTestService API](https://create.roblox.com/docs/reference/engine/classes/StudioTestService).
 - **E:** Remove probe markers, save the useful scene in edit mode at the canonical
   path, close/reopen it, reconnect the current checkout, and check scene content
   plus current script sources. Commit the snapshot. In a separate clean checkout
