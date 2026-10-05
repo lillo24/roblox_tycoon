@@ -38,7 +38,9 @@ local function centerAboveTerrain(spawn: SpawnLocation, offset: Vector3, plotId:
 	local position = spawn.Position + offset
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Include
-	params.FilterDescendantsInstances = { workspace.Terrain }
+	local terrain = workspace.Terrain
+	assert(terrain, "Tycoon: plot placement requires Workspace Terrain")
+	params.FilterDescendantsInstances = { terrain }
 	local high = -math.huge
 	-- Sample the floor's corners, edges, and center; never carve or move terrain.
 	for x = -5, 5, 5 do

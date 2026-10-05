@@ -2,11 +2,11 @@
 
 -- Server-only session state. No Instances, player attributes, timers, or persistence.
 export type Tuning = {
-	PlotCount: number,
-	StartingCash: number,
-	BaseIncome: number,
-	UpgradedIncome: number,
-	UpgradeCost: number,
+	read PlotCount: number,
+	read StartingCash: number,
+	read BaseIncome: number,
+	read UpgradedIncome: number,
+	read UpgradeCost: number,
 }
 
 export type State = {

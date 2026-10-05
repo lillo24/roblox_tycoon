@@ -8,6 +8,7 @@ local Hud = {}
 
 function Hud.start()
 	local player = Players.LocalPlayer
+	assert(player, "Tycoon: HUD must start on a client with a LocalPlayer")
 	local playerGui = player:WaitForChild("PlayerGui")
 	assert(not playerGui:FindFirstChild(Config.HudName), "Tycoon: HUD started twice")
 	local gui = Instance.new("ScreenGui")
