@@ -45,12 +45,15 @@ recorded in the SETUP-02 PR.
 | A: initial sync/reconnect, markers, owned-folder reconciliation | Passed: six external Folder markers retained their attributes through initial sync and reconnect; the disposable unknown child inside TycoonServer was removed. Exact classes, unique paths, source, and SpawnLocation properties were verified. |
 | B: saved disk edit and revert reach the correct scripts | Passed: a distinctive saved server print reached the live Script; exact original source returned after reverting only that edit. |
 | C: two solo runs | Passed: each run had exactly one server startup and one client startup in the respective runtime log histories, with no errors observed. |
-| Script Analysis | Observed by Codex in the earlier native UI session: all-script analysis displayed zero errors, warnings, information, and hints; the current-script-only filter was unchecked. This is separate from MCP runtime evidence. |
+| Script Analysis | Observed by Codex in the native UI on both the probe and clean restore: all-script analysis displayed zero errors, warnings, information, and hints; the current-script-only filter was unchecked. This is separate from MCP runtime evidence. |
 | D: one local server with two clients | Passed: the official StudioTestService launched two clients, Player1 and Player2. The server logged one startup and each client logged one startup; all three context-specific histories contained no errors. The session ended afterward. |
-| E: authored save, reopen, and restore from a clean checkout | Tested scene saved by the user in edit mode and committed, with serialized content/source verified by CLI. Close/reopen, reconnect, and Studio play from the clean committed checkout remain pending. |
+| E: authored save, reopen, and restore from a clean checkout | Passed: user saved the tested scene in edit mode. The exact committed snapshot was reopened from a separate clean checkout and connected to that checkout's Rojo server on loopback port 34873. A saved-source comment and its exact revert were observed through MCP, proving the active server belonged to that checkout. Live hierarchy, spawn, 23 scripts, 2,584 Workspace descendants, and original source were verified. Connected restore play logged one server and one client startup with no errors; it stopped in edit mode. |
 
-The PR must remain unmerged until gate E and validation of the resulting committed
-head are observed. CLI success alone does not establish readiness for gameplay.
+All Studio gates are now observed. The exact tested code/scene tree is
+`2a05f92b1729ab7460a3d3ccfe267765879ad756`; the following evidence-only documentation
+commit leaves that tree unchanged. Final-head CLI/CI results and merge status are
+recorded in the SETUP-02 PR. This closes setup readiness for the separate first
+gameplay slice; no tycoon gameplay or publishing was added.
 
 Prefer CLI/CI and supported Studio MCP interfaces for QA. GUI-only steps are
 manual unless the user explicitly authorizes desktop control for the current
