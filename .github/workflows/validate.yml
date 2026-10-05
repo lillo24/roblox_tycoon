@@ -62,16 +62,6 @@ jobs:
         if: steps.scope.outputs.run_checks == 'true'
         run: rokit install --no-trust-check
 
-      - name: Check formatting
+      - name: Validate project
         if: steps.scope.outputs.run_checks == 'true'
-        run: stylua --check src
-
-      - name: Lint Luau
-        if: steps.scope.outputs.run_checks == 'true'
-        run: selene src
-
-      - name: Validate Rojo project
-        if: steps.scope.outputs.run_checks == 'true'
-        run: |
-          New-Item -ItemType Directory -Force build | Out-Null
-          rojo build default.project.json --output build/validation.rbxlx
+        run: ./scripts/Validate-Project.ps1

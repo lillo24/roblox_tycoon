@@ -1,7 +1,8 @@
 # roblox_tycoon
 
-An early-stage Roblox multiplayer tycoon. This repository currently contains only
-development tooling and two startup scripts; gameplay has not been implemented.
+An early-stage Roblox multiplayer tycoon. This repository contains development
+tooling, two project startup scripts, and a Studio-authored scene with existing
+template content. Tycoon gameplay has not been implemented.
 
 ## Prerequisites
 
@@ -78,8 +79,8 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
 
 1. From the repository root, start `rojo serve default.project.json` and leave the
    terminal running. Stop it with Ctrl+C when finished.
-2. Open or create the working place in Studio, such as a Baseplate. Save the place
-   normally in Studio; a local `.rbxl`/`.rbxlx` is ignored by Git.
+2. Open the tracked Studio-authored `place/tycoon.rbxlx` in Studio. Follow
+   [the Studio handoff](place/README.md) for save/restore steps and observed checks.
 3. Open the Rojo plugin and connect to `127.0.0.1:34872`. Review the initial sync
    before accepting it, especially if these folder names already exist.
 4. Confirm the three folders in the mapping below appear in Studio's Explorer.
@@ -93,7 +94,8 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
    ```
 
 7. Stop the playtest and run the CLI checks below before committing changes.
-   Save or publish Studio content separately through Studio as needed.
+   Save scene changes in edit mode to `place/tycoon.rbxlx` and commit the snapshot
+   with the source changes; scratch places and generated builds remain ignored.
 
 For implementation work, follow `AGENTS.md`: use an isolated branch/worktree,
 push the branch, and open a PR into `main`. Merge after the relevant CI passes
@@ -119,9 +121,11 @@ levels. It does not map Workspace, StarterGui, terrain, or whole services to dis
 Keep Studio-created content outside the three reserved folders. Their parents are
 only routing containers, with no service properties configured.
 
-Non-code Studio content is currently outside this repository's backup/versioning;
-save the working place through Studio. A CLI build contains only the mapped code
-and containers and cannot reconstruct the Studio-authored game.
+Studio-authored non-code content is backed up through the tracked
+`place/tycoon.rbxlx` snapshot. Scripts captured in it are copies; re-sync current disk code
+when opening an older snapshot. A CLI build contains only the mapped code and
+containers and cannot reconstruct the scene. Never build over the authored path.
+See [save/restore steps and observed Studio gate status](place/README.md).
 
 ## Validation
 
@@ -131,21 +135,20 @@ Format all repository Luau:
 stylua src
 ```
 
-Check formatting, lint, and validate the Rojo project:
+Run the same complete validation used in CI:
 
 ```powershell
-./scripts/Test-ValidationScope.ps1
-stylua --check src
-selene src
-New-Item -ItemType Directory -Force build | Out-Null
-rojo build default.project.json --output build/validation.rbxlx
+./scripts/Validate-Project.ps1
 ```
 
-The `build/` directory is ignored. Its place is a disposable CLI validation
-artifact; continue using your Studio-authored working place for development.
-On macOS/Linux, replace `New-Item ...` with `mkdir -p build`. Scope-policy tests
-require PowerShell (`pwsh -File ./scripts/Test-ValidationScope.ps1`); use the
-manual full CI run below if PowerShell is unavailable locally.
+This runs scope tests, `stylua --check src`, `selene src`, a fresh
+`rojo build default.project.json --output build/validation.rbxlx`, serialized
+structure/source assertions, regression probes, and Git tracking/ignore checks.
+The output path is fixed under ignored `build/`, and linked output paths are
+rejected. The canonical Studio file is never a build target. Native failures stop
+validation. A missing authored snapshot is reported as a pending Studio gate.
+On macOS/Linux use `pwsh -File ./scripts/Validate-Project.ps1`; use manual CI below
+if PowerShell is unavailable locally. These checks do not run or type-check Luau.
 
 GitHub Actions validates PRs targeting `main`; it does not duplicate validation
 on branch pushes or the resulting merge push. Every PR reports the same `validate`
@@ -177,10 +180,10 @@ as the default branch. Git 2.53.0 and GitHub CLI 2.96.0 were available. Rokit, R
 StyLua, and Selene were absent. No Roblox Studio executable, installed-app record,
 protocol registration, or running Studio process was found.
 
-Rokit and the pinned CLI tools are installed locally. Studio installation is a
-manual prerequisite, so the plugin has not been installed or verified in Studio.
-Complete the plugin installation and the connect/Explorer/Play/Output checks in
-the daily workflow after installing Studio.
+At initial setup, Rokit and the pinned CLI tools were installed locally. Studio
+and plugin checks were pending. The latest reinspection and separate live sync,
+solo, Script Analysis, two-client, and save/restore gates are recorded in
+[the Studio handoff](place/README.md); this historical section is not a live result.
 
 Local validation passed: `rokit install`, all tool version commands,
 `stylua --check src`, `selene src` (zero errors, warnings, or parse errors), and
