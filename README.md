@@ -1,8 +1,10 @@
 # roblox_tycoon
 
-An early-stage Roblox multiplayer tycoon. This repository contains development
-tooling, two project startup scripts, and a Studio-authored scene with existing
-template content. Tycoon gameplay has not been implemented.
+An early-stage Roblox multiplayer tycoon. The first playable slice assigns a
+temporary plot, accrues session cash, and lets its owner buy one Income Booster.
+A small HUD observes server state. The existing Studio-authored scene is preserved;
+prototype plots and UI are generated only during Play. See [gameplay behavior,
+tuning, source responsibilities, and QA](src/README.md).
 
 ## Prerequisites
 
@@ -93,6 +95,9 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
    [roblox_tycoon] Client bootstrap ready.
    ```
 
+   Walk toward world +Z from spawn to the four colored plots. Your HUD identifies
+   your plot; its yellow pad sells the booster for 10 cash. Cash starts at 0,
+   grows by 1/sec, and grows by 2/sec after purchase. These are prototype values.
 7. Stop the playtest and run the CLI checks below before committing changes.
    Save scene changes in edit mode to `place/tycoon.rbxlx` and commit the snapshot
    with the source changes; scratch places and generated builds remain ignored.
@@ -113,7 +118,8 @@ and task worktree. Do not push implementation changes directly to `main`.
 Filesystem/Git is authoritative for these three code folders. Keep them reserved
 for repository content: Rojo may remove unknown instances **inside these folders**
 so they match disk. Edit synced code on disk; Studio edits are not written back.
-The shared folder starts empty; `.gitkeep` only preserves it in Git.
+The shared folder contains prototype tuning in `Config.luau`; `.gitkeep` remains
+as the original directory marker.
 
 Studio is authoritative for all other world/UI/art content for now. The project
 explicitly preserves unknown children at the DataModel and service/container
@@ -132,7 +138,7 @@ See [save/restore steps and observed Studio gate status](place/README.md).
 Format all repository Luau:
 
 ```powershell
-stylua src
+stylua src tests
 ```
 
 Run the same complete validation used in CI:
@@ -141,7 +147,7 @@ Run the same complete validation used in CI:
 ./scripts/Validate-Project.ps1
 ```
 
-This runs scope tests, `stylua --check src`, `selene src`, a fresh
+This runs scope tests, `stylua --check src tests`, `selene src tests`, a fresh
 `rojo build default.project.json --output build/validation.rbxlx`, serialized
 structure/source assertions, regression probes, and Git tracking/ignore checks.
 The output path is fixed under ignored `build/`, and linked output paths are
@@ -194,5 +200,5 @@ dashboard and API; the temporary server was stopped after checking it. Routing
 container preservation flags and Git's build-output ignore rule were checked.
 Current remote validation results are recorded in PR checks and GitHub Actions.
 
-Wally, packages, gameplay frameworks, persistence, networking, gameplay tests, binary assets,
+Wally, packages, gameplay frameworks, persistence, custom remotes, binary assets,
 Git LFS, and publishing automation are deferred until there is an actual need.
