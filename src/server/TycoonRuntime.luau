@@ -14,7 +14,15 @@ function TycoonRuntime.start()
 	assert(RunService:IsServer(), "Tycoon: runtime must start on the server")
 	assert(not started, "Tycoon: runtime started twice")
 	assert(Config.IncomeInterval > 0, "Tycoon: IncomeInterval must be positive")
-	local session = Session.new(Config)
+	-- Pass a typed value snapshot; shared Config is frozen and remains presentation-safe.
+	local tuning: Session.Tuning = {
+		PlotCount = Config.PlotCount,
+		StartingCash = Config.StartingCash,
+		BaseIncome = Config.BaseIncome,
+		UpgradedIncome = Config.UpgradedIncome,
+		UpgradeCost = Config.UpgradeCost,
+	}
+	local session = Session.new(tuning)
 	local plots = PlotWorld.create()
 	local active: { [number]: Player } = {}
 	started = true

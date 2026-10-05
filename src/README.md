@@ -25,6 +25,10 @@ accumulator accrues completed intervals, including elapsed intervals after a
 stall. A new owner joins the server-wide cadence; their first tick can occur in
 less than one second. There is no offline income.
 
+At startup, the runtime copies the five economy values into a typed session tuning
+record. The shared Config table stays frozen; the constructor receives an explicit
+value snapshot without depending on cross-module readonly-property inference.
+
 Walk from the authored spawn toward world +Z, approximately 42–54 studs, to the
 four colored plots. Stand near your yellow purchase pad and use its built-in
 ProximityPrompt (keyboard, gamepad, or touch). The HUD shows cash, plot, income,
