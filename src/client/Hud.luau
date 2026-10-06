@@ -7,6 +7,7 @@ local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
 local SupplyRules = require(ReplicatedStorage.TycoonShared.SupplyRules)
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
+local SupplyFeedback = require(script.Parent.SupplyFeedback)
 
 local Hud = {}
 
@@ -15,6 +16,12 @@ function Hud.start()
 	assert(player, "Tycoon: HUD must start on a client with a LocalPlayer")
 	local playerGui = player:WaitForChild("PlayerGui")
 	assert(not playerGui:FindFirstChild(Config.HudName), "Tycoon: HUD started twice")
+	local running = true
+	local connections: { RBXScriptConnection } = {}
+	local function track(connection: RBXScriptConnection)
+		table.insert(connections, connection)
+	end
+	local eventFeedback = SupplyFeedback.new(SupplyRules.Tuning.ResultDuration)
 	local gui = Instance.new("ScreenGui")
 	gui.Name = Config.HudName
 	gui.ResetOnSpawn = false
@@ -100,6 +107,9 @@ function Hud.start()
 	result.Text = ""
 	result.Parent = panel
 	local function resize()
+		if not running then
+			return
+		end
 		-- Keep feedback visible on short landscape/editor viewports; scroll the list.
 		local height = math.min(300, math.max(196, gui.AbsoluteSize.Y - 24))
 		panel.Size = UDim2.new(0.86, 0, 0, height)
@@ -107,22 +117,32 @@ function Hud.start()
 		upgradeList.Size = UDim2.new(1, -24, 0, height - 164)
 		result.Position = UDim2.fromOffset(12, height - 34)
 	end
-	gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(resize)
+	track(gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(resize))
 	local resultVersion = 0
 	local lastPlot: number? = nil
 	local lastAssigned = false
 	local eventSnapshot: SupplyRules.Snapshot? = nil
-	local eventMessage = ""
-	local eventVersion = 0
 	local function renderEvent()
 		local snapshot = eventSnapshot
-		if snapshot then
+		if running and snapshot then
+			local message = eventFeedback:read(os.clock())
 			eventLine.Text = SupplyRules.describe(snapshot, workspace:GetServerTimeNow(), lastAssigned)
-				.. (if eventMessage ~= "" then "\n" .. eventMessage else "")
+				.. (if message ~= "" then "\n" .. message else "")
 		end
 	end
+	gui.Destroying:Connect(function()
+		running = false
+		resultVersion += 1
+		eventFeedback:reset()
+		for _, connection in connections do
+			connection:Disconnect()
+		end
+	end)
 
 	local function update()
+		if not running then
+			return
+		end
 		local balance = player:GetAttribute(Config.Attributes.Cash)
 		local income = player:GetAttribute(Config.Attributes.IncomeRate)
 		local plot = player:GetAttribute(Config.Attributes.PlotId)
@@ -134,8 +154,7 @@ function Hud.start()
 		if currentPlot ~= lastPlot or assigned ~= lastAssigned then
 			resultVersion += 1
 			result.Text = ""
-			eventVersion += 1
-			eventMessage = ""
+			eventFeedback:reset()
 		end
 		lastPlot = currentPlot
 		lastAssigned = assigned
@@ -172,19 +191,38 @@ function Hud.start()
 		renderEvent()
 	end
 	for _, definition in Catalogue.Definitions do
-		player:GetAttributeChangedSignal(Catalogue.purchaseAttribute(definition.Id)):Connect(update)
+		track(player:GetAttributeChangedSignal(Catalogue.purchaseAttribute(definition.Id)):Connect(update))
 	end
 	for _, attribute in
 		{ Config.Attributes.Cash, Config.Attributes.IncomeRate, Config.Attributes.PlotId, Config.Attributes.Assignment }
 	do
-		player:GetAttributeChangedSignal(attribute):Connect(update)
+		track(player:GetAttributeChangedSignal(attribute):Connect(update))
 	end
 	update()
+	-- Listen before either the purchase/state waits or the first snapshot read.
+	-- RemoteEvent delivery does not order the replicated StringValue ahead of it.
+	local supplyFeedback = ReplicatedStorage:WaitForChild(SupplyRules.FeedbackName, 10)
+	assert(supplyFeedback and supplyFeedback:IsA("RemoteEvent"), "Tycoon: missing Supply Cache feedback")
+	track(supplyFeedback.OnClientEvent:Connect(function(id: number, message: string)
+		if not running then
+			return
+		end
+		local version = eventFeedback:receive(id, message, os.clock())
+		if not version then
+			return
+		end
+		renderEvent()
+		task.delay(SupplyRules.Tuning.ResultDuration, function()
+			if running and eventFeedback:expire(version, os.clock()) then
+				renderEvent()
+			end
+		end)
+	end))
 	local feedback = ReplicatedStorage:WaitForChild(Config.FeedbackName, 10)
 	assert(feedback and feedback:IsA("RemoteEvent"), `Tycoon: missing feedback RemoteEvent {Config.FeedbackName}`)
-	feedback.OnClientEvent:Connect(function(resultPlot: number?, message: string)
+	track(feedback.OnClientEvent:Connect(function(resultPlot: number?, message: string)
 		-- Late results for a previous assignment cannot contaminate the new HUD.
-		if resultPlot ~= lastPlot then
+		if not running or resultPlot ~= lastPlot then
 			return
 		end
 		resultVersion += 1
@@ -195,46 +233,30 @@ function Hud.start()
 				result.Text = ""
 			end
 		end)
-	end)
+	end))
 	local supplyState = ReplicatedStorage:WaitForChild(SupplyRules.StateName, 10)
 	assert(supplyState and supplyState:IsA("StringValue"), "Tycoon: missing Supply Cache snapshot")
 	local function readEvent()
-		-- A server-authored atomic JSON value; this cast is presentation, never claim authority.
-		local snapshot = HttpService:JSONDecode(supplyState.Value) :: SupplyRules.Snapshot
-		if not eventSnapshot or eventSnapshot.id ~= snapshot.id then
-			eventVersion += 1
-			eventMessage = ""
-		end
-		eventSnapshot = snapshot
-		renderEvent()
-	end
-	supplyState:GetPropertyChangedSignal("Value"):Connect(readEvent)
-	readEvent() -- Subscribe before reading so initialization/late joins cannot miss state.
-	local supplyFeedback = ReplicatedStorage:WaitForChild(SupplyRules.FeedbackName, 10)
-	assert(supplyFeedback and supplyFeedback:IsA("RemoteEvent"), "Tycoon: missing Supply Cache feedback")
-	supplyFeedback.OnClientEvent:Connect(function(id: number, message: string)
-		if not eventSnapshot or eventSnapshot.id ~= id then
+		if not running then
 			return
 		end
-		eventVersion += 1
-		local version = eventVersion
-		eventMessage = message
-		renderEvent()
-		task.delay(SupplyRules.Tuning.ResultDuration, function()
-			if eventVersion == version then
-				eventMessage = ""
-				renderEvent()
-			end
-		end)
-	end)
+		-- A server-authored atomic JSON value; this cast is presentation, never claim authority.
+		local snapshot = HttpService:JSONDecode(supplyState.Value) :: SupplyRules.Snapshot
+		if eventFeedback:snapshot(snapshot.id, snapshot.phase == "idle", os.clock()) then
+			eventSnapshot = snapshot
+			renderEvent()
+		end
+	end
+	track(supplyState:GetPropertyChangedSignal("Value"):Connect(readEvent))
+	readEvent() -- Subscribe before reading so initialization/late joins cannot miss state.
 	local eventElapsed = 0
-	RunService.Heartbeat:Connect(function(delta: number)
+	track(RunService.Heartbeat:Connect(function(delta: number)
 		eventElapsed += delta
 		if eventElapsed >= 0.25 then
 			eventElapsed = 0
 			renderEvent()
 		end
-	end)
+	end))
 	gui.Parent = playerGui
 	resize()
 end

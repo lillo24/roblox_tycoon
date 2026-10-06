@@ -51,9 +51,11 @@ its own checkout root. A passing CLI check reports a missing authored snapshot a
 snapshot must be tracked. Save/reopen/restore and runtime gates remain separately
 required by `place/README.md`.
 
-The standalone Session and SupplyEvent tests run in Studio against the actual
-server modules, with supplied event times; CLI/CI formats, lints, and type-checks
-them but does not execute Luau. See
+The standalone Session, SupplyEvent and SupplyFeedback tests run in Studio against
+the actual production modules, with supplied event/feedback times. The client
+feedback helper is Instance-free and can run through the same server test route;
+fixtures remain outside production Rojo mappings. CLI/CI formats, lints, and
+type-checks them but does not execute Luau. See
 [`src/README.md`](../src/README.md) for execution and runtime QA procedures.
 
 ## Standalone type analysis
