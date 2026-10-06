@@ -24,6 +24,14 @@ It does not contain gameplay code or require additional packages.
 - `Test-ProjectStructure.ps1` mutates copies of a fresh build and config in memory
   to ensure missing/duplicate/wrong-class instances, stale code, and broadened
   ownership or server binding are rejected. It never changes mapped Luau or a scene.
+- `Assert-AuthoredMap.ps1` checks the canonical scene's six inward frames, dimensions,
+  SAT separation, anchored geometry, single spawn, script ownership and no saved
+  runtime/old terrain. `Test-AuthoredMap.ps1` runs seven malformed-scene probes on
+  in-memory copies. Both run in full validation. For an authoring checkpoint,
+  `./scripts/Assert-AuthoredMap.ps1 -CheckSnapshotCode` additionally verifies the
+  captured script classes/counts and current source (CRLF/LF normalized). That
+  option is not a permanent code-only save requirement: Git/Rojo remains the code
+  authority, and later code-only work may leave captured scene scripts older.
 - `Test-LuauAnalysis.ps1` receives the exact analyzer options from the full entry
   point. It uses one generated file below `build/` for a passing Roblox/Rojo
   control and five expected TypeErrors: ordinary scalar mismatch, Roblox

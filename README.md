@@ -5,8 +5,9 @@ session cash, and can choose the order of four one-time upgrades. This catalogue
 is a reversible prototype experiment with provisional costs/effects. A compact
 HUD observes server state and private purchase results. A provisional shared
 Supply Cache opens first after 20 seconds, then every 30 seconds; the first valid
-server-processed claim receives 10 cash. The Studio-authored scene is preserved;
-prototype plots and UI are generated only during Play. See [gameplay behavior,
+server-processed claim receives 10 cash. Six inward-facing factory lots and a shared plaza are saved in the editable
+Studio scene; ownership, equipment, prompts and UI are created only during Play.
+See [the MAP-01 checkpoint and visual review](place/MAP_01_REVIEW.md). See [gameplay behavior,
 tuning, source responsibilities, and QA](src/README.md).
 
 ## Prerequisites
@@ -100,14 +101,12 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
    [roblox_tycoon] Client bootstrap ready.
    ```
 
-   Walk toward world +Z from spawn to the four colored plots. Your HUD identifies
-   your plot. Approach a labeled pad to select its built-in prompt. Income Booster
-   still costs 10 cash and raises income from 1 to 2/sec. Workshop is another
-   initial option; each unlocks a follow-up. The HUD explains locked, unaffordable,
-   affordable, and owned states. See `src/README.md` for the provisional catalogue.
-   A shared marker 28 studs toward +Z from spawn identifies the Supply Cache.
-   Watch the event countdown, approach during its ten-second window, and use the
-   built-in prompt. It awards cash once, without resetting plots or changing income.
+   Follow a spoke from the central plaza to your numbered factory (the HUD shows
+   your assignment). Approach a labeled pad to use its built-in prompt. Income
+   Booster costs 10 cash and raises income from 1 to 2/sec. Workshop is another
+   initial option; each unlocks a follow-up. The shared Supply Cache is in the
+   plaza, away from the spawn. Approach during its ten-second window to claim
+   once, without resetting factories or changing income. See src/README.md.
 7. Stop the playtest and run the CLI checks below before committing changes.
    Save scene changes in edit mode to `place/tycoon.rbxlx` and commit the snapshot
    with the source changes; scratch places and generated builds remain ignored.

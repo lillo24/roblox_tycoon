@@ -28,8 +28,6 @@ local SupplyRules = {}
 SupplyRules.StateName = "TycoonSupplyState"
 SupplyRules.FeedbackName = "TycoonSupplyFeedback"
 SupplyRules.WorldName = "SupplyCache"
--- Inspected dry, clear 6x6 area in front of the four plots, outside pad ranges.
-SupplyRules.Offset = Vector3.new(0, 0, 28)
 
 function SupplyRules.validate(tuning: Tuning): Tuning
 	local values: { [string]: number } = {
@@ -88,7 +86,7 @@ function SupplyRules.describe(state: Snapshot, now: number, assigned: boolean): 
 	else
 		line = if state.winnerName then `{state.winnerName} claimed +{state.reward} cash` else "Supply Cache expired"
 	end
-	return line .. "\n" .. (if assigned then "Shared marker ahead of plots" else "A plot is needed to claim")
+	return line .. "\n" .. (if assigned then "Shared cache in the central plaza" else "A plot is needed to claim")
 end
 
 return table.freeze(SupplyRules)

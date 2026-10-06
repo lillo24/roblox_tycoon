@@ -65,6 +65,7 @@ return function(Session: typeof(SessionTypes), Config: SessionTypes.Tuning, Cata
 	end
 
 	local session = freshSession()
+	check(Config.PlotCount == 6, "Production has six lots")
 	local first = assigned(session, 101)
 	local second = assigned(session, 202)
 	check(first.plotId ~= second.plotId, "Unique plots")
@@ -78,6 +79,7 @@ return function(Session: typeof(SessionTypes), Config: SessionTypes.Tuning, Cata
 		seen[state.plotId] = true
 	end
 	check(session:assign(999) == nil and session:get(999) == nil, "Capacity has no waiting economy")
+	check(session:assignedCount() == 6, "Seventh player cannot corrupt six active assignments")
 	local before = snapshot(first)
 	session:accrue(0)
 	unchanged(first, before)

@@ -1,9 +1,10 @@
 # Authored place and Studio handoff
 
-`tycoon.rbxlx` is the canonical **Studio-authored** scene source, saved by the
-user in edit mode. It preserves the existing scene, including its terrain,
-models, safe SpawnLocation, and template scripts. It is not a generated build.
-`build/validation.rbxlx` is disposable code-only output and cannot restore a scene.
+`tycoon.rbxlx` is the canonical Studio-authored FactoryHub scene. MAP-01 replaces
+the old rolling-ball template; the old evidence below is historical. The map
+already exists in Edit. No runtime generator is needed to restore it.
+See [the current map checkpoint, screenshots and review gate](MAP_01_REVIEW.md).
+`build/validation.rbxlx` remains disposable code-only output.
 
 This folder owns the scene snapshot and its save/restore procedure. Luau under
 the three mapped code folders remains authoritative on disk. Scripts captured
@@ -11,7 +12,39 @@ in a snapshot are copies; re-sync the current checkout before testing an older
 snapshot. Never run `rojo build` with an output in this folder or edit the same
 mapped scripts through Script Sync.
 
-## Current evidence (2026-10-05)
+## FactoryHub map contract
+
+- One Workspace/FactoryHub Model; its PrimaryPart is CacheAnchor.
+- Lots/Lot1 through Lot6 Models have matching numeric LotId and Color3 Accent
+  attributes. Each model's PrimaryPart is its invisible, anchored Anchor Part.
+- Each Foundation is an anchored collidable 60×0.4×70 Part. Anchor is its top
+  CFrame; local +X is tangential/right, local -Z points toward the plaza, +Y up.
+  Entrance is an invisible Part at local (0,0,-35). Move/rotate the whole lot
+  with PivotTo/the Studio pivot tools, including anchors and floor markings.
+- Plaza is the known collidable circular support; CacheAnchor sits at its top
+  center. One neutral HubSpawn is 15 studs away. Ground, Paths, Streetscape,
+  empty floors/trim/numbers and landscaping belong to this saved scene.
+- Owners, income equipment, purchase pads/prompts, event state/cache and HUD
+  belong to the non-archivable runtime. Never save a Play session.
+- Keep entrances and the local machine/pad zones clear. MapLayout validates
+  intended support, upright/inward alignment and rectangle separation;
+  PlotWorld preflights every interaction/equipment footprint before writes.
+  Removing an anchor or inserting a collidable obstacle produces a named error.
+- Stop Play before editing. Preserve IDs and transform the whole lot. Uniform
+  dimension/ring changes also require updating the explicit reviewed dimensions
+  in Assert-AuthoredMap.ps1 and repeating map/walking checks.
+- Keep the live default.project.json limited to its three code folders.
+  Later code-only changes re-sync current disk code; captured scripts are copies.
+
+The MAP-01 file was persisted from Edit-mode Instances using Studio's native
+SerializationService. A temporary project under ignored build/ used pinned Rojo
+only to transcode that native model buffer to XML; an XML splice retained scene
+service settings/sky and inserted current mapped code. No Rojo build targeted
+the authored path, and no export project/generator is required to open or play
+the committed scene. XML line endings were normalized to LF for the committed
+checkpoint. Ordinary future authoring may use Studio File > Save to File in Edit.
+
+## Historical SETUP-02 evidence (2026-10-05)
 
 Starting main: `0574d7883f7d27138d3b64485b41524ac93f61f7`. The shared `.gitkeep`,
 ancestor preservation flags, manual CI dispatch, and PR-only validation were
