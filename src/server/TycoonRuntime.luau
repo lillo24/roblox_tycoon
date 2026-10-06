@@ -7,6 +7,7 @@ local Config = require(ReplicatedStorage.TycoonShared.Config)
 local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
 local Session = require(script.Parent.Session)
 local PlotWorld = require(script.Parent.PlotWorld)
+local SupplyRuntime = require(script.Parent.SupplyRuntime)
 
 local TycoonRuntime = {}
 local started = false
@@ -39,6 +40,7 @@ function TycoonRuntime.start()
 		BaseIncome = Config.BaseIncome,
 	}
 	local session = Session.new(tuning, Catalogue.Definitions)
+	local supplyCenter = SupplyRuntime.inspect() -- Validate reserved names/neutral scene before writes.
 	local plots = PlotWorld.create()
 	-- Outbound only: no client purchase remote, message forwarding, or broadcast.
 	local feedback = Instance.new("RemoteEvent")
@@ -69,6 +71,9 @@ function TycoonRuntime.start()
 		player:SetAttribute(Config.Attributes.IncomeRate, nil)
 		player:SetAttribute(Config.Attributes.PlotId, nil)
 	end
+	local runtimeFolder = workspace:FindFirstChild(Config.RuntimeName)
+	assert(runtimeFolder, "Tycoon: runtime geometry is missing")
+	local supply = SupplyRuntime.new(session, active, publish, runtimeFolder, supplyCenter)
 
 	local function join(player: Player)
 		if player.Parent ~= Players or active[player.UserId] == player then
@@ -87,6 +92,7 @@ function TycoonRuntime.start()
 		end
 		PlotWorld.setOwner(plots[state.plotId], player)
 		publish(player, state)
+		supply:sync(workspace:GetServerTimeNow())
 	end
 
 	local function leave(player: Player)
@@ -99,6 +105,7 @@ function TycoonRuntime.start()
 			end
 		end
 		clear(player)
+		supply:leave(player)
 	end
 
 	local function sendResult(player: Player, message: string)
@@ -151,6 +158,7 @@ function TycoonRuntime.start()
 	-- Joining players enter this server-wide cadence (first tick may be less than 1s away).
 	local elapsed = 0
 	RunService.Heartbeat:Connect(function(delta: number)
+		supply:sync(workspace:GetServerTimeNow())
 		elapsed += delta
 		local ticks = math.floor(elapsed / Config.IncomeInterval)
 		if ticks == 0 then

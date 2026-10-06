@@ -4,6 +4,9 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Config = require(ReplicatedStorage.TycoonShared.Config)
 local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
+local SupplyRules = require(ReplicatedStorage.TycoonShared.SupplyRules)
+local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
 
 local Hud = {}
 
@@ -21,12 +24,12 @@ function Hud.start()
 	panel.Name = "Panel"
 	panel.AnchorPoint = Vector2.new(0.5, 0)
 	panel.Position = UDim2.new(0.5, 0, 0, 12)
-	panel.Size = UDim2.new(0.86, 0, 0, 264)
+	panel.Size = UDim2.new(0.86, 0, 0, 300)
 	panel.BackgroundColor3 = Color3.fromRGB(24, 28, 36)
 	panel.BackgroundTransparency = 0.12
 	panel.Parent = gui
 	local constraint = Instance.new("UISizeConstraint")
-	constraint.MaxSize = Vector2.new(360, 264)
+	constraint.MaxSize = Vector2.new(360, 300)
 	constraint.Parent = panel
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0, 8)
@@ -50,9 +53,19 @@ function Hud.start()
 	status.TextSize = 14
 	status.TextWrapped = true
 	status.Parent = panel
+	local eventLine = Instance.new("TextLabel")
+	eventLine.Name = "SupplyEvent"
+	eventLine.Position = UDim2.fromOffset(12, 76)
+	eventLine.Size = UDim2.new(1, -24, 0, 44)
+	eventLine.BackgroundTransparency = 1
+	eventLine.TextColor3 = Color3.fromRGB(141, 238, 233)
+	eventLine.Font = Enum.Font.Gotham
+	eventLine.TextSize = 12
+	eventLine.TextWrapped = true
+	eventLine.Parent = panel
 	local upgradeList = Instance.new("ScrollingFrame")
 	upgradeList.Name = "UpgradeList"
-	upgradeList.Position = UDim2.fromOffset(12, 76)
+	upgradeList.Position = UDim2.fromOffset(12, 124)
 	upgradeList.Size = UDim2.new(1, -24, 0, 136)
 	upgradeList.CanvasSize = UDim2.fromOffset(0, #Catalogue.Definitions * 34)
 	upgradeList.BackgroundTransparency = 1
@@ -78,7 +91,7 @@ function Hud.start()
 	local result = Instance.new("TextLabel")
 	result.Name = "PurchaseResult"
 	result.Position = UDim2.fromOffset(12, 218)
-	result.Size = UDim2.new(1, -24, 0, 34)
+	result.Size = UDim2.new(1, -24, 0, 24)
 	result.BackgroundTransparency = 1
 	result.TextColor3 = Color3.fromRGB(255, 223, 123)
 	result.Font = Enum.Font.GothamBold
@@ -88,16 +101,26 @@ function Hud.start()
 	result.Parent = panel
 	local function resize()
 		-- Keep feedback visible on short landscape/editor viewports; scroll the list.
-		local height = math.min(264, math.max(128, gui.AbsoluteSize.Y - 24))
+		local height = math.min(300, math.max(196, gui.AbsoluteSize.Y - 24))
 		panel.Size = UDim2.new(0.86, 0, 0, height)
 		constraint.MaxSize = Vector2.new(360, height)
-		upgradeList.Size = UDim2.new(1, -24, 0, height - 128)
-		result.Position = UDim2.fromOffset(12, height - 46)
+		upgradeList.Size = UDim2.new(1, -24, 0, height - 164)
+		result.Position = UDim2.fromOffset(12, height - 34)
 	end
 	gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(resize)
 	local resultVersion = 0
 	local lastPlot: number? = nil
 	local lastAssigned = false
+	local eventSnapshot: SupplyRules.Snapshot? = nil
+	local eventMessage = ""
+	local eventVersion = 0
+	local function renderEvent()
+		local snapshot = eventSnapshot
+		if snapshot then
+			eventLine.Text = SupplyRules.describe(snapshot, workspace:GetServerTimeNow(), lastAssigned)
+				.. (if eventMessage ~= "" then "\n" .. eventMessage else "")
+		end
+	end
 
 	local function update()
 		local balance = player:GetAttribute(Config.Attributes.Cash)
@@ -111,6 +134,8 @@ function Hud.start()
 		if currentPlot ~= lastPlot or assigned ~= lastAssigned then
 			resultVersion += 1
 			result.Text = ""
+			eventVersion += 1
+			eventMessage = ""
 		end
 		lastPlot = currentPlot
 		lastAssigned = assigned
@@ -144,6 +169,7 @@ function Hud.start()
 				then "Plots full — no income this session"
 				else "Joining…"
 		end
+		renderEvent()
 	end
 	for _, definition in Catalogue.Definitions do
 		player:GetAttributeChangedSignal(Catalogue.purchaseAttribute(definition.Id)):Connect(update)
@@ -169,6 +195,45 @@ function Hud.start()
 				result.Text = ""
 			end
 		end)
+	end)
+	local supplyState = ReplicatedStorage:WaitForChild(SupplyRules.StateName, 10)
+	assert(supplyState and supplyState:IsA("StringValue"), "Tycoon: missing Supply Cache snapshot")
+	local function readEvent()
+		-- A server-authored atomic JSON value; this cast is presentation, never claim authority.
+		local snapshot = HttpService:JSONDecode(supplyState.Value) :: SupplyRules.Snapshot
+		if not eventSnapshot or eventSnapshot.id ~= snapshot.id then
+			eventVersion += 1
+			eventMessage = ""
+		end
+		eventSnapshot = snapshot
+		renderEvent()
+	end
+	supplyState:GetPropertyChangedSignal("Value"):Connect(readEvent)
+	readEvent() -- Subscribe before reading so initialization/late joins cannot miss state.
+	local supplyFeedback = ReplicatedStorage:WaitForChild(SupplyRules.FeedbackName, 10)
+	assert(supplyFeedback and supplyFeedback:IsA("RemoteEvent"), "Tycoon: missing Supply Cache feedback")
+	supplyFeedback.OnClientEvent:Connect(function(id: number, message: string)
+		if not eventSnapshot or eventSnapshot.id ~= id then
+			return
+		end
+		eventVersion += 1
+		local version = eventVersion
+		eventMessage = message
+		renderEvent()
+		task.delay(SupplyRules.Tuning.ResultDuration, function()
+			if eventVersion == version then
+				eventMessage = ""
+				renderEvent()
+			end
+		end)
+	end)
+	local eventElapsed = 0
+	RunService.Heartbeat:Connect(function(delta: number)
+		eventElapsed += delta
+		if eventElapsed >= 0.25 then
+			eventElapsed = 0
+			renderEvent()
+		end
 	end)
 	gui.Parent = playerGui
 	resize()

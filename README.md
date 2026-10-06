@@ -3,7 +3,9 @@
 An early-stage Roblox multiplayer tycoon. Each owner has a temporary plot and
 session cash, and can choose the order of four one-time upgrades. This catalogue
 is a reversible prototype experiment with provisional costs/effects. A compact
-HUD observes server state and private purchase results. The Studio-authored scene is preserved;
+HUD observes server state and private purchase results. A provisional shared
+Supply Cache opens first after 20 seconds, then every 30 seconds; the first valid
+server-processed claim receives 10 cash. The Studio-authored scene is preserved;
 prototype plots and UI are generated only during Play. See [gameplay behavior,
 tuning, source responsibilities, and QA](src/README.md).
 
@@ -103,6 +105,9 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
    still costs 10 cash and raises income from 1 to 2/sec. Workshop is another
    initial option; each unlocks a follow-up. The HUD explains locked, unaffordable,
    affordable, and owned states. See `src/README.md` for the provisional catalogue.
+   A shared marker 28 studs toward +Z from spawn identifies the Supply Cache.
+   Watch the event countdown, approach during its ten-second window, and use the
+   built-in prompt. It awards cash once, without resetting plots or changing income.
 7. Stop the playtest and run the CLI checks below before committing changes.
    Save scene changes in edit mode to `place/tycoon.rbxlx` and commit the snapshot
    with the source changes; scratch places and generated builds remain ignored.
@@ -124,7 +129,8 @@ Filesystem/Git is authoritative for these three code folders. Keep them reserved
 for repository content: Rojo may remove unknown instances **inside these folders**
 so they match disk. Edit synced code on disk; Studio edits are not written back.
 The shared folder contains general tuning in `Config.luau` and the typed, validated
-upgrade source of truth in `UpgradeCatalogue.luau`; `.gitkeep` remains
+upgrade source of truth in `UpgradeCatalogue.luau`, plus the provisional event
+rules and snapshot schema in `SupplyRules.luau`; `.gitkeep` remains
 as the original directory marker.
 
 Studio is authoritative for all other world/UI/art content for now. The project

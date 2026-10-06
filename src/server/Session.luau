@@ -79,6 +79,26 @@ function Session.release(self: Session, userId: number): number?
 	return state.plotId
 end
 
+function Session.assignedCount(self: Session): number
+	local count = 0
+	for _ in self.states do
+		count += 1
+	end
+	return count
+end
+
+-- Server-only additive reward, with no yield, attribute writes, income or purchase effects.
+-- Inactive/replaced owners cannot receive a credit. Amount is resolved by the event.
+function Session.credit(self: Session, userId: number, amount: number): boolean
+	assert(amount > 0 and amount < math.huge and amount % 1 == 0, "Tycoon: credit must be a finite positive integer")
+	local state = self.states[userId]
+	if not state or self.owners[state.plotId] ~= userId then
+		return false
+	end
+	state.cash += amount
+	return true
+end
+
 function Session.accrue(self: Session, ticks: number)
 	assert(ticks >= 0 and ticks % 1 == 0, "Tycoon: income ticks must be nonnegative integers")
 	for _, state in self.states do
