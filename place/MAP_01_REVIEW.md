@@ -60,29 +60,45 @@ Current code is captured in the scene, but Git/Rojo remains its authority.
   support, facing, footprint intersection, obstacle, reset and rotated equipment.
 - Solo: all six entrance/production-zone walks, connected neighboring-lot route,
   all four normal prompt purchases, rate 12 and no health loss.
-- Real six-client session: unique lots, live independent income, six normal
+- Earlier real six-client session: unique lots, live independent income, six normal
   booster purchases, six exact -10 deductions, own-lot replicated equipment.
 - Focused two-client session: funded non-owner rejection; Workshop -30 once,
   replay rejected without neighbor effects; competing normal claims produced
   one exact +10, matching public winner and requester-only private feedback.
 - Real respawn retained assignment/purchases and same HUD; real disconnect
   released only its lot; AddPlayers replacement reused it with fresh progression.
-- iPhone 17 Pro emulation: portrait and landscape safe-area measurements, native
-  Touch input purchase/claim. Wide HUD positioning leaves center prompts outside
-  its touch-active catalogue. No physical phone or mobile performance claim.
+- iPhone 17 Pro emulation: portrait safe-area measurements and native Touch
+  purchase/claim on the unchanged centered portrait branch; final-source
+  landscape Touch claim after moving the wide HUD away from the center prompt.
+  No physical phone or mobile performance claim.
 - Task-owned Studio stop leaves the 698-descendant Edit scene, no runtime/events
   or QA modules. Device preferences are restored to default, LandscapeRight,
   ScaleToPhysicalSize. An orientation switch during Play sometimes stalled MCP
-  capture; final-source portrait and clean-checkout restoration are checked in a
-  separate fresh session before the PR handoff.
+  capture. The final-source portrait repeat remains pending as described below.
 
-The PR records the tested implementation commit, clean-checkout restore and
-final-head CI. The scene and runtime source are committed together for that
-restore; screenshots and this evidence record can follow without changing them.
+The committed behavior-bearing tree is
+7f4478b3635b53d9471b5dd52db15bc613677a9a, based on main 29ee28c above.
+A separate clean detached clone under build/restore-checkout reopened its tracked
+scene in Studio, with matching SHA256, all 695 hub descendants/698 Workspace
+descendants and pivots present in Edit. All 14 script classes and normalized
+sources matched that checkout and were applied from it. The four actual module
+tests passed again (969 assertions). A fresh real six-client session on this
+commit gave six unique owners with independent live income.
+
+The earlier six-client purchase/lifecycle and two-client competition observations
+precede the final presentation adjustments (smaller billboards, wide HUD position)
+and a type-only local variable in the rectangle corner calculation. Map geometry,
+purchase placement and economy were unchanged. A repeat of normal six-client
+purchases and final portrait/restore prompt smoke is still required: the fresh
+shell-launched clients report a 1×1 camera viewport, do not show normal prompts,
+and MCP capture stalls. Native device switching did not restore rendering. No
+purchase was recorded as successful in that repeat; all six remained at rate 1.
+The test was stopped, preferences restored, and the committed file stayed clean.
+The PR records final-head CI separately from these Studio observations.
 
 ## Actual Studio captures
 
-World shots temporarily hide the HUD. Factory-eye uses the normal first-person
+World shots from the earlier live session temporarily hide the HUD. Factory-eye uses the normal first-person
 Custom camera; close-up uses a temporary capture camera. The images are actual
 Studio renders, with no generated concept art.
 
@@ -108,6 +124,12 @@ Review scale/spacing, whether the starter equipment plus unused expansion floor
 feels like a factory, and whether neighbors/opposite growth remain visible while
 walking. Report approve or the specific adjustment wanted. This is the required
 founder decision before merge; it is not a compiler-panel test request.
+
+To unblock the remaining automated Studio repeat, open this checkout's
+place/tycoon.rbxlx in a normal visible Studio window with MCP enabled and report
+connected. Codex can then repeat normal prompts and final phone portrait through
+the supported Studio interface. The draft remains open for that evidence and
+the visual founder decision. No desktop control or repeated compiler QA is needed.
 
 Production supports six owners. Local Players.MaxPlayers still reads 60 and is
 read-only to scripts. Before publishing, configure the intended hosted place
