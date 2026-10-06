@@ -3,6 +3,14 @@
 This folder owns the PowerShell validation used locally and by CI.
 It does not contain gameplay code or require additional packages.
 
+- `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
+  `build/`, combining the unchanged canonical scene with current mapped source.
+  Play runs exact SupplyFeedback, UiState and WorldLabels tests via temporary
+  unmapped QA instances. It rejects linked outputs and verifies the canonical
+  hash. Run from the checkout whose scene/runtime you intend to review; default
+  output is `ui-review-main.rbxlx`, or use `-OutputName ui-review-map.rbxlx` in an
+  isolated map compatibility checkout. This helper never saves a canonical scene.
+
 - `Get-ValidationScope.ps1` returns whether the complete CLI suite is required:
   manual runs always require it, while PRs skip it only when every changed file is
   Markdown. The workflow supplies paths from the PR merge commit's diff against

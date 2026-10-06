@@ -1,0 +1,442 @@
+--!strict
+
+local GuiService = game:GetService("GuiService")
+local UserInputService = game:GetService("UserInputService")
+local ProximityPromptService = game:GetService("ProximityPromptService")
+local TweenService = game:GetService("TweenService")
+local TextChatService = game:GetService("TextChatService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
+local State = require(script.Parent.UiState)
+local Preferences = require(script.Parent.UiPreferences)
+local Theme = require(script.Parent.UiTheme)
+
+local View = {}
+export type Handle = {
+	economy: (State.Economy) -> (),
+	event: (string, string?) -> (),
+	feedback: (string, string) -> (),
+	refresh: () -> (),
+	destroy: () -> (),
+}
+
+local function list(parent: Instance, gap: number)
+	local layout = Instance.new("UIListLayout")
+	layout.Padding, layout.SortOrder = UDim.new(0, gap), Enum.SortOrder.LayoutOrder
+	layout.Parent = parent
+end
+
+local function text(parent: Instance, name: string, value: string): TextLabel
+	local label = Instance.new("TextLabel")
+	label.Name, label.Text = name, value
+	label.Size, label.AutomaticSize = UDim2.fromScale(1, 0), Enum.AutomaticSize.Y
+	label.BackgroundTransparency = 1
+	label.Font, label.TextSize, label.TextColor3 = Theme.Font, Theme.TextSize, Theme.Text
+	label.TextWrapped, label.TextScaled = true, false
+	label.TextXAlignment, label.TextYAlignment = Enum.TextXAlignment.Left, Enum.TextYAlignment.Top
+	label.Active, label.Selectable = false, false
+	label.Parent = parent
+	return label
+end
+
+local function frame(parent: Instance, name: string): Frame
+	local object = Instance.new("Frame")
+	object.Name, object.BackgroundColor3 = name, Theme.Background
+	object.BorderSizePixel = 0
+	object.Parent = parent
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius, corner.Parent = UDim.new(0, 8), object
+	return object
+end
+
+local function button(parent: Instance, name: string, value: string): TextButton
+	local object = Instance.new("TextButton")
+	object.Name, object.Text = name, value
+	object.Size, object.AutomaticSize = UDim2.new(1, 0, 0, Theme.Target), Enum.AutomaticSize.Y
+	object.Font, object.TextSize = Theme.StrongFont, Theme.TextSize
+	object.TextColor3, object.BackgroundColor3 = Theme.Text, Theme.Surface
+	object.TextWrapped, object.AutoButtonColor = true, true
+	object.BorderSizePixel, object.Selectable = 0, true
+	object.Parent = parent
+	local padding = Instance.new("UIPadding")
+	padding.PaddingTop, padding.PaddingBottom = UDim.new(0, 10), UDim.new(0, 10)
+	padding.PaddingLeft, padding.PaddingRight = UDim.new(0, 8), UDim.new(0, 8)
+	padding.Parent = object
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius, corner.Parent = UDim.new(0, 6), object
+	return object
+end
+
+function View.new(gui: ScreenGui, changed: () -> ()): Handle
+	local connections: { RBXScriptConnection } = {}
+	local function track(connection: RBXScriptConnection)
+		table.insert(connections, connection)
+	end
+	local root = frame(gui, "Interface")
+	root.BackgroundTransparency = 1
+	local scale = Instance.new("UIScale")
+	scale.Parent = root
+	local summary = text(root, "Summary", "Joining…")
+	summary.Font, summary.TextSize = Theme.StrongFont, 18
+	local navigation = frame(root, "Navigation")
+	navigation.BackgroundTransparency = 1
+	local factory = button(navigation, "Factory", "Factory")
+	local settings = button(navigation, "Settings", "Settings")
+	local help = button(navigation, "Help", "? Help")
+	local event = text(root, "Event", "Supply Cache\nWaiting for server state")
+	event.TextXAlignment = Enum.TextXAlignment.Center
+	local feedback = frame(root, "Feedback")
+	feedback.BackgroundTransparency = 1
+	feedback.AutomaticSize = Enum.AutomaticSize.Y
+	list(feedback, 4)
+	local purchase = text(feedback, "PurchaseResult", "")
+	local supply = text(feedback, "SupplyResult", "")
+	purchase.LayoutOrder, supply.LayoutOrder = 1, 2
+	local panel = frame(root, "Panel")
+	panel.Visible, panel.Active, panel.ClipsDescendants = false, true, true
+	panel.SelectionGroup = true
+	local title = text(panel, "Title", "")
+	title.Font, title.TextSize = Theme.StrongFont, 20
+	local close = button(panel, "Close", "Close")
+	local scroll = Instance.new("ScrollingFrame")
+	scroll.Name, scroll.BackgroundTransparency, scroll.BorderSizePixel = "Content", 1, 0
+	scroll.AutomaticCanvasSize, scroll.CanvasSize = Enum.AutomaticSize.Y, UDim2.new()
+	scroll.ScrollingDirection, scroll.ScrollBarThickness = Enum.ScrollingDirection.Y, 6
+	scroll.Active, scroll.Selectable = true, true
+	scroll.Parent = panel
+	list(scroll, Theme.Gap)
+	local content = frame(scroll, "Pages")
+	content.BackgroundTransparency, content.AutomaticSize = 1, Enum.AutomaticSize.Y
+	content.Size = UDim2.new(1, -10, 0, 0)
+	local pages: { [State.Panel]: Frame } = {}
+	for _, name: State.Panel in { "Factory", "Settings", "Help" } do
+		local page = frame(content, name)
+		page.BackgroundTransparency, page.AutomaticSize = 1, Enum.AutomaticSize.Y
+		page.Size, page.Visible = UDim2.fromScale(1, 0), false
+		list(page, 12)
+		pages[name] = page
+	end
+	local factorySummary = text(pages.Factory, "FactorySummary", "")
+	factorySummary.LayoutOrder = 1
+	text(
+		pages.Factory,
+		"PurchaseHelp",
+		"Information only. Buy at nearby world pads; this panel does not pause production."
+	).LayoutOrder =
+		2
+	local rows: { [Catalogue.Id]: TextLabel } = {}
+	for index, definition in Catalogue.Definitions do
+		local row = text(pages.Factory, definition.Id, "")
+		row.LayoutOrder = index + 2
+		rows[definition.Id] = row
+	end
+	text(pages.Settings, "Session", "Applies to this session. Changes take effect immediately; the game keeps running.").LayoutOrder =
+		1
+	local sizeButton = button(pages.Settings, "InterfaceSize", "")
+	local motionButton = button(pages.Settings, "ReduceMotion", "")
+	local labelsButton = button(pages.Settings, "FactoryLabels", "")
+	local reset = button(pages.Settings, "Reset", "Reset interface settings")
+	sizeButton.LayoutOrder, motionButton.LayoutOrder, labelsButton.LayoutOrder, reset.LayoutOrder = 2, 3, 4, 5
+	text(
+		pages.Settings,
+		"Platform",
+		"Roblox text size, transparency and reduced motion preferences are respected. Reset affects only these interface settings."
+	).LayoutOrder =
+		6
+	local helpText = text(
+		pages.Help,
+		"Loop",
+		"You receive an available factory when joining. If factories are full, no factory income is assigned.\n\nEarn cash automatically. Approach your factory's pads to buy an available upgrade. Read its price and prerequisite; owned upgrades increase income.\n\nWatch Supply Cache status. Approach its shared marker when OPEN and use its prompt. The first valid claim processed by the server wins.\n\nProgress resets when you leave. These panels do not pause the game."
+	)
+	helpText.LayoutOrder = 1
+	local controls = text(pages.Help, "Controls", "")
+	controls.LayoutOrder = 2
+	local current: State.Panel? = nil
+	local returnFocus: GuiObject? = nil
+	local promptEnabled: boolean? = nil
+	local tween: Tween? = nil
+	local panelScale = Instance.new("UIScale")
+	panelScale.Parent = panel
+	local alive = true
+	local buttons: { TextButton } = { factory, settings, help, close, sizeButton, motionButton, labelsButton, reset }
+	factory.NextSelectionRight, factory.NextSelectionLeft = settings, help
+	settings.NextSelectionRight, settings.NextSelectionLeft = help, factory
+	help.NextSelectionRight, help.NextSelectionLeft = factory, settings
+	for index, object in { sizeButton, motionButton, labelsButton, reset } do
+		local settingsControls = { sizeButton, motionButton, labelsButton, reset }
+		object.NextSelectionUp = if index == 1 then close else settingsControls[index - 1]
+		object.NextSelectionDown = if index == #settingsControls then close else settingsControls[index + 1]
+	end
+	local function updateControls()
+		local input = UserInputService.PreferredInput
+		local key, gamepad = Enum.KeyCode.E, Enum.KeyCode.ButtonX
+		local runtime = workspace:FindFirstChild("TycoonRuntime")
+		if runtime then
+			for _, instance in runtime:GetDescendants() do
+				if instance:IsA("ProximityPrompt") and instance.Name == "Purchase" then
+					key, gamepad = instance.KeyboardKeyCode, instance.GamepadKeyCode
+					break
+				end
+			end
+		end
+		controls.Text = if input == Enum.PreferredInput.Touch
+			then "Touch: tap a nearby native world prompt. Tap interface buttons; scroll panels with a swipe."
+			elseif
+				input == Enum.PreferredInput.Gamepad
+			then `Controller: use the world prompt's {gamepad.Name} hint. Select interface buttons and activate with A; B closes an open panel.`
+			else `Keyboard / mouse: use a nearby prompt's {key.Name} hint or click it. Click interface buttons; scroll panels with the wheel.`
+	end
+	local function resize()
+		if not alive then
+			return
+		end
+		local factor = Preferences.scale(Preferences.read())
+		scale.Scale = factor
+		local width, height = gui.AbsoluteSize.X / factor, gui.AbsoluteSize.Y / factor
+		root.Size = UDim2.fromOffset(width, height)
+		local usable = math.max(1, width - 24)
+		local wide = width >= 940
+		local compactWidth = if width >= 600 then 320 else usable
+		-- Reserve native chat bounds (including its input bar), without disabling CoreGui.
+		local startY = 12
+		local startX, chatRight = 12, 0
+		for _, config in { TextChatService.ChatWindowConfiguration, TextChatService.ChatInputBarConfiguration } do
+			if config.Enabled and config.AbsoluteSize.Y > 0 then
+				startY = math.max(
+					startY,
+					(config.AbsolutePosition.Y + config.AbsoluteSize.Y - gui.AbsolutePosition.Y) / factor + 12
+				)
+				chatRight = math.max(chatRight, (config.AbsolutePosition.X + config.AbsoluteSize.X) / factor)
+			end
+		end
+		if height < 420 and width >= 600 then
+			startX, startY = chatRight + 12, 12
+			compactWidth = math.min(compactWidth, width - startX - 12)
+		end
+		summary.Position, summary.Size =
+			UDim2.fromOffset(startX, startY), UDim2.fromOffset(if wide then 260 else compactWidth, 0)
+		local summaryHeight = summary.AbsoluteSize.Y / factor
+		local target = math.max(
+			Theme.Target,
+			factory.AbsoluteSize.Y / factor,
+			settings.AbsoluteSize.Y / factor,
+			help.AbsoluteSize.Y / factor
+		)
+		local top = startY + summaryHeight + 8
+		if wide then
+			navigation.Position, navigation.Size = UDim2.fromOffset(12, top), UDim2.fromOffset(usable, target)
+			factory.Position, factory.Size = UDim2.fromOffset(0, 0), UDim2.fromOffset(140, Theme.Target)
+			local listBottom = math.min(height * 0.35, 48 + #Players:GetPlayers() * 24)
+			settings.Position, settings.Size =
+				UDim2.fromOffset(usable - 212, -top + listBottom), UDim2.fromOffset(108, Theme.Target)
+			help.Position, help.Size =
+				UDim2.fromOffset(usable - 96, -top + listBottom), UDim2.fromOffset(96, Theme.Target)
+			event.Position, event.Size = UDim2.fromOffset(292, 12), UDim2.fromOffset(usable - 520, 0)
+		else
+			navigation.Position, navigation.Size = UDim2.fromOffset(startX, top), UDim2.fromOffset(compactWidth, target)
+			local each = (compactWidth - 16) / 3
+			for index, object in { factory, settings, help } do
+				object.Position, object.Size =
+					UDim2.fromOffset((index - 1) * (each + 8), 0), UDim2.fromOffset(each, Theme.Target)
+			end
+			event.Position, event.Size = UDim2.fromOffset(startX, top + target + 8), UDim2.fromOffset(compactWidth, 0)
+		end
+		local bottom = math.max(top + target, event.Position.Y.Offset + event.AbsoluteSize.Y / factor) + 8
+		feedback.Position, feedback.Size =
+			UDim2.fromOffset(startX, bottom), UDim2.fromOffset(if wide then 350 else compactWidth, 0)
+		-- Feedback has its own bounded, noninteractive space, even with all panels closed.
+		local panelTop = bottom + (if wide then 0 else feedback.AbsoluteSize.Y / factor) + 8
+		panel.Position = UDim2.fromOffset(startX, panelTop)
+		panel.Size = UDim2.fromOffset(
+			if width >= 600 then math.min(360, width - startX - 12) else usable,
+			math.max(80, math.min(height - panelTop - 12, height * 0.65))
+		)
+		-- Private feedback moves to the opposite side while a wide panel is open.
+		if current then
+			feedback.Position = if wide then UDim2.fromOffset(width - 374, bottom) else UDim2.fromOffset(startX, bottom)
+			feedback.Visible = true
+		else
+			feedback.Visible = true
+		end
+		title.Position, title.Size = UDim2.fromOffset(12, 12), UDim2.new(1, -124, 0, 0)
+		close.Position, close.Size = UDim2.new(1, -104, 0, 8), UDim2.fromOffset(92, Theme.Target)
+		local header = math.max(64, title.AbsoluteSize.Y / factor + 24, close.AbsoluteSize.Y / factor + 16)
+		scroll.Position, scroll.Size = UDim2.fromOffset(12, header), UDim2.new(1, -24, 1, -header - 12)
+	end
+	local function restoreInput()
+		if promptEnabled ~= nil then
+			ProximityPromptService.Enabled = promptEnabled
+			promptEnabled = nil
+		end
+		local selected = GuiService.SelectedObject
+		if selected and selected:IsDescendantOf(gui) then
+			GuiService.SelectedObject = if returnFocus and returnFocus.Parent then returnFocus else nil
+		end
+		returnFocus = nil
+	end
+	local function setPanel(nextPanel: State.Panel?, opener: TextButton?)
+		if tween then
+			tween:Cancel()
+			tween = nil
+		end
+		panelScale.Scale = 1
+		if nextPanel and not current then
+			returnFocus = opener or GuiService.SelectedObject
+			promptEnabled = ProximityPromptService.Enabled
+			-- Temporary client input gate: prevents native purchase/claim activation behind a panel.
+			ProximityPromptService.Enabled = false
+		elseif not nextPanel then
+			restoreInput()
+		end
+		current = nextPanel
+		panel.Visible = current ~= nil
+		for name, page in pages do
+			page.Visible = name == current
+		end
+		for _, object in { factory, settings, help } do
+			object.TextColor3 = if object.Name == current then Theme.Accent else Theme.Text
+		end
+		if current then
+			title.Text = current
+			scroll.CanvasPosition = Vector2.zero
+			updateControls()
+			close.NextSelectionDown = if current == "Settings" then sizeButton else scroll
+			close.NextSelectionUp = if current == "Settings" then reset else scroll
+			if UserInputService.PreferredInput == Enum.PreferredInput.Gamepad then
+				GuiService.SelectedObject = close
+			end
+			if not Preferences.motionReduced(Preferences.read(), GuiService.ReducedMotionEnabled) then
+				panelScale.Scale = 0.98
+				local animation = TweenService:Create(panelScale, TweenInfo.new(0.12), { Scale = 1 })
+				tween = animation
+				animation:Play()
+			end
+		end
+		resize()
+	end
+	for _, object in { factory, settings, help } do
+		track(object.Activated:Connect(function()
+			setPanel(State.toggle(current, object.Name :: State.Panel), object)
+		end))
+	end
+	track(close.Activated:Connect(function()
+		setPanel(nil, nil)
+	end))
+	for object, key in { [sizeButton] = "large", [motionButton] = "reduceMotion", [labelsButton] = "labels" } do
+		track(object.Activated:Connect(function()
+			local typed = key :: "large" | "reduceMotion" | "labels"
+			Preferences.set(typed, not Preferences.value(Preferences.read(), typed))
+			changed()
+		end))
+	end
+	track(reset.Activated:Connect(function()
+		Preferences.reset()
+		changed()
+	end))
+	track(UserInputService.InputBegan:Connect(function(input: InputObject, processed: boolean)
+		if processed or UserInputService:GetFocusedTextBox() or GuiService.MenuIsOpen then
+			return
+		end
+		if current and input.KeyCode == Enum.KeyCode.ButtonB then
+			setPanel(nil, nil)
+		end
+	end))
+	track(UserInputService:GetPropertyChangedSignal("PreferredInput"):Connect(function()
+		updateControls()
+		if current and UserInputService.PreferredInput == Enum.PreferredInput.Gamepad and not GuiService.MenuIsOpen then
+			GuiService.SelectedObject = close
+		end
+	end))
+	track(gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(resize))
+	track(Players.PlayerAdded:Connect(resize))
+	track(Players.PlayerRemoving:Connect(resize))
+	for _, config in { TextChatService.ChatWindowConfiguration, TextChatService.ChatInputBarConfiguration } do
+		for _, property in { "AbsolutePosition", "AbsoluteSize", "Enabled" } do
+			track(config:GetPropertyChangedSignal(property):Connect(resize))
+		end
+	end
+	for _, object in { summary, event, title, close, factory, settings, help, feedback } do
+		track(object:GetPropertyChangedSignal("AbsoluteSize"):Connect(resize))
+	end
+	-- Native selection highlight plus explicit focus/hover states; labels are always visible.
+	for _, object in buttons do
+		track(object.SelectionGained:Connect(function()
+			object.BackgroundColor3 = Theme.Accent
+			object.TextColor3 = Theme.Background
+		end))
+		track(object.SelectionLost:Connect(function()
+			object.BackgroundColor3 = Theme.Surface
+			object.TextColor3 = Theme.Text
+		end))
+	end
+	local function refresh()
+		local values = Preferences.read()
+		sizeButton.Text = "Interface size: " .. (if values.large then "Large" else "Standard")
+		motionButton.Text = "Reduce UI motion: "
+			.. (
+				if GuiService.ReducedMotionEnabled
+					then "On (Roblox preference)"
+					elseif values.reduceMotion then "On"
+					else "Off"
+			)
+		labelsButton.Text = "Factory labels: " .. (if values.labels then "On" else "Off")
+		if tween and Preferences.motionReduced(values, GuiService.ReducedMotionEnabled) then
+			tween:Cancel()
+			tween = nil
+			panelScale.Scale = 1
+		end
+		panel.BackgroundTransparency = Theme.Transparency * GuiService.PreferredTransparency
+		for _, label in { summary, event, purchase, supply } do
+			label.BackgroundColor3 = Theme.Background
+			label.BackgroundTransparency = Theme.Transparency * GuiService.PreferredTransparency
+		end
+		resize()
+	end
+	refresh()
+	return {
+		economy = function(economy: State.Economy)
+			summary.Text = State.summary(economy)
+			factorySummary.Text = State.summary(economy)
+				.. (
+					if economy.assigned
+						then `\n{economy.count}/{#Catalogue.Definitions} owned` .. (if economy.count
+								== #Catalogue.Definitions
+							then " — income continues"
+							else "")
+						else ""
+				)
+			for _, definition in Catalogue.Definitions do
+				rows[definition.Id].Text = State.entry(definition, economy)
+				rows[definition.Id].TextColor3 = if economy.purchases[definition.Id] then Theme.Owned else Theme.Text
+			end
+		end,
+		event = function(value: string, phase: string?)
+			event.Text = value
+			event.TextColor3 = if phase == "warning"
+				then Theme.Warning
+				elseif phase == "open" then Theme.Accent
+				else Theme.Muted
+		end,
+		feedback = function(purchaseText: string, supplyText: string)
+			purchase.Text, supply.Text = purchaseText, supplyText
+			purchase.Visible, supply.Visible = purchaseText ~= "", supplyText ~= ""
+		end,
+		refresh = refresh,
+		destroy = function()
+			alive = false
+			if tween then
+				tween:Cancel()
+			end
+			if returnFocus and returnFocus:IsDescendantOf(gui) then
+				returnFocus = nil
+			end
+			restoreInput()
+			for _, connection in connections do
+				connection:Disconnect()
+			end
+		end,
+	}
+end
+
+return View
