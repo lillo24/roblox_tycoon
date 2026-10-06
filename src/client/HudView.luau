@@ -159,6 +159,8 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 	local panelScale = Instance.new("UIScale")
 	panelScale.Parent = panel
 	local alive = true
+	local summaryValue, compactSummaryValue = "Joining…", "Joining…"
+	local resizing = false
 	local buttons: { TextButton } = { factory, settings, help, close, sizeButton, motionButton, labelsButton, reset }
 	factory.NextSelectionRight, factory.NextSelectionLeft = settings, help
 	settings.NextSelectionRight, settings.NextSelectionLeft = help, factory
@@ -188,9 +190,10 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 			else `Keyboard / mouse: use a nearby prompt's {key.Name} hint or click it. Click interface buttons; scroll panels with the wheel.`
 	end
 	local function resize()
-		if not alive then
+		if not alive or resizing then
 			return
 		end
+		resizing = true
 		local factor = Preferences.scale(Preferences.read())
 		scale.Scale = factor
 		local width, height = gui.AbsoluteSize.X / factor, gui.AbsoluteSize.Y / factor
@@ -210,7 +213,13 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 				chatRight = math.max(chatRight, (config.AbsolutePosition.X + config.AbsoluteSize.X) / factor)
 			end
 		end
-		if height < 420 and width >= 600 then
+		local chatBottom = startY
+		local short = height < 420 and width >= 600
+		local nextSummary = if short then compactSummaryValue else summaryValue
+		if summary.Text ~= nextSummary then
+			summary.Text = nextSummary
+		end
+		if short then
 			startX, startY = chatRight + 12, 12
 			compactWidth = math.min(compactWidth, width - startX - 12)
 		end
@@ -232,7 +241,6 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 				UDim2.fromOffset(usable - 212, -top + listBottom), UDim2.fromOffset(108, Theme.Target)
 			help.Position, help.Size =
 				UDim2.fromOffset(usable - 96, -top + listBottom), UDim2.fromOffset(96, Theme.Target)
-			event.Position, event.Size = UDim2.fromOffset(292, 12), UDim2.fromOffset(usable - 520, 0)
 		else
 			navigation.Position, navigation.Size = UDim2.fromOffset(startX, top), UDim2.fromOffset(compactWidth, target)
 			local each = (compactWidth - 16) / 3
@@ -240,29 +248,55 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 				object.Position, object.Size =
 					UDim2.fromOffset((index - 1) * (each + 8), 0), UDim2.fromOffset(each, Theme.Target)
 			end
+		end
+		if short and current then
+			-- Leave room for a usable panel above native touch controls in landscape.
+			event.Position, event.Size =
+				UDim2.fromOffset(12, chatBottom), UDim2.fromOffset(math.max(140, math.min(280, startX - 24)), 0)
+		elseif wide then
+			event.Position, event.Size = UDim2.fromOffset(292, 12), UDim2.fromOffset(usable - 520, 0)
+		else
 			event.Position, event.Size = UDim2.fromOffset(startX, top + target + 8), UDim2.fromOffset(compactWidth, 0)
 		end
 		local bottom = math.max(top + target, event.Position.Y.Offset + event.AbsoluteSize.Y / factor) + 8
-		feedback.Position, feedback.Size =
-			UDim2.fromOffset(startX, bottom), UDim2.fromOffset(if wide then 350 else compactWidth, 0)
+		local feedbackWidth = if short and current then event.Size.X.Offset elseif wide then 350 else compactWidth
+		feedback.Size = UDim2.fromOffset(feedbackWidth, 0)
 		-- Feedback has its own bounded, noninteractive space, even with all panels closed.
-		local panelTop = bottom + (if wide then 0 else feedback.AbsoluteSize.Y / factor) + 8
+		local panelTop = if short
+			then top + target + 8
+			else bottom + (if wide then 0 else feedback.AbsoluteSize.Y / factor) + 8
+		local touchReserve = 0
+		if UserInputService.TouchEnabled then
+			touchReserve = 90 / factor
+			local playerGui = gui.Parent
+			local touchGui = if playerGui then playerGui:FindFirstChild("TouchGui") else nil
+			local jump = if touchGui then touchGui:FindFirstChild("JumpButton", true) else nil
+			if jump and jump:IsA("GuiObject") then
+				touchReserve = math.max(
+					touchReserve,
+					(gui.AbsolutePosition.Y + gui.AbsoluteSize.Y - jump.AbsolutePosition.Y) / factor
+				)
+			end
+		end
 		panel.Position = UDim2.fromOffset(startX, panelTop)
 		panel.Size = UDim2.fromOffset(
 			if width >= 600 then math.min(360, width - startX - 12) else usable,
-			math.max(80, math.min(height - panelTop - 12, height * 0.65))
+			math.max(80, math.min(height - panelTop - 12 - touchReserve, height * 0.65))
 		)
 		-- Private feedback moves to the opposite side while a wide panel is open.
 		if current then
-			feedback.Position = if wide then UDim2.fromOffset(width - 374, bottom) else UDim2.fromOffset(startX, bottom)
-			feedback.Visible = true
+			feedback.Position = if short
+				then UDim2.fromOffset(12, bottom)
+				elseif wide then UDim2.fromOffset(width - 374, bottom)
+				else UDim2.fromOffset(startX, bottom)
 		else
-			feedback.Visible = true
+			feedback.Position = UDim2.fromOffset(startX, bottom)
 		end
 		title.Position, title.Size = UDim2.fromOffset(12, 12), UDim2.new(1, -124, 0, 0)
-		close.Position, close.Size = UDim2.new(1, -104, 0, 8), UDim2.fromOffset(92, Theme.Target)
-		local header = math.max(64, title.AbsoluteSize.Y / factor + 24, close.AbsoluteSize.Y / factor + 16)
+		close.Position, close.Size = UDim2.new(1, -104, 0, 4), UDim2.fromOffset(92, Theme.Target)
+		local header = math.max(52, title.AbsoluteSize.Y / factor + 16, close.AbsoluteSize.Y / factor + 8)
 		scroll.Position, scroll.Size = UDim2.fromOffset(12, header), UDim2.new(1, -24, 1, -header - 12)
+		resizing = false
 	end
 	local function restoreInput()
 		if promptEnabled ~= nil then
@@ -396,7 +430,8 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 	refresh()
 	return {
 		economy = function(economy: State.Economy)
-			summary.Text = State.summary(economy)
+			summaryValue, compactSummaryValue = State.summary(economy), State.compactSummary(economy)
+			resize()
 			factorySummary.Text = State.summary(economy)
 				.. (
 					if economy.assigned

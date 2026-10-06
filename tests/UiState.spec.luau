@@ -61,6 +61,8 @@ return function(
 		check(string.find(State.summary(economy), `Factory {plot}`, 1, true) ~= nil, "Factory number is replicated")
 	end
 	local initial = State.economy(read)
+	check(State.compactSummary(initial) == "F6 • Cash 0 • +1/sec", "Compact row retains exact server values")
+	check(State.compactSummary(empty) == State.summary(empty), "Compact loading remains truthful")
 	check(
 		string.find(State.entry(Catalogue.ById.income_booster, initial), "Unaffordable", 1, true) ~= nil,
 		"Exact affordability"

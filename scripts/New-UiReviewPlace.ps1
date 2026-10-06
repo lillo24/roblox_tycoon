@@ -80,13 +80,31 @@ local labels = require(script.Parent.WorldLabels)(require(client.WorldLabels))
 print("UI01 EXECUTED SupplyFeedback assertions:", feedback, "UiState assertions:", ui, "WorldLabels assertions:", labels)
 '@
     [void](Add-QAItem $qa 'Script' 'RunAssertions' $runner)
+    $replicated = $scene.SelectSingleNode('/roblox/Item[@class="ReplicatedStorage"]')
+    $clientQA = Add-QAItem $replicated 'Folder' 'UI01ClientQA' ''
+    foreach ($test in @('HudLifecycle', 'HudFeedback')) {
+        [void](Add-QAItem $clientQA 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
+    }
+    [void](Add-QAItem $replicated 'RemoteEvent' 'UI01OrderQA' '')
+    $delivery = @'
+-- Disposable preview fixture only. No gameplay mutation or production mapping.
+local shared = game.ReplicatedStorage:WaitForChild("TycoonShared")
+local config, rules = require(shared.Config), require(shared.SupplyRules)
+game.ReplicatedStorage.UI01OrderQA.OnServerEvent:Connect(function(player)
+    local state = game:GetService("HttpService"):JSONDecode(game.ReplicatedStorage[rules.StateName].Value)
+    assert(state.phase ~= "idle", "UI01 feedback fixture: run during warning/open/resolved, not idle")
+    game.ReplicatedStorage[rules.FeedbackName]:FireClient(player, state.id, "UI01 receipt-before-snapshot")
+    game.ReplicatedStorage[config.FeedbackName]:FireClient(player, player:GetAttribute(config.Attributes.PlotId), "UI01 independent purchase")
+end)
+'@
+    [void](Add-QAItem $qa 'Script' 'OrderFixture' $delivery)
     $scene.Save($output)
     if ((Get-FileHash -LiteralPath $canonical -Algorithm SHA256).Hash -ne $initialHash) {
         throw 'Canonical scene changed while constructing disposable preview.'
     }
     Write-Output "Disposable UI review: $output"
     Write-Output "Canonical scene unchanged: $initialHash"
-    Write-Output 'Play executes actual SupplyFeedback/UiState production-module assertions; Output reports counts. QA exists only in this disposable place.'
+    Write-Output 'Play executes SupplyFeedback/UiState/WorldLabels assertions. UI01ClientQA contains opt-in lifecycle/delivery checks; see docs/UI_01_REVIEW.md. QA exists only in this disposable place.'
 } finally {
     Pop-Location
 }

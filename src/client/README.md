@@ -31,7 +31,11 @@ reduced motion snaps it directly to its final size.
 
 Placement uses CoreUISafeInsets and reported native chat/input bounds. Medium
 editor views stack a compact column; portrait fills the usable width. Short wide
-views move beside chat. Wide views keep the public event above the center and
+views move beside chat with an exact compact economy row. An open short panel
+moves public status/private slots to the left. Touch panels reserve at least
+90 screen pixels at the bottom and the reported native JumpButton bounds; Close
+stays outside the scrolling content. Layout writes final dimensions once and
+guards synchronous automatic-size re-entry. Wide views keep the public event above the center and
 place Settings/Help below a conservative player-list reservation. Chat/menu/CoreGui
 are never disabled. Native menus retain their priority; Escape/Start are untouched.
 Opening a panel temporarily disables `ProximityPromptService.Enabled` only for
@@ -74,3 +78,7 @@ temporary QA modules outside mapped folders. It refuses linked output locations
 and verifies the canonical scene hash. Play reports executed assertion counts.
 This generated review copy is never a canonical scene save. Exact source and
 map provenance, observations and review limits belong in the UI review evidence.
+The preview also includes opt-in `HudLifecycle` and `HudFeedback` client modules
+and an unmapped `UI01OrderQA` delivery fixture. They exercise actual HUD handlers
+without changing authoritative money; delivery must run in a non-idle phase.
+See [UI review evidence](../../docs/UI_01_REVIEW.md) for exact commands and limits.

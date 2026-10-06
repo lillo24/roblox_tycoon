@@ -72,6 +72,15 @@ function State.summary(economy: Economy): string
 	return if economy.full then "Factories full\nNo income this session" else "Joining…\nWaiting for factory state"
 end
 
+-- Short landscape views need a single compact row above the panel.
+function State.compactSummary(economy: Economy): string
+	if not economy.assigned then
+		return State.summary(economy)
+	end
+	assert(economy.plot and economy.cash and economy.income, "UI: assigned economy is incomplete")
+	return `F{economy.plot} • Cash {State.number(economy.cash)} • {State.rate(economy.income, Config.IncomeInterval)}`
+end
+
 function State.entry(definition: Catalogue.Definition, economy: Economy): string
 	local requirement = if definition.Requires then Catalogue.ById[definition.Requires].DisplayName else "None"
 	local status = "Awaiting factory"
