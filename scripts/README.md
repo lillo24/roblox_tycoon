@@ -28,7 +28,7 @@ It does not contain gameplay code or require additional packages.
   point. It uses one generated file below `build/` for a passing Roblox/Rojo
   control and five expected TypeErrors: ordinary scalar mismatch, Roblox
   property type, nullable Roblox return, resolved module value type, and frozen
-  Config assigned to writable tuning. It checks exit 1 and the expected diagnostic,
+  catalogue definition assigned to a writable record. It checks exit 1 and the expected diagnostic,
   so missing definitions cannot create a false pass. Cleanup runs in `finally`;
   source/test file hashes and the file set must remain unchanged.
 
@@ -87,8 +87,10 @@ watcher and consumes the freshly generated map. Source diagnostic failures still
 exit nonzero and stop validation.
 
 Historical coverage is precise: `GetPlayerByUserId()` returning `Player?` cannot be
-assigned to `Player`, and Rojo-imported frozen Config cannot satisfy writable
-tuning. This definition snapshot declares `LocalPlayer` and `Terrain` non-optional,
+assigned to `Player`, and a Rojo-imported frozen catalogue definition cannot satisfy
+a writable `Cost` record. The positive/module probes use the real
+`UpgradeCatalogue.ById.income_booster.Cost` API, replacing the removed Config price.
+This definition snapshot declares `LocalPlayer` and `Terrain` non-optional,
 so those exact Studio diagnostics are not replicated. Preserve their runtime
 assertions and use Studio analysis when full-place context or a discrepancy matters.
 

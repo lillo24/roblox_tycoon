@@ -3,6 +3,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Config = require(ReplicatedStorage.TycoonShared.Config)
+local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
 
 local Hud = {}
 
@@ -20,12 +21,12 @@ function Hud.start()
 	panel.Name = "Panel"
 	panel.AnchorPoint = Vector2.new(0.5, 0)
 	panel.Position = UDim2.new(0.5, 0, 0, 12)
-	panel.Size = UDim2.new(0.86, 0, 0, 90)
+	panel.Size = UDim2.new(0.86, 0, 0, 264)
 	panel.BackgroundColor3 = Color3.fromRGB(24, 28, 36)
 	panel.BackgroundTransparency = 0.12
 	panel.Parent = gui
 	local constraint = Instance.new("UISizeConstraint")
-	constraint.MaxSize = Vector2.new(320, 90)
+	constraint.MaxSize = Vector2.new(360, 264)
 	constraint.Parent = panel
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0, 8)
@@ -41,24 +42,102 @@ function Hud.start()
 	cash.Parent = panel
 	local status = Instance.new("TextLabel")
 	status.Name = "Status"
-	status.Position = UDim2.fromOffset(12, 40)
-	status.Size = UDim2.new(1, -24, 0, 42)
+	status.Position = UDim2.fromOffset(12, 36)
+	status.Size = UDim2.new(1, -24, 0, 36)
 	status.BackgroundTransparency = 1
 	status.TextColor3 = Color3.fromRGB(219, 231, 245)
 	status.Font = Enum.Font.Gotham
 	status.TextSize = 14
 	status.TextWrapped = true
 	status.Parent = panel
+	local upgradeList = Instance.new("ScrollingFrame")
+	upgradeList.Name = "UpgradeList"
+	upgradeList.Position = UDim2.fromOffset(12, 76)
+	upgradeList.Size = UDim2.new(1, -24, 0, 136)
+	upgradeList.CanvasSize = UDim2.fromOffset(0, #Catalogue.Definitions * 34)
+	upgradeList.BackgroundTransparency = 1
+	upgradeList.BorderSizePixel = 0
+	upgradeList.ScrollBarThickness = 4
+	upgradeList.ScrollingDirection = Enum.ScrollingDirection.Y
+	upgradeList.Parent = panel
+	local rows: { [Catalogue.Id]: TextLabel } = {}
+	for index, definition in Catalogue.Definitions do
+		local row = Instance.new("TextLabel")
+		row.Name = definition.Id
+		row.Position = UDim2.fromOffset(0, (index - 1) * 34)
+		row.Size = UDim2.new(1, -6, 0, 32)
+		row.BackgroundTransparency = 1
+		row.TextColor3 = Color3.fromRGB(219, 231, 245)
+		row.Font = Enum.Font.Gotham
+		row.TextSize = 12
+		row.TextWrapped = true
+		row.TextXAlignment = Enum.TextXAlignment.Left
+		row.Parent = upgradeList
+		rows[definition.Id] = row
+	end
+	local result = Instance.new("TextLabel")
+	result.Name = "PurchaseResult"
+	result.Position = UDim2.fromOffset(12, 218)
+	result.Size = UDim2.new(1, -24, 0, 34)
+	result.BackgroundTransparency = 1
+	result.TextColor3 = Color3.fromRGB(255, 223, 123)
+	result.Font = Enum.Font.GothamBold
+	result.TextSize = 14
+	result.TextWrapped = true
+	result.Text = ""
+	result.Parent = panel
+	local function resize()
+		-- Keep feedback visible on short landscape/editor viewports; scroll the list.
+		local height = math.min(264, math.max(128, gui.AbsoluteSize.Y - 24))
+		panel.Size = UDim2.new(0.86, 0, 0, height)
+		constraint.MaxSize = Vector2.new(360, height)
+		upgradeList.Size = UDim2.new(1, -24, 0, height - 128)
+		result.Position = UDim2.fromOffset(12, height - 46)
+	end
+	gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(resize)
+	local resultVersion = 0
+	local lastPlot: number? = nil
+	local lastAssigned = false
 
 	local function update()
 		local balance = player:GetAttribute(Config.Attributes.Cash)
 		local income = player:GetAttribute(Config.Attributes.IncomeRate)
 		local plot = player:GetAttribute(Config.Attributes.PlotId)
+		local assigned = player:GetAttribute(Config.Attributes.Assignment) == "Assigned"
+			and typeof(plot) == "number"
+			and typeof(balance) == "number"
+			and typeof(income) == "number"
+		local currentPlot = if assigned and typeof(plot) == "number" then plot else nil
+		if currentPlot ~= lastPlot or assigned ~= lastAssigned then
+			resultVersion += 1
+			result.Text = ""
+		end
+		lastPlot = currentPlot
+		lastAssigned = assigned
+		local purchases: Catalogue.Purchases = {}
+		local count = 0
+		for _, definition in Catalogue.Definitions do
+			local purchased = assigned and player:GetAttribute(Catalogue.purchaseAttribute(definition.Id)) == true
+			purchases[definition.Id] = purchased
+			if purchased then
+				count += 1
+			end
+		end
+		for _, definition in Catalogue.Definitions do
+			local state = if assigned and typeof(balance) == "number"
+				then Catalogue.stateText(definition, purchases, balance)
+				else "Awaiting plot"
+			local row = rows[definition.Id]
+			row.Text = `{definition.DisplayName} • {definition.Cost} cash • +{definition.IncomeDelta}/tick\n{state}`
+			row.TextColor3 = if purchases[definition.Id]
+				then Color3.fromRGB(143, 246, 164)
+				else Color3.fromRGB(219, 231, 245)
+		end
 		cash.Text = if typeof(balance) == "number" then `Cash: {balance}` else "Cash: —"
-		if typeof(plot) == "number" and typeof(income) == "number" then
-			local hint = if income == Config.UpgradedIncome
-				then "Booster active"
-				else `Income Booster: {Config.UpgradeCost} cash at your plot`
+		if assigned then
+			local hint = if count == #Catalogue.Definitions
+				then "Complete — income continues"
+				else `{count}/{#Catalogue.Definitions} owned • Choose a pad`
 			status.Text = `Plot {plot} • +{income}/sec\n{hint}`
 		else
 			status.Text = if player:GetAttribute(Config.Attributes.Assignment) == "Full"
@@ -66,13 +145,33 @@ function Hud.start()
 				else "Joining…"
 		end
 	end
+	for _, definition in Catalogue.Definitions do
+		player:GetAttributeChangedSignal(Catalogue.purchaseAttribute(definition.Id)):Connect(update)
+	end
 	for _, attribute in
 		{ Config.Attributes.Cash, Config.Attributes.IncomeRate, Config.Attributes.PlotId, Config.Attributes.Assignment }
 	do
 		player:GetAttributeChangedSignal(attribute):Connect(update)
 	end
 	update()
+	local feedback = ReplicatedStorage:WaitForChild(Config.FeedbackName, 10)
+	assert(feedback and feedback:IsA("RemoteEvent"), `Tycoon: missing feedback RemoteEvent {Config.FeedbackName}`)
+	feedback.OnClientEvent:Connect(function(resultPlot: number?, message: string)
+		-- Late results for a previous assignment cannot contaminate the new HUD.
+		if resultPlot ~= lastPlot then
+			return
+		end
+		resultVersion += 1
+		local version = resultVersion
+		result.Text = message -- Repeated identical results still refresh the lifetime.
+		task.delay(Config.FeedbackDuration, function()
+			if version == resultVersion then
+				result.Text = ""
+			end
+		end)
+	end)
 	gui.Parent = playerGui
+	resize()
 end
 
 return Hud

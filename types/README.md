@@ -24,4 +24,4 @@ This API snapshot differs from Studio: `Players.LocalPlayer` and
 diagnostics for those properties are not reproduced. Do not remove the runtime
 assertions on that basis. `Players:GetPlayerByUserId()` is optional and the
 nullable-return probe verifies rejection of `Player?` assigned to `Player`.
-The frozen Config/readonly mismatch is also rejected through Rojo resolution.
+The frozen catalogue-definition/readonly mismatch is also rejected through Rojo resolution.
