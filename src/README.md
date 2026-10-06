@@ -22,6 +22,7 @@ Round-based versus persistent/infinite progression remains unresolved.
 | `server/PlotWorld.luau` | Placement validation, temporary geometry, reconciliation of pads and purchased visuals |
 | `client/Bootstrap.client.luau` | Starts the HUD once |
 | `client/Hud.luau` | Observes purchase attributes/results and current event snapshot; deadline countdown, separate feedback, safe scrolling catalogue |
+| `client/SupplyFeedback.luau` | Supplied-time private event feedback retention, matching public identity, expiry and reset/timeout protection |
 
 No packages, persistence, exclusivity, combat, prestige, finale, or round/reset rules.
 There are separate outbound purchase/event feedback RemoteEvents, no custom
@@ -213,10 +214,34 @@ display; client zero never opens or pays. See the [Workspace time API](https://c
 
 `ReplicatedStorage/TycoonSupplyFeedback` is outbound only to the requester:
 `(currentEventId, serverMessage)`. Public result comes from the replicated snapshot,
-not arbitrary broadcasts through the purchase-only remote. Its private message
-occupies the event line, with a separate versioned timeout; new event IDs or
-assignment changes clear stale messages. Purchase feedback retains its own label
-and timeout. The HUD grows up to 300 pixels; on short viewports, at least one
+not arbitrary broadcasts through the purchase-only remote. The ID identifies the
+server's current event **at response time**, including rejection of an old prompt;
+it is not retagged with the requesting prompt's stale ID. Property replication
+may arrive before or after a RemoteEvent callback; see Roblox's
+[replication-order contract](https://create.roblox.com/docs/scripting/attributes#replication-order).
+
+`SupplyFeedback` keeps **one latest private result**, pending or displayed. A
+current-ID response displays immediately; a future response (or one received
+before the first snapshot) waits for its matching public snapshot. An intermediate
+older snapshot preserves future pending text without showing it on that event.
+Passing its ID discards it. Older responses cannot replace a newer one, including
+after that newer result expires. Same-ID phase updates preserve valid feedback.
+Only the replicated snapshot advances the public event/winner, never feedback.
+
+Pending and displayed results share the existing **three-second lifetime from
+receipt**, measured with local monotonic `os.clock()`. Matching later shows only
+the remaining lifetime; at/beyond expiry the message cannot reappear. Identical
+repeats refresh receipt/deadline and get a new timeout token. Old timeout tokens
+cannot clear new results. Retention is one record plus scalar identity/version
+state; there is no history, retry/claim resend, or per-message polling coroutine.
+The HUD attaches event feedback before waiting for purchase/state objects and
+preserves snapshot subscribe-before-read. Assignment loss/change clears retained
+results and invalidates timers; ordinary respawn retains the same assignment/HUD.
+An observed cancellation clears even future pending text. An initial idle snapshot
+and later unassigned rejection still allow "A plot is needed to claim". HUD
+destruction resets state, disconnects subscriptions and invalidates deferred work.
+Purchase feedback retains its independent label/protocol/timeout. No server,
+economy, schedule, input or layout setting changes. The HUD grows up to 300 pixels; on short viewports, at least one
 catalogue row remains scrollable below cash/status/event text and above purchase
 results. Safe-area clipping and the one respawn-retained HUD are preserved.
 
@@ -307,6 +332,42 @@ warning/open/expiry/cadence, exclusive closing boundaries, stale IDs, delayed
 frames, competing/replayed claims, exact credit without other mutation,
 inactive/full players, join/respawn/replacement/cancellation, and invalid rules/
 times/credits. Keep the original Session suite running too. Neither runs in CI.
+
+For the client presentation suite, load exact `tests/SupplyFeedback.spec.luau`
+into a temporary server ModuleScript outside the owned folders and invoke:
+
+```luau
+local ok, count = xpcall(function()
+    return require(testModule)(require(
+        game.StarterPlayer.StarterPlayerScripts.TycoonClient.SupplyFeedback
+    ))
+end, debug.traceback)
+testModule:Destroy()
+if not ok then error(count) end
+print("SupplyFeedback assertions passed:", count)
+```
+
+This executes the actual Instance-free client helper with supplied times: current,
+future and initialization feedback; intermediate/skipped snapshots; stale/multiple
+results; repeated lifetimes/old timeouts; exact expiry; same-ID phase updates;
+cancellation/assignment/teardown resets and unassigned messages. CLI/CI analysis
+does not execute it. Unchanged server-domain suites may reuse prior executed
+evidence for this client-only fix.
+
+For controlled integration ordering in a disposable Play client, temporarily
+present an older snapshot ID through the actual `TycoonSupplyState.Value` handler,
+send private feedback from the QA server for its current event, then restore the
+matching snapshot within three seconds. Verify text stays absent on the old ID
+and appears on matching delivery for only its remaining lifetime. A client-only
+temporary reparent of the state while starting a fresh HUD can test feedback
+after its listener attaches but before the first snapshot read; restore promptly.
+Use the actual HUD/RemoteEvent paths, not direct TextLabel writes. Clear fixtures
+by stopping without saving. Record these as **injected delivery order**, separately
+from natural network behavior; they do not reproduce packet loss or reward bugs.
+Also check a normal cache claim/later event, independent upgrade feedback, private
+requester-only results with two clients, controlled cancellation/assignment
+resets, a real respawn singleton and HUD teardown. Input/layout are unchanged,
+so FIX-01 adds no phone/touch/physical-device gate.
 
 For a two-player playtest, start Studio Server & Clients with two clients (or
 supported `StudioTestService:ExecuteMultiplayerTestAsync(2, testArgs)`). Observe
