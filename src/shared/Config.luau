@@ -1,14 +1,17 @@
 --!strict
 
--- Temporary GAMEPLAY-01 tuning; these values have no persistence semantics.
+-- Provisional session tuning; catalogue prices/effects live only in UpgradeCatalogue.
 return table.freeze({
 	PlotCount = 4,
 	StartingCash = 0,
 	BaseIncome = 1,
-	UpgradedIncome = 2,
-	UpgradeCost = 10,
 	IncomeInterval = 1,
 	PromptDistance = 10,
+	-- A smaller display radius lets players select one of four separated pads.
+	PurchasePromptDistance = 4,
+	RequestInterval = 0.25,
+	FeedbackDuration = 3,
+	FeedbackName = "TycoonPurchaseFeedback",
 	RuntimeName = "TycoonRuntime",
 	HudName = "TycoonHud",
 	-- World X/Z offsets from the authored spawn, in the inspected clear corridor.
@@ -24,6 +27,5 @@ return table.freeze({
 		IncomeRate = "TycoonIncomeRate",
 		Assignment = "TycoonAssignment",
 		OwnerUserId = "TycoonOwnerUserId",
-		Purchased = "TycoonUpgradePurchased",
 	}),
 })

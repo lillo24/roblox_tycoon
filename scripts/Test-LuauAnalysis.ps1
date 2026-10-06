@@ -12,8 +12,8 @@ $probePath = Join-Path $repositoryRoot 'build/typecheck-probe.luau'
 $cases = @(
     @{ Name = 'positive Roblox/Rojo control'; Exit = 0; Error = ''; Source = @'
 --!strict
-local Config = require(game:GetService("ReplicatedStorage").TycoonShared.Config)
-local cost: number = Config.UpgradeCost
+local Catalogue = require(game:GetService("ReplicatedStorage").TycoonShared.UpgradeCatalogue)
+local cost: number = Catalogue.ById.income_booster.Cost
 local player: Player? = game:GetService("Players"):GetPlayerByUserId(123)
 local part = Instance.new("Part")
 part.Size = Vector3.new(1, 1, 1)
@@ -37,16 +37,16 @@ return player
 '@ },
     @{ Name = 'Rojo-resolved module type'; Exit = 1; Error = "Expected this to be 'string', but got 'number'"; Source = @'
 --!strict
-local Config = require(game:GetService("ReplicatedStorage").TycoonShared.Config)
-local cost: string = Config.UpgradeCost
+local Catalogue = require(game:GetService("ReplicatedStorage").TycoonShared.UpgradeCatalogue)
+local cost: string = Catalogue.ById.income_booster.Cost
 return cost
 '@ },
     @{ Name = 'frozen cross-module tuning'; Exit = 1; Error = 'read-only property'; Source = @'
 --!strict
-local Config = require(game:GetService("ReplicatedStorage").TycoonShared.Config)
-type WritableTuning = { UpgradeCost: number }
-local tuning: WritableTuning = Config
-return tuning
+local Catalogue = require(game:GetService("ReplicatedStorage").TycoonShared.UpgradeCatalogue)
+type WritableDefinition = { Cost: number }
+local definition: WritableDefinition = Catalogue.ById.income_booster
+return definition
 '@ }
 )
 

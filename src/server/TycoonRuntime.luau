@@ -4,6 +4,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Config = require(ReplicatedStorage.TycoonShared.Config)
+local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
 local Session = require(script.Parent.Session)
 local PlotWorld = require(script.Parent.PlotWorld)
 
@@ -13,32 +14,60 @@ local started = false
 function TycoonRuntime.start()
 	assert(RunService:IsServer(), "Tycoon: runtime must start on the server")
 	assert(not started, "Tycoon: runtime started twice")
-	assert(Config.IncomeInterval > 0, "Tycoon: IncomeInterval must be positive")
+	local numbers: { [string]: number } = {
+		IncomeInterval = Config.IncomeInterval,
+		PromptDistance = Config.PromptDistance,
+		PurchasePromptDistance = Config.PurchasePromptDistance,
+		RequestInterval = Config.RequestInterval,
+		FeedbackDuration = Config.FeedbackDuration,
+	}
+	for field, value in numbers do
+		assert(value > 0 and value < math.huge, `Tycoon: {field} must be finite and positive`)
+	end
+	assert(
+		Config.PurchasePromptDistance <= Config.PromptDistance,
+		"Tycoon: display distance exceeds server purchase distance"
+	)
+	assert(
+		not ReplicatedStorage:FindFirstChild(Config.FeedbackName),
+		`Tycoon: reserved ReplicatedStorage/{Config.FeedbackName} already exists`
+	)
 	-- Pass a typed value snapshot; shared Config is frozen and remains presentation-safe.
 	local tuning: Session.Tuning = {
 		PlotCount = Config.PlotCount,
 		StartingCash = Config.StartingCash,
 		BaseIncome = Config.BaseIncome,
-		UpgradedIncome = Config.UpgradedIncome,
-		UpgradeCost = Config.UpgradeCost,
 	}
-	local session = Session.new(tuning)
+	local session = Session.new(tuning, Catalogue.Definitions)
 	local plots = PlotWorld.create()
+	-- Outbound only: no client purchase remote, message forwarding, or broadcast.
+	local feedback = Instance.new("RemoteEvent")
+	feedback.Name = Config.FeedbackName
+	feedback.Archivable = false
+	feedback.Parent = ReplicatedStorage
 	local active: { [number]: Player } = {}
+	local nextRequest: { [number]: number } = {}
 	started = true
 
 	local function publish(player: Player, state: Session.State)
+		for _, definition in Catalogue.Definitions do
+			player:SetAttribute(Catalogue.purchaseAttribute(definition.Id), state.purchases[definition.Id] == true)
+		end
 		player:SetAttribute(Config.Attributes.Cash, state.cash)
 		player:SetAttribute(Config.Attributes.IncomeRate, state.incomeRate)
 		player:SetAttribute(Config.Attributes.PlotId, state.plotId)
 		player:SetAttribute(Config.Attributes.Assignment, "Assigned")
+		PlotWorld.reconcile(plots[state.plotId], state.purchases, state.cash)
 	end
 
 	local function clear(player: Player)
+		player:SetAttribute(Config.Attributes.Assignment, nil)
+		for _, definition in Catalogue.Definitions do
+			player:SetAttribute(Catalogue.purchaseAttribute(definition.Id), nil)
+		end
 		player:SetAttribute(Config.Attributes.Cash, nil)
 		player:SetAttribute(Config.Attributes.IncomeRate, nil)
 		player:SetAttribute(Config.Attributes.PlotId, nil)
-		player:SetAttribute(Config.Attributes.Assignment, nil)
 	end
 
 	local function join(player: Player)
@@ -47,6 +76,7 @@ function TycoonRuntime.start()
 		end
 		assert(active[player.UserId] == nil, `Tycoon: duplicate active user {player.UserId}`)
 		clear(player)
+		active[player.UserId] = player
 		local state = session:assign(player.UserId)
 		if not state then
 			player:SetAttribute(Config.Attributes.Assignment, "Full")
@@ -55,12 +85,12 @@ function TycoonRuntime.start()
 			)
 			return
 		end
-		active[player.UserId] = player
 		PlotWorld.setOwner(plots[state.plotId], player)
 		publish(player, state)
 	end
 
 	local function leave(player: Player)
+		nextRequest[player.UserId] = nil
 		if active[player.UserId] == player then
 			active[player.UserId] = nil
 			local id = session:release(player.UserId)
@@ -71,28 +101,45 @@ function TycoonRuntime.start()
 		clear(player)
 	end
 
-	for id, plot in plots do
-		plot.prompt.Triggered:Connect(function(player: Player)
-			-- Attributes and prompt visibility are presentation, never eligibility inputs.
-			if player.Parent ~= Players or active[player.UserId] ~= player then
-				return
-			end
-			local character = player.Character
-			local root = if character then character:FindFirstChild("HumanoidRootPart") else nil
-			local humanoid = if character then character:FindFirstChildWhichIsA("Humanoid") else nil
-			if not root or not root:IsA("BasePart") or not humanoid or humanoid.Health <= 0 then
-				return
-			end
-			if (root.Position - plot.pad.Position).Magnitude > Config.PromptDistance then
-				return
-			end
-			if session:purchase(player.UserId, id) then
-				local state = session:get(player.UserId)
-				assert(state, "Tycoon: purchased assignment disappeared")
-				PlotWorld.applyUpgrade(plot)
-				publish(player, state)
-			end
-		end)
+	local function sendResult(player: Player, message: string)
+		local state = session:get(player.UserId)
+		feedback:FireClient(player, if state then state.plotId else nil, message)
+	end
+
+	for plotId, plot in plots do
+		for upgradeId, pad in plot.pads do
+			pad.prompt.Triggered:Connect(function(player: Player)
+				-- Attributes and prompt visibility are presentation, never eligibility inputs.
+				if player.Parent ~= Players or active[player.UserId] ~= player then
+					return
+				end
+				-- Bound both processing and private result messages to four attempts/sec.
+				-- Excess attempts are dropped; balance/ownership checks still decide purchases.
+				local now = os.clock()
+				if now < (nextRequest[player.UserId] or 0) then
+					return
+				end
+				nextRequest[player.UserId] = now + Config.RequestInterval
+				local character = player.Character
+				local root = if character then character:FindFirstChild("HumanoidRootPart") else nil
+				local humanoid = if character then character:FindFirstChildWhichIsA("Humanoid") else nil
+				if not root or not root:IsA("BasePart") or not humanoid or humanoid.Health <= 0 then
+					sendResult(player, "Respawn before buying")
+					return
+				end
+				if (root.Position - pad.part.Position).Magnitude > Config.PromptDistance then
+					sendResult(player, "Move closer to the pad")
+					return
+				end
+				local accepted, reason, missing = session:purchase(player.UserId, plotId, upgradeId)
+				if accepted then
+					local state = session:get(player.UserId)
+					assert(state, "Tycoon: purchased assignment disappeared")
+					publish(player, state)
+				end
+				sendResult(player, Catalogue.resultMessage(upgradeId, reason, missing))
+			end)
+		end
 	end
 	Players.PlayerAdded:Connect(join)
 	Players.PlayerRemoving:Connect(leave)
@@ -113,8 +160,9 @@ function TycoonRuntime.start()
 		session:accrue(ticks)
 		for userId, player in active do
 			local state = session:get(userId)
-			assert(state, `Tycoon: active user {userId} has no session state`)
-			publish(player, state)
+			if state then
+				publish(player, state)
+			end -- Full-capacity players have no economy.
 		end
 	end)
 end

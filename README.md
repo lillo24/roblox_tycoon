@@ -1,8 +1,9 @@
 # roblox_tycoon
 
-An early-stage Roblox multiplayer tycoon. The first playable slice assigns a
-temporary plot, accrues session cash, and lets its owner buy one Income Booster.
-A small HUD observes server state. The existing Studio-authored scene is preserved;
+An early-stage Roblox multiplayer tycoon. Each owner has a temporary plot and
+session cash, and can choose the order of four one-time upgrades. This catalogue
+is a reversible prototype experiment with provisional costs/effects. A compact
+HUD observes server state and private purchase results. The Studio-authored scene is preserved;
 prototype plots and UI are generated only during Play. See [gameplay behavior,
 tuning, source responsibilities, and QA](src/README.md).
 
@@ -98,8 +99,10 @@ See the [official Rojo installation guide](https://rojo.space/docs/v7/getting-st
    ```
 
    Walk toward world +Z from spawn to the four colored plots. Your HUD identifies
-   your plot; its yellow pad sells the booster for 10 cash. Cash starts at 0,
-   grows by 1/sec, and grows by 2/sec after purchase. These are prototype values.
+   your plot. Approach a labeled pad to select its built-in prompt. Income Booster
+   still costs 10 cash and raises income from 1 to 2/sec. Workshop is another
+   initial option; each unlocks a follow-up. The HUD explains locked, unaffordable,
+   affordable, and owned states. See `src/README.md` for the provisional catalogue.
 7. Stop the playtest and run the CLI checks below before committing changes.
    Save scene changes in edit mode to `place/tycoon.rbxlx` and commit the snapshot
    with the source changes; scratch places and generated builds remain ignored.
@@ -120,7 +123,8 @@ and task worktree. Do not push implementation changes directly to `main`.
 Filesystem/Git is authoritative for these three code folders. Keep them reserved
 for repository content: Rojo may remove unknown instances **inside these folders**
 so they match disk. Edit synced code on disk; Studio edits are not written back.
-The shared folder contains prototype tuning in `Config.luau`; `.gitkeep` remains
+The shared folder contains general tuning in `Config.luau` and the typed, validated
+upgrade source of truth in `UpgradeCatalogue.luau`; `.gitkeep` remains
 as the original directory marker.
 
 Studio is authoritative for all other world/UI/art content for now. The project
@@ -214,5 +218,5 @@ dashboard and API; the temporary server was stopped after checking it. Routing
 container preservation flags and Git's build-output ignore rule were checked.
 Current remote validation results are recorded in PR checks and GitHub Actions.
 
-Wally, packages, gameplay frameworks, persistence, custom remotes, binary assets,
+Wally, packages, gameplay frameworks, persistence, custom purchase remotes, binary assets,
 Git LFS, and publishing automation are deferred until there is an actual need.

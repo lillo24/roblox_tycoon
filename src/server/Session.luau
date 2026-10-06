@@ -1,12 +1,11 @@
 --!strict
 
 -- Server-only session state. No Instances, player attributes, timers, or persistence.
+local Catalogue = require(game:GetService("ReplicatedStorage").TycoonShared.UpgradeCatalogue)
 export type Tuning = {
 	read PlotCount: number,
 	read StartingCash: number,
 	read BaseIncome: number,
-	read UpgradedIncome: number,
-	read UpgradeCost: number,
 }
 
 export type State = {
@@ -14,7 +13,7 @@ export type State = {
 	plotId: number,
 	cash: number,
 	incomeRate: number,
-	purchased: boolean,
+	purchases: Catalogue.Purchases,
 }
 
 local Session = {}
@@ -22,24 +21,26 @@ Session.__index = Session
 
 type Data = {
 	tuning: Tuning,
+	definitions: { [string]: Catalogue.Definition },
 	states: { [number]: State },
 	owners: { [number]: number },
 }
 export type Session = typeof(setmetatable({} :: Data, Session))
 
-function Session.new(tuning: Tuning): Session
+function Session.new(tuning: Tuning, definitions: { Catalogue.Definition }): Session
 	assert(tuning.PlotCount > 0 and tuning.PlotCount % 1 == 0, "Tycoon: PlotCount must be a positive integer")
 	assert(
 		tuning.StartingCash >= 0 and tuning.StartingCash % 1 == 0,
 		"Tycoon: StartingCash must be a nonnegative integer"
 	)
 	assert(tuning.BaseIncome > 0 and tuning.BaseIncome % 1 == 0, "Tycoon: BaseIncome must be a positive integer")
-	assert(
-		tuning.UpgradedIncome > tuning.BaseIncome and tuning.UpgradedIncome % 1 == 0,
-		"Tycoon: invalid UpgradedIncome"
-	)
-	assert(tuning.UpgradeCost > 0 and tuning.UpgradeCost % 1 == 0, "Tycoon: UpgradeCost must be a positive integer")
-	return setmetatable({ tuning = tuning, states = {}, owners = {} }, Session)
+	local byId = Catalogue.validate(definitions)
+	local snapshot = table.freeze({
+		PlotCount = tuning.PlotCount,
+		StartingCash = tuning.StartingCash,
+		BaseIncome = tuning.BaseIncome,
+	})
+	return setmetatable({ tuning = snapshot, definitions = byId, states = {}, owners = {} }, Session)
 end
 
 function Session.get(self: Session, userId: number): State?
@@ -58,7 +59,7 @@ function Session.assign(self: Session, userId: number): State?
 				plotId = plotId,
 				cash = self.tuning.StartingCash,
 				incomeRate = self.tuning.BaseIncome,
-				purchased = false,
+				purchases = {},
 			}
 			self.owners[plotId] = userId
 			self.states[userId] = state
@@ -86,24 +87,39 @@ function Session.accrue(self: Session, ticks: number)
 end
 
 -- No yields: eligibility, deduction, and application form one server transaction.
-function Session.purchase(self: Session, userId: number, plotId: number): (boolean, string)
+-- Returns accepted, reason, missing cash (zero for other results). IDs resolve on
+-- the server; neither price nor effect is supplied by the caller.
+function Session.purchase(
+	self: Session,
+	userId: number,
+	plotId: number,
+	upgradeId: string
+): (boolean, Catalogue.PurchaseReason, number)
 	local state = self.states[userId]
 	if not state then
-		return false, "inactive"
+		return false, "inactive", 0
 	end
 	if state.plotId ~= plotId or self.owners[plotId] ~= userId then
-		return false, "not-owner"
+		return false, "not-owner", 0
 	end
-	if state.purchased then
-		return false, "already-purchased"
+	local definition = self.definitions[upgradeId]
+	if not definition then
+		return false, "unknown-upgrade", 0
 	end
-	if state.cash < self.tuning.UpgradeCost then
-		return false, "insufficient-cash"
+	local availability, missing = Catalogue.availability(definition, state.purchases, state.cash)
+	if availability == "purchased" then
+		return false, "already-purchased", 0
 	end
-	state.cash -= self.tuning.UpgradeCost
-	state.purchased = true
-	state.incomeRate = self.tuning.UpgradedIncome
-	return true, "purchased"
+	if availability == "locked" then
+		return false, "locked", 0
+	end
+	if availability == "unaffordable" then
+		return false, "insufficient-cash", missing
+	end
+	state.cash -= definition.Cost
+	state.purchases[definition.Id] = true
+	state.incomeRate += definition.IncomeDelta
+	return true, "purchased", 0
 end
 
 return Session
