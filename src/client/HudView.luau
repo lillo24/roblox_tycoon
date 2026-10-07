@@ -160,6 +160,7 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 	panelScale.Parent = panel
 	local alive = true
 	local summaryValue, compactSummaryValue = "Joining…", "Joining…"
+	local eventValue, compactEventValue = event.Text, event.Text
 	local resizing = false
 	local buttons: { TextButton } = { factory, settings, help, close, sizeButton, motionButton, labelsButton, reset }
 	factory.NextSelectionRight, factory.NextSelectionLeft = settings, help
@@ -215,12 +216,18 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 		end
 		local chatBottom = startY
 		local short = height < 420 and width >= 600
+		-- The marker hint is repeated in Help; keep short views on the public status line.
+		local nextEvent = if short then compactEventValue else eventValue
+		if event.Text ~= nextEvent then
+			event.Text = nextEvent
+		end
 		local nextSummary = if short then compactSummaryValue else summaryValue
 		if summary.Text ~= nextSummary then
 			summary.Text = nextSummary
 		end
 		if short then
-			startX, startY = chatRight + 12, 12
+			-- Collapsed chat can be very narrow; still reserve a readable message column.
+			startX, startY = math.max(chatRight + 12, 304), 12
 			compactWidth = math.min(compactWidth, width - startX - 12)
 		end
 		summary.Position, summary.Size =
@@ -249,7 +256,7 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 					UDim2.fromOffset((index - 1) * (each + 8), 0), UDim2.fromOffset(each, Theme.Target)
 			end
 		end
-		if short and current then
+		if short then
 			-- Leave room for a usable panel above native touch controls in landscape.
 			event.Position, event.Size =
 				UDim2.fromOffset(12, chatBottom), UDim2.fromOffset(math.max(140, math.min(280, startX - 24)), 0)
@@ -259,7 +266,7 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 			event.Position, event.Size = UDim2.fromOffset(startX, top + target + 8), UDim2.fromOffset(compactWidth, 0)
 		end
 		local bottom = math.max(top + target, event.Position.Y.Offset + event.AbsoluteSize.Y / factor) + 8
-		local feedbackWidth = if short and current then event.Size.X.Offset elseif wide then 350 else compactWidth
+		local feedbackWidth = if short then event.Size.X.Offset elseif wide then 350 else compactWidth
 		feedback.Size = UDim2.fromOffset(feedbackWidth, 0)
 		-- Feedback has its own bounded, noninteractive space, even with all panels closed.
 		local panelTop = if short
@@ -290,7 +297,7 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 				elseif wide then UDim2.fromOffset(width - 374, bottom)
 				else UDim2.fromOffset(startX, bottom)
 		else
-			feedback.Position = UDim2.fromOffset(startX, bottom)
+			feedback.Position = UDim2.fromOffset(if short then 12 else startX, bottom)
 		end
 		title.Position, title.Size = UDim2.fromOffset(12, 12), UDim2.new(1, -124, 0, 0)
 		close.Position, close.Size = UDim2.new(1, -104, 0, 4), UDim2.fromOffset(92, Theme.Target)
@@ -447,7 +454,9 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 			end
 		end,
 		event = function(value: string, phase: string?)
-			event.Text = value
+			eventValue = value
+			compactEventValue = if phase then string.match(value, "^[^\n]+") or value else value
+			resize()
 			event.TextColor3 = if phase == "warning"
 				then Theme.Warning
 				elseif phase == "open" then Theme.Accent
