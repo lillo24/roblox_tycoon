@@ -160,7 +160,14 @@ game.ReplicatedStorage.UI01OrderQA.OnServerEvent:Connect(function(player)
 end)
 '@
     [void](Add-QAItem $qa 'Script' 'OrderFixture' $delivery)
-    $scene.Save($output)
+    # Studio's place reader rejects a leading XML declaration, including one
+    # inherited from an authored scene. Normalize only the disposable output.
+    $xmlSettings = [System.Xml.XmlWriterSettings]::new()
+    $xmlSettings.OmitXmlDeclaration = $true
+    $xmlSettings.Indent = $true
+    $xmlSettings.Encoding = [Text.UTF8Encoding]::new($false)
+    $xmlWriter = [System.Xml.XmlWriter]::Create($output, $xmlSettings)
+    try { $scene.Save($xmlWriter) } finally { $xmlWriter.Dispose() }
     if ((Get-FileHash -LiteralPath $canonical -Algorithm SHA256).Hash -ne $initialHash) {
         throw 'Canonical scene changed while constructing disposable preview.'
     }

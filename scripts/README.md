@@ -10,10 +10,16 @@ It does not contain gameplay code or require additional packages.
   hash. Run from the checkout whose scene/runtime you intend to review; default
   output is `ui-review-main.rbxlx`, or use `-OutputName ui-review-map.rbxlx` in an
   isolated map compatibility checkout. This helper never saves a canonical scene.
+  Disposable output omits the XML declaration because Studio's place reader
+  rejects that header even when the authored input is valid general-purpose XML.
   Opt-in HUD tests use `UI01ClientQA/RunClientAssertions`, cloned into the Play
   client's PlayerScripts. Direct command-bar module requires have a separate
   module cache. Keep the runner until Stop Play so its recreated HUD connections
   remain alive; see `docs/UI_01_REVIEW.md` for the exact route.
+  `UI01ClientQA/RunDisplayFixture` is an opt-in LocalScript for labelled synthetic
+  large balances, long names and independent messages in the actual HudView.
+  It checks safe-area Close, short-view panel separation and native jump clearance;
+  it never writes economy attributes. Stop Play removes all QA instances.
 
 - `Get-ValidationScope.ps1` returns whether the complete CLI suite is required:
   manual runs always require it, while PRs skip it only when every changed file is
