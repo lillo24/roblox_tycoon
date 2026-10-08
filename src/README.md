@@ -22,7 +22,7 @@ Round-based versus persistent/infinite progression remains unresolved.
 | `server/MapLayout.luau` | Saved-map contract, support/obstacle preflight and oriented footprint clearance |
 | `server/PlotWorld.luau` | Local-frame equipment/pads/signs and purchase reconciliation on saved foundations |
 | `client/Bootstrap.client.luau` | Starts the HUD once |
-| `client/Hud.luau` | Observes purchase attributes/results and current event snapshot; deadline countdown, separate feedback, safe scrolling catalogue |
+| `client/Hud.luau` | Composes the compact interface, read-only subscriptions, independent feedback lifetimes and teardown; see [client module map](client/README.md) |
 | `client/SupplyFeedback.luau` | Supplied-time private event feedback retention, matching public identity, expiry and reset/timeout protection |
 
 No packages, persistence, exclusivity, combat, prestige, finale, or round/reset rules.
@@ -92,11 +92,9 @@ Server-written presentation attributes:
 The old `TycoonUpgradePurchased` attribute and Config's `UpgradeCost`/
 `UpgradedIncome` fields are removed; all call sites and type probes use the new
 catalogue API. HUD ownership comes from purchased IDs, never an inferred rate.
-On short viewports the catalogue scrolls while cash/income/results remain visible
-inside the safe area. On wide safe areas (width > 1.5 × height), the same HUD uses
-a left anchor at (12,12) and 320px maximum width so the touch-active catalogue
-does not cover central world prompts. Portrait retains its centered 360px maximum.
-Contents, scrolling, feedback lifetime and respawn behavior are unchanged. Assignment loss/change clears stale feedback and upgrade presentation. Respawns
+The optional Factory panel starts closed and scrolls on bounded viewports.
+The compact HUD observes current cash/income/identity, event status and independent
+private feedback even with the Factory panel closed. Assignment loss/change clears stale feedback and upgrade presentation. Respawns
 preserve the session and one `ResetOnSpawn = false` safe-area HUD. Disconnect
 removes every purchase, resets visuals/pads, and clears attributes/throttle state.
 The next join can reuse the plot with a fresh economy. Full capacity still has no
@@ -249,10 +247,12 @@ results and invalidates timers; ordinary respawn retains the same assignment/HUD
 An observed cancellation clears even future pending text. An initial idle snapshot
 and later unassigned rejection still allow "A plot is needed to claim". HUD
 destruction resets state, disconnects subscriptions and invalidates deferred work.
-Purchase feedback retains its independent label/protocol/timeout. No server,
-economy, schedule, input or layout setting changes. The HUD grows up to 300 pixels; on short viewports, at least one
-catalogue row remains scrollable below cash/status/event text and above purchase
-results. Safe-area clipping and the one respawn-retained HUD are preserved.
+Purchase feedback retains its independent label/protocol/timeout. UI-01 replaces
+the expanded prototype catalogue with a compact HUD and optional panels, preserving
+these FIX-01 invariants and the one respawn-retained HUD. See the
+[client interface contract](client/README.md) for session preferences, native input,
+accessibility, responsive placement and scoped world labels. Server economy and
+event scheduling are unchanged.
 
 ### Shared scene location and design limits
 
