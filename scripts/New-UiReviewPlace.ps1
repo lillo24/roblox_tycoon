@@ -68,7 +68,7 @@ try {
     }
     $server = $scene.SelectSingleNode('/roblox/Item[@class="ServerScriptService"]')
     $qa = Add-QAItem $server 'Folder' 'UI01QA' ''
-    foreach ($test in @('SupplyFeedback', 'UiState', 'WorldLabels')) {
+    foreach ($test in @('SupplyFeedback', 'UiState', 'WorldLabels', 'PlayerGuidance')) {
         [void](Add-QAItem $qa 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
     }
     $runner = @'
@@ -78,11 +78,12 @@ local feedback = require(script.Parent.SupplyFeedback)(require(client.SupplyFeed
 local ui = require(script.Parent.UiState)(require(client.UiState), require(client.UiPreferences), require(shared.Config), require(shared.UpgradeCatalogue))
 local labels = require(script.Parent.WorldLabels)(require(client.WorldLabels))
 print("UI01 EXECUTED SupplyFeedback assertions:", feedback, "UiState assertions:", ui, "WorldLabels assertions:", labels)
+print("UX02 EXECUTED guidance/readiness assertions:", require(script.Parent.PlayerGuidance)())
 '@
     [void](Add-QAItem $qa 'Script' 'RunAssertions' $runner)
     $replicated = $scene.SelectSingleNode('/roblox/Item[@class="ReplicatedStorage"]')
     $clientQA = Add-QAItem $replicated 'Folder' 'UI01ClientQA' ''
-    foreach ($test in @('HudLifecycle', 'HudFeedback')) {
+    foreach ($test in @('HudLifecycle', 'HudFeedback', 'HudReadiness')) {
         [void](Add-QAItem $clientQA 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
     }
     $clientRunner = @'
@@ -93,6 +94,7 @@ local qa = game.ReplicatedStorage:WaitForChild("UI01ClientQA")
 local hud, preferences = require(client.Hud), require(client.UiPreferences)
 print("UI01 ACTUAL lifecycle assertions:", require(qa.HudLifecycle)(hud, preferences))
 print("UI01 ACTUAL ordering assertions:", require(qa.HudFeedback)(hud, game.ReplicatedStorage.UI01OrderQA))
+print("UX02 ACTUAL HUD readiness assertions:", require(qa.HudReadiness)(hud))
 -- Keep this caller alive until Stop Play: destroying the script also disconnects
 -- engine connections created by the recreated HUD in this script's context.
 '@
@@ -173,7 +175,7 @@ end)
     }
     Write-Output "Disposable UI review: $output"
     Write-Output "Canonical scene unchanged: $initialHash"
-    Write-Output 'Play executes SupplyFeedback/UiState/WorldLabels assertions. UI01ClientQA contains opt-in lifecycle/delivery checks; see docs/UI_01_REVIEW.md. QA exists only in this disposable place.'
+    Write-Output 'Play executes SupplyFeedback/UiState/WorldLabels/PlayerGuidance assertions. UI01ClientQA contains opt-in lifecycle/delivery/readiness checks. See docs/UX_02_REVIEW.md. QA exists only in this disposable place.'
 } finally {
     Pop-Location
 }

@@ -10,6 +10,12 @@ Studio scene; ownership, equipment, prompts and UI are created only during Play.
 See [the MAP-01 checkpoint and visual review](place/MAP_01_REVIEW.md). See [gameplay behavior,
 tuning, source responsibilities, and QA](src/README.md).
 
+The **combined draft** includes MAP-01, UI-01 and UX-02 factory guidance,
+first-purchase hints and recoverable startup states. Use the
+[UX-02 preview and consolidated QA checkpoint](docs/UX_02_REVIEW.md) for current
+startup/review instructions. The source review packets retain historical evidence;
+final approval and consolidation belong to this combined checkpoint.
+
 ## Prerequisites
 
 - [Git](https://git-scm.com/downloads), installed separately.

@@ -11,6 +11,9 @@ native world prompts and the atomic Supply Cache snapshot remain authoritative.
 | `UiState.luau` | Exact number/rate formatting and read-only economy/catalogue/event presentation |
 | `UiPreferences.luau` | Session-only preferences, separate from HUD/character lifetime |
 | `UiTheme.luau` | Colors, typography, spacing and touch target tokens |
+| `FactoryGuidance.luau` | One local entrance marker, ownership-checked target, camera-relative direction/distance and arrival/loss cleanup |
+| `Onboarding.luau` | First-purchase hint and completion/dismissal retained in client-session module memory |
+| `RuntimeBindings.luau` | Ordered runtime subscriptions, bounded startup deadline, diagnostics and late replacement recovery |
 | `WorldLabels.luau` | Scoped local styling/visibility adapters for known factory labels in both PlotWorld hierarchies |
 | `SupplyFeedback.luau` | FIX-01 supplied-time retention, snapshot matching, expiry and timeout invalidation |
 
@@ -19,6 +22,39 @@ identity and public event status. Factory starts closed. It lists actual ownersh
 costs, income effects, prerequisites and availability; purchases use world pads.
 Help explains the existing loop and session reset, with hints from actual prompt
 keys and the current preferred input. No menu pauses the shared game.
+
+Factory's Find my factory closes the panel and resolves `FactoryHub/Lots/Lot{id}/Entrance`
+only after `TycoonRuntime/Plot{id}` has matching PlotId and local OwnerUserId.
+The local occluded marker is separate from ambient ownership labels. A stationary
+HUD cue gives camera-relative Ahead/Behind/Left/Right and horizontal stud distance
+even when the entrance is offscreen. Stop guidance is available in the cue and
+Factory. Arrival within 8 horizontal studs and 10 vertical studs retires it.
+Assignment/ownership loss, target replacement/destruction and teardown clear it.
+Respawn reuses the single helper and waits for the new character. Fixed-name
+lookups run at 4 Hz only while requested; no Workspace scans, camera movement,
+walking, teleportation or remotes are added. Missing anchors show locating, then
+unavailable after 10 seconds with a developer diagnostic; late replication recovers.
+Panels pause the world cue. The optional `world` argument supports isolated engine
+fixtures; production resolves the actual Workspace.
+
+The optional hint uses any server-written valid catalogue purchase, including one
+present at initialization. Completion acknowledges for four seconds, then retires.
+Dismissal/completion survive HUD recreation and respawn. Reset interface settings
+does not replay it. Help explicitly reopens guidance, including completed-player
+reminders. Full/unassigned states and open panels hide the card. Private results
+take its space immediately; warning/open/result phases pause onboarding. Requested
+navigation uses the same card in the closed panel's bounded space. Text scrolls;
+Dismiss/Stop stays outside that content. No additional animation is used.
+
+The shell renders before runtime feedback/event data. RuntimeBindings attaches
+supply feedback, purchase feedback, then subscribes to/reads the snapshot. One
+10-second deadline from HUD creation changes absent dependencies/assignment to
+unavailable, with exact paths/reasons in developer logs. Owned root child/name
+listeners recover expected late/replacement instances without polling/retry loops.
+Missing event data leaves known cash/rate intact. Wrong classes, duplicate named
+dependencies, malformed JSON/snapshot fields and invalid economy attributes surface
+unavailable status; valid later data recovers. Only external JSON decoding is caught.
+Internal helper/view errors fail normally. Full capacity remains factual with no queue.
 
 Factory, Settings and Help share one bounded scrollable panel and an explicit
 Close button. Buttons use `Activated`, wrapped text, automatic height and a
@@ -89,3 +125,8 @@ them in the live client's module context, and keep it until Stop Play. Studio
 command-bar requires have a separate preference cache; destroying the runner
 also disconnects the recreated HUD's engine connections in that caller context.
 See [UI review evidence](../../docs/UI_01_REVIEW.md) for exact commands and limits.
+The current combined continuation is [UX-02](../../docs/UX_02_REVIEW.md).
+PlayerGuidance tests isolated ownership/anchor fixtures, cues, hint completion and
+binding recovery. HudReadiness uses client-only held/replacement snapshots for
+the real ten-second timeout, malformed JSON, late recovery and teardown, without
+changing server cash. They are unmapped and execute only in disposable previews.

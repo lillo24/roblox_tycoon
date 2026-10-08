@@ -20,6 +20,11 @@ It does not contain gameplay code or require additional packages.
   large balances, long names and independent messages in the actual HudView.
   It checks safe-area Close, short-view panel separation and native jump clearance;
   it never writes economy attributes. Stop Play removes all QA instances.
+  UX-02 also runs `PlayerGuidance.spec` automatically in Play and adds
+  `HudReadiness.spec` to the opt-in client runner (about 11 seconds for the real
+  timeout). Generate the combined checkout with
+  `./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-ux-02.rbxlx`.
+  See `docs/UX_02_REVIEW.md` for current provenance and consolidated QA.
 
 - `Get-ValidationScope.ps1` returns whether the complete CLI suite is required:
   manual runs always require it, while PRs skip it only when every changed file is

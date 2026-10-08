@@ -15,6 +15,7 @@ export type Economy = {
 	full: boolean,
 	purchases: Catalogue.Purchases,
 	count: number,
+	unavailable: string?,
 }
 
 function State.number(value: number): string
@@ -37,18 +38,40 @@ end
 function State.economy(read: (string) -> any): Economy
 	local cash, income, plot =
 		read(Config.Attributes.Cash), read(Config.Attributes.IncomeRate), read(Config.Attributes.PlotId)
-	local assigned = read(Config.Attributes.Assignment) == "Assigned"
+	local assignment = read(Config.Attributes.Assignment)
+	local issue: string? = nil
+	local numeric: { [string]: any } = { Cash = cash, IncomeRate = income, PlotId = plot }
+	for name, value in numeric do
+		if value ~= nil and (typeof(value) ~= "number" or value ~= value or value < 0 or value >= math.huge) then
+			issue = `Invalid {name} attribute`
+		end
+	end
+	if typeof(plot) == "number" and (plot < 1 or plot % 1 ~= 0) then
+		issue = "Invalid PlotId attribute"
+	end
+	if assignment ~= nil and assignment ~= "Assigned" and assignment ~= "Full" then
+		issue = "Invalid assignment attribute"
+	end
+	local assigned = assignment == "Assigned"
 		and typeof(cash) == "number"
 		and typeof(income) == "number"
 		and typeof(plot) == "number"
+		and issue == nil
 	local purchases: Catalogue.Purchases = {}
 	local count = 0
 	for _, definition in Catalogue.Definitions do
-		local owned = assigned and read(Catalogue.purchaseAttribute(definition.Id)) == true
+		local value = read(Catalogue.purchaseAttribute(definition.Id))
+		if value ~= nil and typeof(value) ~= "boolean" then
+			issue = `Invalid purchase attribute {definition.Id}`
+		end
+		local owned = assigned and value == true
 		purchases[definition.Id] = owned
 		if owned then
 			count += 1
 		end
+	end
+	if issue then
+		assigned, purchases, count = false, {}, 0
 	end
 	return {
 		assigned = assigned,
@@ -58,6 +81,7 @@ function State.economy(read: (string) -> any): Economy
 		full = read(Config.Attributes.Assignment) == "Full",
 		purchases = purchases,
 		count = count,
+		unavailable = issue,
 	}
 end
 
@@ -69,7 +93,47 @@ function State.summary(economy: Economy): string
 			Config.IncomeInterval
 		)}`
 	end
+	if economy.unavailable then
+		return "Factory state unavailable\nHelp and Settings remain available"
+	end
 	return if economy.full then "Factories full\nNo income this session" else "Joining…\nWaiting for factory state"
+end
+
+-- Validate the external atomic snapshot before its fields reach SupplyFeedback.
+-- JSON syntax errors are handled at the decoding boundary, not around the HUD.
+function State.snapshot(value: any): (Rules.Snapshot?, string?)
+	if typeof(value) ~= "table" then
+		return nil, "expected snapshot object"
+	end
+	for _, key in { "id", "opensAt", "closesAt", "nextOpensAt", "deadline", "reward" } do
+		local field = value[key]
+		if typeof(field) ~= "number" or field ~= field or field < 0 or field >= math.huge then
+			return nil, `invalid snapshot {key}`
+		end
+	end
+	if value.id % 1 ~= 0 or value.reward % 1 ~= 0 or value.reward <= 0 then
+		return nil, "invalid snapshot id/reward"
+	end
+	if not table.find({ "idle", "waiting", "warning", "open", "result" }, value.phase) then
+		return nil, "invalid snapshot phase"
+	end
+	if
+		value.winnerUserId ~= nil
+		and (
+			typeof(value.winnerUserId) ~= "number"
+			or value.winnerUserId % 1 ~= 0
+			or math.abs(value.winnerUserId) >= math.huge
+		)
+	then
+		return nil, "invalid snapshot winnerUserId"
+	end
+	if value.winnerName ~= nil and typeof(value.winnerName) ~= "string" then
+		return nil, "invalid snapshot winnerName"
+	end
+	if (value.winnerUserId == nil) ~= (value.winnerName == nil) then
+		return nil, "incomplete snapshot winner"
+	end
+	return value :: Rules.Snapshot, nil
 end
 
 -- Short landscape views need a single compact row above the panel.

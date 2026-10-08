@@ -17,9 +17,12 @@ export type Handle = {
 	economy: (State.Economy) -> (),
 	event: (string, string?) -> (),
 	feedback: (string, string) -> (),
+	guidance: (string, boolean, boolean) -> (),
+	context: (string, boolean, string, string) -> (),
 	refresh: () -> (),
 	destroy: () -> (),
 }
+export type Actions = { find: () -> (), stop: () -> (), dismiss: () -> (), restart: () -> (), panel: (boolean) -> () }
 
 local function list(parent: Instance, gap: number)
 	local layout = Instance.new("UIListLayout")
@@ -68,7 +71,7 @@ local function button(parent: Instance, name: string, value: string): TextButton
 	return object
 end
 
-function View.new(gui: ScreenGui, changed: () -> ()): Handle
+function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 	local connections: { RBXScriptConnection } = {}
 	local function track(connection: RBXScriptConnection)
 		table.insert(connections, connection)
@@ -119,16 +122,22 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 	end
 	local factorySummary = text(pages.Factory, "FactorySummary", "")
 	factorySummary.LayoutOrder = 1
+	local find = button(pages.Factory, "FindFactory", "Find my factory")
+	find.LayoutOrder = 2
+	local location = text(pages.Factory, "Location", "")
+	location.LayoutOrder = 3
+	local readiness = text(pages.Factory, "Readiness", "")
+	readiness.LayoutOrder = 4
 	text(
 		pages.Factory,
 		"PurchaseHelp",
 		"Information only. Buy at nearby world pads; this panel does not pause production."
 	).LayoutOrder =
-		2
+		5
 	local rows: { [Catalogue.Id]: TextLabel } = {}
 	for index, definition in Catalogue.Definitions do
 		local row = text(pages.Factory, definition.Id, "")
-		row.LayoutOrder = index + 2
+		row.LayoutOrder = index + 5
 		rows[definition.Id] = row
 	end
 	text(pages.Settings, "Session", "Applies to this session. Changes take effect immediately; the game keeps running.").LayoutOrder =
@@ -152,6 +161,21 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 	helpText.LayoutOrder = 1
 	local controls = text(pages.Help, "Controls", "")
 	controls.LayoutOrder = 2
+	local helpGuidance = text(pages.Help, "GuidanceHelp", "")
+	helpGuidance.LayoutOrder = 3
+	local restart = button(pages.Help, "RestartGuidance", "Show purchase guidance")
+	restart.LayoutOrder = 4
+	local optional = frame(root, "Guidance")
+	optional.Visible, optional.Active, optional.ClipsDescendants = false, true, true
+	local optionalScroll = Instance.new("ScrollingFrame")
+	optionalScroll.Name, optionalScroll.BackgroundTransparency, optionalScroll.BorderSizePixel = "Text", 1, 0
+	optionalScroll.AutomaticCanvasSize, optionalScroll.CanvasSize = Enum.AutomaticSize.Y, UDim2.new()
+	optionalScroll.ScrollingDirection, optionalScroll.ScrollBarThickness = Enum.ScrollingDirection.Y, 4
+	optionalScroll.Active, optionalScroll.Selectable, optionalScroll.Parent = true, true, optional
+	local optionalText = text(optionalScroll, "Hint", "")
+	optionalText.Size = UDim2.new(1, -8, 0, 0)
+	local dismiss = button(optional, "DismissGuidance", "Dismiss hint")
+	local optionalAllowed, optionalActive = false, false
 	local current: State.Panel? = nil
 	local returnFocus: GuiObject? = nil
 	local promptEnabled: boolean? = nil
@@ -162,10 +186,15 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 	local summaryValue, compactSummaryValue = "Joining…", "Joining…"
 	local eventValue, compactEventValue = event.Text, event.Text
 	local resizing = false
-	local buttons: { TextButton } = { factory, settings, help, close, sizeButton, motionButton, labelsButton, reset }
+	local buttons: { TextButton } =
+		{ factory, settings, help, close, find, restart, dismiss, sizeButton, motionButton, labelsButton, reset }
 	factory.NextSelectionRight, factory.NextSelectionLeft = settings, help
 	settings.NextSelectionRight, settings.NextSelectionLeft = help, factory
 	help.NextSelectionRight, help.NextSelectionLeft = factory, settings
+	find.NextSelectionUp, find.NextSelectionDown = close, scroll
+	restart.NextSelectionUp, restart.NextSelectionDown = scroll, close
+	optionalScroll.NextSelectionDown, dismiss.NextSelectionUp = dismiss, optionalScroll
+	dismiss.NextSelectionDown = factory
 	for index, object in { sizeButton, motionButton, labelsButton, reset } do
 		local settingsControls = { sizeButton, motionButton, labelsButton, reset }
 		object.NextSelectionUp = if index == 1 then close else settingsControls[index - 1]
@@ -290,6 +319,13 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 			if width >= 600 then math.min(360, width - startX - 12) else usable,
 			math.max(80, math.min(height - panelTop - 12 - touchReserve, height * 0.65))
 		)
+		-- Reuse the closed panel's bounded space. Explicit navigation takes the
+		-- optional hint's slot; authoritative event/result regions retain priority.
+		optional.Position = panel.Position
+		optional.Size = UDim2.fromOffset(panel.Size.X.Offset, math.min(144, panel.Size.Y.Offset))
+		optional.Visible = current == nil and optionalAllowed and optionalText.Text ~= ""
+		optionalScroll.Position, optionalScroll.Size = UDim2.fromOffset(10, 8), UDim2.new(1, -20, 1, -64)
+		dismiss.Position, dismiss.Size = UDim2.new(0, 10, 1, -52), UDim2.new(1, -20, 0, Theme.Target)
 		-- Private feedback moves to the opposite side while a wide panel is open.
 		if current then
 			feedback.Position = if short
@@ -342,8 +378,13 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 			title.Text = current
 			scroll.CanvasPosition = Vector2.zero
 			updateControls()
-			close.NextSelectionDown = if current == "Settings" then sizeButton else scroll
-			close.NextSelectionUp = if current == "Settings" then reset else scroll
+			close.NextSelectionDown = if current == "Settings"
+				then sizeButton
+				elseif current == "Factory" then find
+				else scroll
+			close.NextSelectionUp = if current == "Settings" then reset elseif current == "Help" then restart else scroll
+			scroll.NextSelectionUp = if current == "Factory" then find else close
+			scroll.NextSelectionDown = if current == "Help" then restart else close
 			if UserInputService.PreferredInput == Enum.PreferredInput.Gamepad then
 				GuiService.SelectedObject = close
 			end
@@ -354,6 +395,9 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 				animation:Play()
 			end
 		end
+		if actions then
+			actions.panel(current ~= nil)
+		end
 		resize()
 	end
 	for _, object in { factory, settings, help } do
@@ -363,6 +407,31 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 	end
 	track(close.Activated:Connect(function()
 		setPanel(nil, nil)
+	end))
+	track(find.Activated:Connect(function()
+		setPanel(nil, nil)
+		if actions then
+			if optionalActive then
+				actions.stop()
+			else
+				actions.find()
+			end
+		end
+	end))
+	track(restart.Activated:Connect(function()
+		setPanel(nil, nil)
+		if actions then
+			actions.restart()
+		end
+	end))
+	track(dismiss.Activated:Connect(function()
+		if actions then
+			if optionalActive then
+				actions.stop()
+			else
+				actions.dismiss()
+			end
+		end
 	end))
 	for object, key in { [sizeButton] = "large", [motionButton] = "reduceMotion", [labelsButton] = "labels" } do
 		track(object.Activated:Connect(function()
@@ -428,6 +497,7 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 			panelScale.Scale = 1
 		end
 		panel.BackgroundTransparency = Theme.Transparency * GuiService.PreferredTransparency
+		optional.BackgroundTransparency = panel.BackgroundTransparency
 		for _, label in { summary, event, purchase, supply } do
 			label.BackgroundColor3 = Theme.Background
 			label.BackgroundTransparency = Theme.Transparency * GuiService.PreferredTransparency
@@ -465,6 +535,17 @@ function View.new(gui: ScreenGui, changed: () -> ()): Handle
 		feedback = function(purchaseText: string, supplyText: string)
 			purchase.Text, supply.Text = purchaseText, supplyText
 			purchase.Visible, supply.Visible = purchaseText ~= "", supplyText ~= ""
+		end,
+		guidance = function(value: string, active: boolean, allowed: boolean)
+			optionalText.Text, optionalActive, optionalAllowed = value, active, allowed
+			dismiss.Text = if active then "Stop guidance" else "Dismiss hint"
+			resize()
+		end,
+		context = function(value: string, active: boolean, hint: string, pending: string)
+			find.Text = if active then "Stop factory guidance" else "Find my factory"
+			location.Text, location.Visible = value, value ~= ""
+			helpGuidance.Text = hint
+			readiness.Text, readiness.Visible = pending, pending ~= ""
 		end,
 		refresh = refresh,
 		destroy = function()

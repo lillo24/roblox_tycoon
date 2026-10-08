@@ -13,6 +13,9 @@ local State = require(script.Parent.UiState)
 local Preferences = require(script.Parent.UiPreferences)
 local View = require(script.Parent.HudView)
 local Labels = require(script.Parent.WorldLabels)
+local Bindings = require(script.Parent.RuntimeBindings)
+local Guidance = require(script.Parent.FactoryGuidance)
+local Onboarding = require(script.Parent.Onboarding)
 
 local Hud = {}
 
@@ -37,12 +40,21 @@ function Hud.start(): ScreenGui
 	local purchaseText, purchaseVersion = "", 0
 	local purchaseTimer: thread? = nil
 	local supplyTimer: thread? = nil
+	local assignmentTimer: thread? = nil
+	local assignmentExpired = false
+	local reportedEconomy: string? = nil
+	local snapshotError: string? = nil
+	local runtime: Bindings.Handle? = nil
+	local guidance: Guidance.Handle
+	local guidanceText, guidanceActive, panelOpen = "", false, false
+	local progress = Onboarding.session()
 	local economy = State.economy(function(attribute: string)
 		return player:GetAttribute(attribute)
 	end)
 	local snapshot: Rules.Snapshot? = nil
 	local labels = Labels.start()
 	local view: View.Handle
+	local render: () -> () = function() end
 	local function applyPreferences()
 		if not running then
 			return
@@ -50,16 +62,59 @@ function Hud.start(): ScreenGui
 		view.refresh()
 		labels.refresh(Preferences.read().labels, GuiService.PreferredTransparency)
 	end
-	view = View.new(gui, applyPreferences)
-	local function render()
+	view = View.new(gui, applyPreferences, {
+		find = function()
+			guidance.start()
+		end,
+		stop = function()
+			guidance.stop()
+		end,
+		dismiss = function()
+			Onboarding.dismiss(progress)
+			render()
+		end,
+		restart = function()
+			Onboarding.restart(progress)
+			render()
+		end,
+		panel = function(open: boolean)
+			panelOpen = open
+			guidance.pause(open)
+			render()
+		end,
+	})
+	guidance = Guidance.new(player, gui, function(value: string, active: boolean)
+		guidanceText, guidanceActive = value, active
+		render()
+	end)
+	render = function()
 		if not running then
 			return
 		end
-		view.event(
-			State.event(snapshot, workspace:GetServerTimeNow(), economy.assigned),
-			if snapshot then snapshot.phase else nil
+		local eventText = State.event(snapshot, workspace:GetServerTimeNow(), economy.assigned)
+		local binding = runtime
+		if not snapshot and (snapshotError or binding and binding.status(Rules.StateName) == "unavailable") then
+			eventText = "Supply Cache unavailable\nServer event state is not ready"
+		end
+		view.event(eventText, if snapshot then snapshot.phase else nil)
+		local supplyText = supply:read(os.clock())
+		view.feedback(purchaseText, supplyText)
+		local hint = Onboarding.text(progress, economy, os.clock())
+		local urgent = snapshot
+			and (snapshot.phase == "warning" or snapshot.phase == "open" or snapshot.phase == "result")
+		view.guidance(
+			if guidanceActive then guidanceText elseif urgent then "" else hint,
+			guidanceActive,
+			not panelOpen and purchaseText == "" and supplyText == ""
 		)
-		view.feedback(purchaseText, supply:read(os.clock()))
+		view.context(
+			guidanceText,
+			guidanceActive,
+			Onboarding.help(progress, economy),
+			if binding and binding.status(Config.FeedbackName) ~= "ready"
+				then "Purchase feedback " .. binding.status(Config.FeedbackName)
+				else ""
+		)
 	end
 	local function update()
 		if not running then
@@ -68,12 +123,21 @@ function Hud.start(): ScreenGui
 		local nextEconomy = State.economy(function(attribute: string)
 			return player:GetAttribute(attribute)
 		end)
+		if not nextEconomy.assigned and not nextEconomy.full and assignmentExpired and not nextEconomy.unavailable then
+			nextEconomy.unavailable = "Factory assignment timed out"
+		end
+		if nextEconomy.unavailable and nextEconomy.unavailable ~= reportedEconomy then
+			warn(`Tycoon HUD: {player:GetFullName()} factory state unavailable: {nextEconomy.unavailable}`)
+		end
+		reportedEconomy = nextEconomy.unavailable
 		if nextEconomy.plot ~= economy.plot or nextEconomy.assigned ~= economy.assigned then
 			purchaseVersion += 1
 			purchaseText = ""
 			supply:reset()
 		end
 		economy = nextEconomy
+		guidance.assignment(economy.plot, economy.full)
+		Onboarding.observe(progress, economy, os.clock())
 		view.economy(economy)
 		render()
 	end
@@ -87,6 +151,13 @@ function Hud.start(): ScreenGui
 		if supplyTimer then
 			task.cancel(supplyTimer)
 		end
+		if assignmentTimer then
+			task.cancel(assignmentTimer)
+		end
+		if runtime then
+			runtime.destroy()
+		end
+		guidance.destroy()
 		for _, connection in connections do
 			connection:Disconnect()
 		end
@@ -107,74 +178,122 @@ function Hud.start(): ScreenGui
 	update()
 	applyPreferences()
 	gui.Parent = playerGui
-	-- FIX-01: attach private feedback before purchase/state waits and snapshot reads.
-	local supplyRemote = ReplicatedStorage:WaitForChild(Rules.FeedbackName, 10)
-	assert(supplyRemote and supplyRemote:IsA("RemoteEvent"), "Tycoon: missing Supply Cache feedback")
-	if not running then
-		return gui
-	end
-	track(supplyRemote.OnClientEvent:Connect(function(id: number, message: string)
-		if not running then
-			return
-		end
-		local version = supply:receive(id, message, os.clock())
-		if not version then
-			return
-		end
-		render()
-		if supplyTimer then
-			task.cancel(supplyTimer)
-		end
-		supplyTimer = task.delay(Rules.Tuning.ResultDuration, function()
-			supplyTimer = nil
-			if running and supply:expire(version, os.clock()) then
-				render()
-			end
-		end)
-	end))
-	local purchaseRemote = ReplicatedStorage:WaitForChild(Config.FeedbackName, 10)
-	assert(purchaseRemote and purchaseRemote:IsA("RemoteEvent"), `Tycoon: missing {Config.FeedbackName}`)
-	if not running then
-		return gui
-	end
-	track(purchaseRemote.OnClientEvent:Connect(function(plot: number?, message: string)
-		if not running or plot ~= economy.plot then
-			return
-		end
-		purchaseVersion += 1
-		local version = purchaseVersion
-		purchaseText = message
-		render()
-		if purchaseTimer then
-			task.cancel(purchaseTimer)
-		end
-		purchaseTimer = task.delay(Config.FeedbackDuration, function()
-			purchaseTimer = nil
-			if running and purchaseVersion == version then
-				purchaseText = ""
-				render()
-			end
-		end)
-	end))
-	local supplyState = ReplicatedStorage:WaitForChild(Rules.StateName, 10)
-	assert(supplyState and supplyState:IsA("StringValue"), "Tycoon: missing Supply Cache snapshot")
-	if not running then
-		return gui
-	end
-	local function readSnapshot()
-		if not running then
-			return
-		end
-		local nextSnapshot = HttpService:JSONDecode(supplyState.Value) :: Rules.Snapshot
-		if supply:snapshot(nextSnapshot.id, nextSnapshot.phase == "idle", os.clock()) then
-			snapshot = nextSnapshot
-			render()
-		end
-	end
-	track(supplyState:GetPropertyChangedSignal("Value"):Connect(readSnapshot))
-	readSnapshot() -- Subscribe before reading; replication is not ordered with the remote.
+	assignmentTimer = task.delay(Bindings.Timeout, function()
+		assignmentTimer = nil
+		assignmentExpired = true
+		update()
+	end)
+	-- FIX-01: ordered non-yielding binding attaches feedback before snapshot reads,
+	-- including dependencies arriving after the documented ten-second deadline.
+	runtime = Bindings.start(ReplicatedStorage, {
+		{
+			name = Rules.FeedbackName,
+			class = "RemoteEvent",
+			bind = function(instance: Instance): () -> ()
+				assert(instance:IsA("RemoteEvent"), "HUD supply binding expected RemoteEvent")
+				local connection = instance.OnClientEvent:Connect(function(id: number, message: string)
+					if not running then
+						return
+					end
+					local version = supply:receive(id, message, os.clock())
+					if not version then
+						return
+					end
+					render()
+					if supplyTimer then
+						task.cancel(supplyTimer)
+					end
+					supplyTimer = task.delay(Rules.Tuning.ResultDuration, function()
+						supplyTimer = nil
+						if running and supply:expire(version, os.clock()) then
+							render()
+						end
+					end)
+				end)
+				return function()
+					connection:Disconnect()
+					supply:reset()
+				end
+			end,
+		},
+		{
+			name = Config.FeedbackName,
+			class = "RemoteEvent",
+			bind = function(instance: Instance): () -> ()
+				assert(instance:IsA("RemoteEvent"), "HUD purchase binding expected RemoteEvent")
+				local connection = instance.OnClientEvent:Connect(function(plot: number?, message: string)
+					if not running or plot ~= economy.plot then
+						return
+					end
+					purchaseVersion += 1
+					local version = purchaseVersion
+					purchaseText = message
+					render()
+					if purchaseTimer then
+						task.cancel(purchaseTimer)
+					end
+					purchaseTimer = task.delay(Config.FeedbackDuration, function()
+						purchaseTimer = nil
+						if running and purchaseVersion == version then
+							purchaseText = ""
+							render()
+						end
+					end)
+				end)
+				return function()
+					connection:Disconnect()
+					purchaseVersion += 1
+					purchaseText = ""
+				end
+			end,
+		},
+		{
+			name = Rules.StateName,
+			class = "StringValue",
+			requires = { Rules.FeedbackName, Config.FeedbackName },
+			bind = function(instance: Instance): () -> ()
+				assert(instance:IsA("StringValue"), "HUD snapshot binding expected StringValue")
+				local function readSnapshot()
+					if not running then
+						return
+					end
+					-- Only this external JSON decoding operation is caught. Internal render,
+					-- binding and helper errors retain their normal diagnostics/test failures.
+					local decoded, value = pcall(HttpService.JSONDecode, HttpService, instance.Value)
+					local nextSnapshot: Rules.Snapshot? = nil
+					local issue: string? = nil
+					if decoded then
+						nextSnapshot, issue = State.snapshot(value)
+					else
+						issue = "invalid JSON: " .. tostring(value)
+					end
+					if not nextSnapshot then
+						if issue ~= snapshotError then
+							warn(`Tycoon HUD: {instance:GetFullName()} unavailable: {issue}`)
+						end
+						snapshotError, snapshot = issue, nil
+						render()
+						return
+					end
+					snapshotError = nil
+					if supply:snapshot(nextSnapshot.id, nextSnapshot.phase == "idle", os.clock()) then
+						snapshot = nextSnapshot
+						render()
+					end
+				end
+				local connection = instance:GetPropertyChangedSignal("Value"):Connect(readSnapshot)
+				readSnapshot() -- Subscribe before reading; replication is not ordered with the remote.
+				return function()
+					connection:Disconnect()
+					snapshot, snapshotError = nil, nil
+				end
+			end,
+		},
+	}, render)
+	render()
 	local elapsed = 0
 	track(RunService.Heartbeat:Connect(function(delta: number)
+		guidance.tick(delta)
 		elapsed += delta
 		if elapsed >= 0.25 then
 			elapsed = 0
