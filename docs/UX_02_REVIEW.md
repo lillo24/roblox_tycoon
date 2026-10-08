@@ -13,7 +13,7 @@ provide approval of the combined build. No deployment or publication is authoriz
 | MAP-01 incorporated head | `56fb72feb538add13a863e6b4eef2f970fa9bba8` |
 | UI-01 incorporated head | `33b7f5ac46ed6e968c7ec23b8eb18352b3a6736f` |
 | Ancestry-preserving integration merge | `0ac574af850a9c7e4f50e43a11406d2c9b10f92a` |
-| UX implementation/source head | Pending recording after source commit |
+| UX implementation/source head | `17fe09f583b5a4db15d984129de9ca5d7010419d` |
 | Final draft/evidence head | The PR head; later evidence-only commits do not change tested source |
 | Scene | `place/tycoon.rbxlx`, unchanged from incorporated MAP-01 |
 | Scene SHA256 | `9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8` |
@@ -82,12 +82,18 @@ fixtures, not gameplay proof. Stop only this preview's Play session when finishe
 
 | Check | Current result |
 | --- | --- |
-| Complete local Validate-Project | Passed on the integrated source before the final documentation commit; final run recorded below |
+| Complete local Validate-Project | **Passed at `17fe09f`**, including formatting/lint, fresh Rojo build/sourcemap, Luau analysis of src/tests, 12 structure probes, 5 negative type probes, six-lot map contract and 7 malformed-scene probes |
 | Scene hash; MAP server/shared; FIX-01 unchanged | Passed byte/source comparisons |
 | PlayerGuidance engine suite | **Not run: Studio preview launch unavailable in this task**; formatted, linted and type-checked |
 | Real HUD lifecycle/ordering/readiness suites | **Not run at this head**; engine route included in preview |
 | Single-client combined smoke | **Environment blocked: no usable window appeared for the exact generated preview** |
-| Exact final draft-head CI | Pending PR creation |
+| Exact final draft-head CI | The combined draft's current-head `validate` check is authoritative; handoff records the observed result |
+
+The generated preview's mapped script classes/counts and exact normalized sources
+were checked against `17fe09f` with Assert-ProjectStructure. Its Workspace XML
+matched canonical Workspace exactly, and the canonical scene SHA256 stayed unchanged.
+No later evidence/documentation commit changes that runtime tree. This verifies
+the generated file, not loaded Studio code: the preview did not finish opening.
 
 CLI formatting, lint, type analysis and XML checks do not execute Luau. Runtime
 results must be recorded separately with source revision and fixture limitations.
