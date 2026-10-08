@@ -112,7 +112,10 @@ return function(): number
 	check(Guidance.resolve(root, 6, 1) == nil, "Another owner cannot become target")
 	check(Guidance.resolve(root, 1, 0) == nil, "No hardcoded factory 1 fallback")
 	check(Guidance.resolve(root, 6, 0) == nil, "Partial anchor replication remains locating")
-	local fakePlayer, gui = Instance.new("Player"), Instance.new("ScreenGui")
+	-- Guidance reads only UserId/Character. A structural double keeps the fixture
+	-- isolated without Studio's protected WritePlayer capability or a live player.
+	local fakePlayer = { UserId = 0, Character = nil } :: any
+	local gui = Instance.new("ScreenGui")
 	local active = false
 	local guide = Guidance.new(fakePlayer, gui, function(_text: string, value: boolean)
 		active = value
@@ -152,7 +155,6 @@ return function(): number
 	guide.tick(1)
 	check(not active and #gui:GetChildren() == 0, "Teardown clears active state and marker")
 	gui:Destroy()
-	fakePlayer:Destroy()
 	root:Destroy()
 	local dependencies = Instance.new("Folder")
 	local order: { string } = {}
