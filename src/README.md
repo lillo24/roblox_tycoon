@@ -4,6 +4,12 @@ Opt-in `Experiments` subfolders contain standalone Studio prototypes. Normal
 bootstraps remain unchanged. `scripts/New-ExperimentPlace.ps1` replaces only the
 two disposable bootstrap copies; see the feature review documents under `docs`.
 
+EXP-02 alone uses `TycoonRuntime.start({ walkOn = true })` and
+`Hud.startWalkOn()`. Normal zero-argument startup keeps native purchase prompts.
+Both purchase routes share the same active-player, living-character, range,
+rate-limit and `Session.purchase` checks. `HudView.new`'s optional fourth flag changes
+only preview instructions; its panel/prompt/focus protection is retained.
+
 This source tree owns gameplay inside the existing three code-only Rojo folders.
 Bootstraps compose the feature and retain the setup startup messages. GAMEPLAY-02
 is a reversible upgrade-order experiment; costs, names, and prerequisites below

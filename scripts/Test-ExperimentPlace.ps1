@@ -9,6 +9,9 @@ foreach ($qa in @($false, $true)) {
     [xml]$scene = [IO.File]::ReadAllText($path)
     $tests = @($scene.SelectNodes('//Item[Properties/string[@name="Name"]="ExperimentAssertions"]'))
     if ($tests.Count -ne [int]$qa) { throw 'Experiment assertion isolation failed.' }
+    $liveTests = @($scene.SelectNodes('//Item[Properties/string[@name="Name"]="ExperimentLiveAssertions"]'))
+    $hasLive = Test-Path -LiteralPath (Join-Path $root "tests/${Name}Live.spec.luau") -PathType Leaf
+    if ($liveTests.Count -ne [int]($qa -and $hasLive)) { throw 'Experiment live-fixture isolation failed.' }
     $bootstraps = @($scene.SelectNodes('//Item[Properties/string[@name="Name"]="Bootstrap"]/Properties/*[@name="Source"]'))
     if ($bootstraps.Count -ne 2) { throw 'Experiment bootstrap count differs.' }
     foreach ($bootstrap in $bootstraps) {

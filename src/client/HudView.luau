@@ -71,7 +71,7 @@ local function button(parent: Instance, name: string, value: string): TextButton
 	return object
 end
 
-function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
+function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?, walkOn: boolean?): Handle
 	local connections: { RBXScriptConnection } = {}
 	local function track(connection: RBXScriptConnection)
 		table.insert(connections, connection)
@@ -131,7 +131,9 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 	text(
 		pages.Factory,
 		"PurchaseHelp",
-		"Information only. Buy at nearby world pads; this panel does not pause production."
+		if walkOn
+			then "Walk onto an available pad to buy. Close panels first; leave and re-enter a pad to retry. Production continues."
+			else "Information only. Buy at nearby world pads; this panel does not pause production."
 	).LayoutOrder =
 		5
 	local rows: { [Catalogue.Id]: TextLabel } = {}
@@ -201,6 +203,13 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 		object.NextSelectionDown = if index == #settingsControls then close else settingsControls[index + 1]
 	end
 	local function updateControls()
+		if walkOn then
+			controls.Text =
+				"Walk onto your factory's pad to buy automatically. Panels, Roblox menu and lost window focus block entry. Leave and re-enter after closing a panel/menu or gaining enough cash. Supply Cache still uses its native prompt."
+			helpText.Text =
+				"Earn cash automatically. Walk onto your factory's available pads to buy; read the price and prerequisite first. Owned equipment increases income and stays active.\n\nA blocked or unaffordable visit needs exit and re-entry. These panels do not pause production.\n\nSupply Cache remains a separate native prompt at its shared marker. Progress resets when you leave."
+			return
+		end
 		local input = UserInputService.PreferredInput
 		local key, gamepad = Enum.KeyCode.E, Enum.KeyCode.ButtonX
 		local runtime = workspace:FindFirstChild("TycoonRuntime")

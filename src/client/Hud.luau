@@ -19,7 +19,8 @@ local Onboarding = require(script.Parent.Onboarding)
 
 local Hud = {}
 
-function Hud.start(): ScreenGui
+-- Preview mode changes purchase instructions only; normal start stays zero-arg.
+local function start(walkOn: boolean): ScreenGui
 	local player = Players.LocalPlayer
 	assert(player, "Tycoon HUD requires a LocalPlayer")
 	local playerGui = player:WaitForChild("PlayerGui")
@@ -82,7 +83,7 @@ function Hud.start(): ScreenGui
 			guidance.pause(open)
 			render()
 		end,
-	})
+	}, walkOn)
 	guidance = Guidance.new(player, gui, function(value: string, active: boolean)
 		guidanceText, guidanceActive = value, active
 		render()
@@ -307,6 +308,14 @@ function Hud.start(): ScreenGui
 		end
 	end))
 	return gui
+end
+
+function Hud.start(): ScreenGui
+	return start(false)
+end
+
+function Hud.startWalkOn(): ScreenGui
+	return start(true)
 end
 
 return Hud

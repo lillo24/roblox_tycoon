@@ -54,6 +54,27 @@ if ($WithTests) {
         [void]$item.AppendChild($properties)
         [void]$parent.AppendChild($item)
     }
+    # Optional engine integration fixture belongs only to the explicit QA copy.
+    # It may seed positions or walk the first test avatar; never included in demo.
+    $livePath = Join-Path $root "tests/${Name}Live.spec.luau"
+    if (Test-Path -LiteralPath $livePath -PathType Leaf) {
+        $item = $scene.CreateElement('Item')
+        $item.SetAttribute('class', 'ModuleScript')
+        $item.SetAttribute('referent', 'EXP_' + [guid]::NewGuid().ToString('N'))
+        $properties = $scene.CreateElement('Properties')
+        $nameNode = $scene.CreateElement('string')
+        $nameNode.SetAttribute('name', 'Name')
+        $nameNode.InnerText = 'ExperimentLiveAssertions'
+        $sourceNode = $scene.CreateElement('ProtectedString')
+        $sourceNode.SetAttribute('name', 'Source')
+        $sourceNode.InnerText = [IO.File]::ReadAllText($livePath)
+        [void]$properties.AppendChild($nameNode)
+        [void]$properties.AppendChild($sourceNode)
+        [void]$item.AppendChild($properties)
+        [void]$parent.AppendChild($item)
+        $runner = $parent.SelectSingleNode('Item[Properties/string[@name="Name"]="RunExperimentAssertions"]/Properties/*[@name="Source"]')
+        $runner.InnerText += "`nprint('EXECUTED $Name LIVE assertions:', require(script.Parent.ExperimentLiveAssertions)())"
+    }
 }
 $settings = [Xml.XmlWriterSettings]::new()
 $settings.OmitXmlDeclaration = $true
