@@ -51,6 +51,10 @@ supply feedback, purchase feedback, then subscribes to/reads the snapshot. One
 10-second deadline from HUD creation changes absent dependencies/assignment to
 unavailable, with exact paths/reasons in developer logs. Owned root child/name
 listeners recover expected late/replacement instances without polling/retry loops.
+Name watches remain attached to every direct child while it is in the root,
+including unbound or duplicate children. Name-only recovery therefore works after
+the deadline and after a bound target is renamed away and back. Removal and HUD
+teardown disconnect those watches; binding cleanup still runs exactly once per loss.
 Missing event data leaves known cash/rate intact. Wrong classes, duplicate named
 dependencies, malformed JSON/snapshot fields and invalid economy attributes surface
 unavailable status; valid later data recovers. Only external JSON decoding is caught.

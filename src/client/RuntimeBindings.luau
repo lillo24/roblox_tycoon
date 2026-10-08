@@ -14,6 +14,7 @@ function Bindings.start(root: Instance, specs: { Spec }, changed: () -> (), time
 	local reported: { [string]: string } = {}
 	local alive, expired = true, false
 	local connections: { RBXScriptConnection } = {}
+	local names: { [Instance]: RBXScriptConnection } = {}
 	local function refresh()
 		if not alive then
 			return
@@ -44,11 +45,7 @@ function Bindings.start(root: Instance, specs: { Spec }, changed: () -> (), time
 				if not targets[spec.name] then
 					targets[spec.name] = target
 					local release = spec.bind(target)
-					local renamed = target:GetPropertyChangedSignal("Name"):Connect(refresh)
-					cleanup[spec.name] = function()
-						renamed:Disconnect()
-						release()
-					end
+					cleanup[spec.name] = release
 				end
 				statuses[spec.name], reported[spec.name] = "ready", nil
 			else
@@ -62,9 +59,35 @@ function Bindings.start(root: Instance, specs: { Spec }, changed: () -> (), time
 		end
 		changed()
 	end
-	-- Subscribe before the first lookup, and rebind once per relevant root change.
-	table.insert(connections, root.ChildAdded:Connect(refresh))
-	table.insert(connections, root.ChildRemoved:Connect(refresh))
+	-- Keep name watches on unbound children too: renaming a held/duplicate target
+	-- must recover after the deadline, when no timer remains to rescan the root.
+	local function watch(child: Instance)
+		if not names[child] then
+			names[child] = child:GetPropertyChangedSignal("Name"):Connect(refresh)
+		end
+	end
+	-- Subscribe before the first lookup and own each child watch until removal.
+	table.insert(
+		connections,
+		root.ChildAdded:Connect(function(child)
+			watch(child)
+			refresh()
+		end)
+	)
+	table.insert(
+		connections,
+		root.ChildRemoved:Connect(function(child)
+			local connection = names[child]
+			if connection then
+				connection:Disconnect()
+				names[child] = nil
+			end
+			refresh()
+		end)
+	)
+	for _, child in root:GetChildren() do
+		watch(child)
+	end
 	local timer: thread? = nil
 	timer = task.delay(timeout or Bindings.Timeout, function()
 		timer = nil
@@ -84,6 +107,10 @@ function Bindings.start(root: Instance, specs: { Spec }, changed: () -> (), time
 			for _, connection in connections do
 				connection:Disconnect()
 			end
+			for _, connection in names do
+				connection:Disconnect()
+			end
+			table.clear(names)
 			for _, release in cleanup do
 				release()
 			end

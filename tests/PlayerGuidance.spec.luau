@@ -212,5 +212,47 @@ return function(): number
 	task.wait()
 	check(#order == before, "Destroyed bindings have no late listeners")
 	dependencies:Destroy()
+	-- No deadline timer or parent change may be needed for name-only recovery.
+	local renameRoot = Instance.new("Folder")
+	local renamed = Instance.new("RemoteEvent")
+	renamed.Name, renamed.Parent = "Held", renameRoot
+	local renamedBinds, renamedReleases = 0, 0
+	local renameBindings = Bindings.start(renameRoot, {
+		{
+			name = "Ready",
+			class = "RemoteEvent",
+			bind = function(_instance: Instance): () -> ()
+				renamedBinds += 1
+				return function()
+					renamedReleases += 1
+				end
+			end,
+		},
+	}, function() end, 0.03)
+	task.wait(0.05)
+	check(renameBindings.status("Ready") == "unavailable", "Rename fixture starts after deadline")
+	renamed.Name = "Ready"
+	task.wait()
+	check(renameBindings.status("Ready") == "ready" and renamedBinds == 1, "Existing unbound child rename recovers")
+	renamed.Name = "Held"
+	task.wait()
+	check(renameBindings.status("Ready") == "unavailable" and renamedReleases == 1, "Rename loss releases once")
+	renamed.Name = "Ready"
+	task.wait()
+	check(renameBindings.status("Ready") == "ready" and renamedBinds == 2, "Same instance renamed back recovers")
+	local renamedDuplicate = renamed:Clone()
+	renamedDuplicate.Parent = renameRoot
+	task.wait()
+	check(renameBindings.status("Ready") == "unavailable" and renamedReleases == 2, "Duplicate releases active binding")
+	renamedDuplicate.Name = "Other"
+	task.wait()
+	check(renameBindings.status("Ready") == "ready" and renamedBinds == 3, "Duplicate rename restores unique target")
+	renameBindings.destroy()
+	renamed.Name = "Held"
+	task.wait()
+	renamed.Name = "Ready"
+	task.wait()
+	check(renamedBinds == 3 and renamedReleases == 3, "Destroyed bindings release all name watches")
+	renameRoot:Destroy()
 	return checks
 end
