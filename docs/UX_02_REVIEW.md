@@ -116,7 +116,7 @@ below have **zero current-head executed assertions**, rather than historical tot
 | Normal desktop, touch swipe, full controller traversal and phone Standard/Large | **Environment blocked** before a current-source viewport; no normal inputs credited. Earlier UI evidence is inherited at its own revisions. |
 | Two/six live clients, private state/shared contest/disconnect/reuse | **Not run at the combined head**; the preexisting old two-client session cannot establish coverage. Seven-user domain coverage also awaits actual Session/SupplyEvent execution here. |
 | New combined screenshots | **Not captured**; old map/UI images remain inherited evidence, not images of this build. |
-| CI | Exact final PR-head result is recorded after the QA packet push; a green historical run is not a current-head check. |
+| CI | **Passed** full Validate at QA packet head `e84f4787293e15d15ebcfc2b4e5a3097147f83a4`: [run 37773551739](https://github.com/lillo24/roblox_tycoon/actions/runs/37773551739), job `113298730966`, including the new preview regression check. Later evidence-only commits leave validated source/tooling unchanged; the [current PR checks](https://github.com/lillo24/roblox_tycoon/pull/11/checks) and PR handoff identify the exact final-head result. |
 
 ### Current environment and bounded recovery
 
@@ -137,7 +137,9 @@ contained only the old previews/session. This failed opening attempt is retained
 no Play was started and no loaded-source, engine, input or gameplay pass is claimed.
 
 Read-only process inspection found nine visible Studio windows plus two existing
-windowless processes. The old client log
+windowless processes. The QA-01 file-open attempt also started process `22992`
+at 13:48:24 local time, but it remained windowless and was not an executed test.
+It was not terminated through another control route. The old client log
 `0.741.19.7411056_20261007T115812Z_Studio_9F517_last.log` contains continuing
 profile-service HTTP 429 responses around 11:49 UTC on 2026-10-08. These service
 errors and the opening failure are environment observations, **not a proven
@@ -209,8 +211,9 @@ at the exact path above for the later consolidated QA.
 | Hosted maximum 6 | **Pre-publication setting pending.** Client/config code does not change hosted capacity. |
 
 Keep statuses explicit: passed at SHA, inherited evidence, not run, environment
-blocked, confirmed failure or user review pending. This task prepares this one
-checkpoint, deferring the full matrix without marking it passed. After general
+blocked, confirmed failure or user review pending. QA-01 attempted execution;
+the unavailable Studio target currently prevents the full runtime matrix.
+QA remains incomplete until those checks actually run. After general
 QA/visual approval, reconcile latest main, rerun affected checks and choose one
 final combined merge/consolidation path. Do not merge or close #8/#9 beforehand.
 
@@ -222,4 +225,5 @@ final combined merge/consolidation path. Do not merge or close #8/#9 beforehand.
 
 Retain this draft checkout/preview and the two source review worktrees/backups.
 Do not delete unrelated or previously blocked artifacts. The current task's
-single-client smoke will be stopped at handoff; unrelated sessions stay intact.
+Play smoke never started; unrelated sessions stay intact. No visual approval,
+automatic merge, source-PR closure, publishing or next feature batch has occurred.
