@@ -79,7 +79,11 @@ and taller views. Touch panels reserve at least
 90 screen pixels at the bottom and the reported native JumpButton bounds; Close
 stays outside the scrolling content. Layout writes final dimensions once and
 guards synchronous automatic-size re-entry. Wide views keep the public event above the center and
-place Settings/Help below a conservative player-list reservation. Chat/menu/CoreGui
+place Settings/Help below a conservative player-list reservation: 48 screen pixels
+for the native header/clearance plus 40 per connected player, independent of the
+local interface scale. This matches the tested Studio native list; its bounds
+are not exposed to this view. The reservation is not capped by viewport height,
+which previously put these buttons behind the six-player list. Chat/menu/CoreGui
 are never disabled. Native menus retain their priority; Escape/Start are untouched.
 Opening a panel temporarily disables `ProximityPromptService.Enabled` only for
 this client so native purchase/claim inputs cannot activate through it; closing

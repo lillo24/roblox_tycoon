@@ -272,7 +272,9 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 		if wide then
 			navigation.Position, navigation.Size = UDim2.fromOffset(12, top), UDim2.fromOffset(usable, target)
 			factory.Position, factory.Size = UDim2.fromOffset(0, 0), UDim2.fromOffset(140, Theme.Target)
-			local listBottom = math.min(height * 0.35, 48 + #Players:GetPlayers() * 24)
+			-- Native list rows occupy screen pixels, independent of our interface scale.
+			-- Keep the 48px header/clearance reservation, with 40px rows; a height cap overlapped six rows.
+			local listBottom = (48 + #Players:GetPlayers() * 40) / factor
 			settings.Position, settings.Size =
 				UDim2.fromOffset(usable - 212, -top + listBottom), UDim2.fromOffset(108, Theme.Target)
 			help.Position, help.Size =

@@ -60,6 +60,23 @@ return function(Hud: typeof(HudTypes), Preferences: typeof(PreferencesTypes)): n
 	check(not (gui:FindFirstChild("Panel", true) :: Frame).Visible, "Recreated HUD starts closed")
 	check(game:GetService("ProximityPromptService").Enabled, "Teardown of open panel restores native prompt input")
 	check(label.Enabled == values.labels, "Fresh adapter applies retained label preference")
+	-- Native list geometry is in screen pixels. Exercise the actual view at both
+	-- local scales; run in a wide multiplayer viewport to reproduce the six-row overlap.
+	for _, large in { false, true } do
+		Preferences.set("large", large)
+		gui = Hud.start()
+		task.wait(0.1)
+		if gui.AbsoluteSize.X / Preferences.scale(Preferences.read()) >= 940 then
+			local reservedBottom = gui.AbsolutePosition.Y + 48 + #game:GetService("Players"):GetPlayers() * 40
+			for _, name in { "Settings", "Help" } do
+				local control = gui:FindFirstChild(name, true) :: TextButton
+				check(control.AbsolutePosition.Y >= reservedBottom - 1, `Wide {name} clears the native player list`)
+			end
+		end
+	end
+	Preferences.set("large", values.large)
+	gui = Hud.start()
+	task.wait()
 	label.Parent = nil
 	task.wait()
 	check(
