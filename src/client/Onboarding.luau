@@ -47,6 +47,9 @@ function Onboarding.text(progress: Progress, economy: State.Economy, now: number
 end
 
 function Onboarding.help(progress: Progress, economy: State.Economy): string
+	if economy.unavailable then
+		return "Factory state unavailable. Help and Settings remain usable."
+	end
 	if not economy.assigned then
 		return if economy.full
 			then "Factories are full. There is no waiting queue this session."

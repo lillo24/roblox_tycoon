@@ -95,6 +95,12 @@ function Hud.start(): ScreenGui
 		local binding = runtime
 		if not snapshot and (snapshotError or binding and binding.status(Rules.StateName) == "unavailable") then
 			eventText = "Supply Cache unavailable\nServer event state is not ready"
+		elseif
+			not snapshot
+			and binding
+			and (binding.status(Rules.FeedbackName) ~= "ready" or binding.status(Config.FeedbackName) ~= "ready")
+		then
+			eventText = "Supply Cache\nWaiting for feedback channels"
 		end
 		view.event(eventText, if snapshot then snapshot.phase else nil)
 		local supplyText = supply:read(os.clock())
@@ -108,7 +114,7 @@ function Hud.start(): ScreenGui
 			not panelOpen and purchaseText == "" and supplyText == ""
 		)
 		view.context(
-			guidanceText,
+			if economy.assigned then guidanceText else Onboarding.help(progress, economy),
 			guidanceActive,
 			Onboarding.help(progress, economy),
 			if binding and binding.status(Config.FeedbackName) ~= "ready"

@@ -1,7 +1,6 @@
 # UX-02 combined prototype checkpoint
 
-Implementation ready for consolidated QA once the execution results below are
-recorded. This draft deliberately combines pending MAP-01/PR #8 and UI-01/PR #9
+**Implementation ready for consolidated QA.** This draft deliberately combines pending MAP-01/PR #8 and UI-01/PR #9
 with the bounded UX-02 batch. Source drafts remain open and unchanged. This is
 the current approval/consolidation checkpoint; historical source packets do not
 provide approval of the combined build. No deployment or publication is authorized.
@@ -10,7 +9,7 @@ provide approval of the combined build. No deployment or publication is authoriz
 
 | Source | Exact revision |
 | --- | --- |
-| Current main, including the UX-02 plan | `2128f69` (full SHA recorded in Git ancestry) |
+| Current main, including the UX-02 plan | `2128f690b2a22534fce1fe8569e2c1caab89ab9b` |
 | MAP-01 incorporated head | `56fb72feb538add13a863e6b4eef2f970fa9bba8` |
 | UI-01 incorporated head | `33b7f5ac46ed6e968c7ec23b8eb18352b3a6736f` |
 | Ancestry-preserving integration merge | `0ac574af850a9c7e4f50e43a11406d2c9b10f92a` |
@@ -85,13 +84,23 @@ fixtures, not gameplay proof. Stop only this preview's Play session when finishe
 | --- | --- |
 | Complete local Validate-Project | Passed on the integrated source before the final documentation commit; final run recorded below |
 | Scene hash; MAP server/shared; FIX-01 unchanged | Passed byte/source comparisons |
-| PlayerGuidance engine suite | Not run yet |
-| Real HUD lifecycle/ordering/readiness suites | Not run yet |
-| Single-client combined smoke | Not run yet |
+| PlayerGuidance engine suite | **Not run: Studio preview launch unavailable in this task**; formatted, linted and type-checked |
+| Real HUD lifecycle/ordering/readiness suites | **Not run at this head**; engine route included in preview |
+| Single-client combined smoke | **Environment blocked: no usable window appeared for the exact generated preview** |
 | Exact final draft-head CI | Pending PR creation |
 
 CLI formatting, lint, type analysis and XML checks do not execute Luau. Runtime
 results must be recorded separately with source revision and fixture limitations.
+
+Studio 0.741.19.7411056 had a preexisting two-client session on the old UI preview;
+it was not started by UX-02 and was preserved. Opening the exact combined file from
+idle Studio Home and a retained idle Edit window, plus launching the installed
+Studio app, did not produce a targetable combined preview window. A new startup
+log appeared but no combined window was returned. This is an environment/control
+observation, not proof that gameplay failed. No blocked cleanup, process termination,
+new runner/plugin or repeated multiplayer retry was used. No UX-02 Play server was
+started, so there is no new test session to stop. The preview remains available
+at the exact path above for the later consolidated QA.
 
 ## Consolidated QA to run later
 
