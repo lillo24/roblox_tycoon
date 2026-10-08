@@ -68,6 +68,14 @@ try {
         # Two small pinned Rojo builds verify that review fixtures never enter the
         # gameplay-only handoff, while the default keeps its QA coverage intact.
         ./scripts/Test-UiReviewPlace.ps1
+        # Experimental modules are dormant in normal builds; verify each opt-in
+        # preview's exact-source and QA boundary separately.
+        $experiments = Join-Path $repositoryRoot 'src/server/Experiments'
+        if (Test-Path -LiteralPath $experiments -PathType Container) {
+            foreach ($experiment in Get-ChildItem -LiteralPath $experiments -Directory) {
+                ./scripts/Test-ExperimentPlace.ps1 -Name $experiment.Name
+            }
+        }
         Write-Output 'Canonical snapshot is tracked; Studio save/reopen/restore still requires observed evidence.'
     }
     Write-Output 'CLI checks passed: formatting, lint, fresh build/sourcemap, Luau type analysis and failure probes, source ownership, serialized structure, and Git ignore rules. Studio integration/runtime gates are separate.'
