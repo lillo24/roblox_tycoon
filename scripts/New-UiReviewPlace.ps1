@@ -1,5 +1,6 @@
 param(
-    [string]$OutputName = 'ui-review-main.rbxlx'
+    [string]$OutputName = 'ui-review-main.rbxlx',
+    [switch]$GameplayOnly
 )
 
 # Disposable local QA only. No production mapping, scene save, or gameplay hook.
@@ -66,27 +67,42 @@ try {
         [void]$Parent.AppendChild($item)
         return $item
     }
-    $server = $scene.SelectSingleNode('/roblox/Item[@class="ServerScriptService"]')
-    $qa = Add-QAItem $server 'Folder' 'UI01QA' ''
-    foreach ($test in @('SupplyFeedback', 'UiState', 'WorldLabels', 'PlayerGuidance')) {
-        [void](Add-QAItem $qa 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
-    }
-    $runner = @'
+    if (-not $GameplayOnly) {
+        $server = $scene.SelectSingleNode('/roblox/Item[@class="ServerScriptService"]')
+        $qa = Add-QAItem $server 'Folder' 'UI01QA' ''
+        foreach ($test in @('Session', 'SupplyEvent', 'SupplyFeedback', 'UiState', 'WorldLabels', 'PlayerGuidance', 'MapLayout')) {
+            [void](Add-QAItem $qa 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
+        }
+        $runner = @'
 local client = game.StarterPlayer.StarterPlayerScripts:WaitForChild("TycoonClient")
 local shared = game.ReplicatedStorage:WaitForChild("TycoonShared")
+local server = game.ServerScriptService:WaitForChild("TycoonServer")
+print("QA01 EXECUTED Session assertions:", require(script.Parent.Session)(require(server.Session), require(shared.Config), require(shared.UpgradeCatalogue)))
+print("QA01 EXECUTED SupplyEvent assertions:", require(script.Parent.SupplyEvent)(require(server.SupplyEvent), require(server.Session), require(shared.SupplyRules), require(shared.UpgradeCatalogue)))
 local feedback = require(script.Parent.SupplyFeedback)(require(client.SupplyFeedback))
 local ui = require(script.Parent.UiState)(require(client.UiState), require(client.UiPreferences), require(shared.Config), require(shared.UpgradeCatalogue))
 local labels = require(script.Parent.WorldLabels)(require(client.WorldLabels))
 print("UI01 EXECUTED SupplyFeedback assertions:", feedback, "UiState assertions:", ui, "WorldLabels assertions:", labels)
 print("UX02 EXECUTED guidance/readiness assertions:", require(script.Parent.PlayerGuidance)())
 '@
-    [void](Add-QAItem $qa 'Script' 'RunAssertions' $runner)
-    $replicated = $scene.SelectSingleNode('/roblox/Item[@class="ReplicatedStorage"]')
-    $clientQA = Add-QAItem $replicated 'Folder' 'UI01ClientQA' ''
-    foreach ($test in @('HudLifecycle', 'HudFeedback', 'HudReadiness')) {
-        [void](Add-QAItem $clientQA 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
-    }
-    $clientRunner = @'
+        [void](Add-QAItem $qa 'Script' 'RunAssertions' $runner)
+        # MapLayout creates/destroys disposable runtime geometry. Invoke only in Edit,
+        # before Play, so it cannot race the production server's runtime.
+        $mapRunner = @'
+return function()
+    assert(not game:GetService("RunService"):IsRunning(), "QA01 map assertions require Edit mode")
+    local count = require(script.Parent.MapLayout)()
+    print("QA01 EXECUTED MapLayout assertions:", count)
+    return count
+end
+'@
+        [void](Add-QAItem $qa 'ModuleScript' 'RunMapAssertions' $mapRunner)
+        $replicated = $scene.SelectSingleNode('/roblox/Item[@class="ReplicatedStorage"]')
+        $clientQA = Add-QAItem $replicated 'Folder' 'UI01ClientQA' ''
+        foreach ($test in @('HudLifecycle', 'HudFeedback', 'HudReadiness')) {
+            [void](Add-QAItem $clientQA 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
+        }
+        $clientRunner = @'
 -- Opt-in: clone into PlayerScripts during Play. Command-bar requires use a separate
 -- module cache, so the actual LocalScript context must own preference/lifecycle QA.
 local client = script.Parent:WaitForChild("TycoonClient")
@@ -98,8 +114,8 @@ print("UX02 ACTUAL HUD readiness assertions:", require(qa.HudReadiness)(hud))
 -- Keep this caller alive until Stop Play: destroying the script also disconnects
 -- engine connections created by the recreated HUD in this script's context.
 '@
-    [void](Add-QAItem $clientQA 'LocalScript' 'RunClientAssertions' $clientRunner)
-    $displayFixture = @'
+        [void](Add-QAItem $clientQA 'LocalScript' 'RunClientAssertions' $clientRunner)
+        $displayFixture = @'
 -- Opt-in display-only fixture. Clone into PlayerScripts; Stop Play removes it.
 -- Uses the real view/state with synthetic values, never player attributes.
 local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -148,9 +164,9 @@ gui.Interface.UIScale:GetPropertyChangedSignal("Scale"):Connect(checkBounds)
 task.spawn(checkBounds)
 -- Keep the caller alive for the view's engine connections until Stop Play.
 '@
-    [void](Add-QAItem $clientQA 'LocalScript' 'RunDisplayFixture' $displayFixture)
-    [void](Add-QAItem $replicated 'RemoteEvent' 'UI01OrderQA' '')
-    $delivery = @'
+        [void](Add-QAItem $clientQA 'LocalScript' 'RunDisplayFixture' $displayFixture)
+        [void](Add-QAItem $replicated 'RemoteEvent' 'UI01OrderQA' '')
+        $delivery = @'
 -- Disposable preview fixture only. No gameplay mutation or production mapping.
 local shared = game.ReplicatedStorage:WaitForChild("TycoonShared")
 local config, rules = require(shared.Config), require(shared.SupplyRules)
@@ -161,7 +177,8 @@ game.ReplicatedStorage.UI01OrderQA.OnServerEvent:Connect(function(player)
     game.ReplicatedStorage[config.FeedbackName]:FireClient(player, player:GetAttribute(config.Attributes.PlotId), "UI01 independent purchase")
 end)
 '@
-    [void](Add-QAItem $qa 'Script' 'OrderFixture' $delivery)
+        [void](Add-QAItem $qa 'Script' 'OrderFixture' $delivery)
+    }
     # Studio's place reader rejects a leading XML declaration, including one
     # inherited from an authored scene. Normalize only the disposable output.
     $xmlSettings = [System.Xml.XmlWriterSettings]::new()
@@ -175,7 +192,11 @@ end)
     }
     Write-Output "Disposable UI review: $output"
     Write-Output "Canonical scene unchanged: $initialHash"
-    Write-Output 'Play executes SupplyFeedback/UiState/WorldLabels/PlayerGuidance assertions. UI01ClientQA contains opt-in lifecycle/delivery/readiness checks. See docs/UX_02_REVIEW.md. QA exists only in this disposable place.'
+    if ($GameplayOnly) {
+        Write-Output 'Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.'
+    } else {
+        Write-Output 'Play executes Session/SupplyEvent/SupplyFeedback/UiState/WorldLabels/PlayerGuidance assertions. UI01QA/RunMapAssertions is opt-in Edit-only. UI01ClientQA contains opt-in lifecycle/delivery/readiness/display checks. See docs/UX_02_REVIEW.md. QA exists only in this disposable place.'
+    }
 } finally {
     Pop-Location
 }

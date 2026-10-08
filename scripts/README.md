@@ -25,6 +25,22 @@ It does not contain gameplay code or require additional packages.
   timeout). Generate the combined checkout with
   `./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-ux-02.rbxlx`.
   See `docs/UX_02_REVIEW.md` for current provenance and consolidated QA.
+  QA-01 additionally includes Session/SupplyEvent in the automatic server route.
+  Before Play, run `require(game.ServerScriptService.UI01QA.RunMapAssertions)()`
+  in Edit for the actual MapLayout suite; its guard rejects Play because the test
+  creates/removes runtime geometry. `-GameplayOnly` omits all QA folders/remotes,
+  assertion runners and synthetic fixtures while retaining identical mapped
+  production source and Workspace. The default still includes the QA routes:
+
+  ```powershell
+  ./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-qa-01.rbxlx
+  ./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-founder.rbxlx -GameplayOnly
+  ```
+
+  `Test-UiReviewPlace.ps1` builds both variants and checks exact mapped source,
+  unchanged Workspace/scene hash, fixture inclusion/exclusion and exact test source.
+  Full validation runs this check when the authored scene exists; the two additional
+  pinned Rojo builds verify the handoff boundary without starting Studio or a server.
 
 - `Get-ValidationScope.ps1` returns whether the complete CLI suite is required:
   manual runs always require it, while PRs skip it only when every changed file is

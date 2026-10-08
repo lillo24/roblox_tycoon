@@ -130,3 +130,6 @@ PlayerGuidance tests isolated ownership/anchor fixtures, cues, hint completion a
 binding recovery. HudReadiness uses client-only held/replacement snapshots for
 the real ten-second timeout, malformed JSON, late recovery and teardown, without
 changing server cash. They are unmapped and execute only in disposable previews.
+For the combined review, the helper's `-GameplayOnly` switch excludes every QA
+fixture; omit it to retain automatic assertions and opt-in client tests. See
+`scripts/README.md` for the Edit-only map route and preview boundary checks.

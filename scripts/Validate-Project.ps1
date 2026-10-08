@@ -65,6 +65,9 @@ try {
         Invoke-CheckedNative -Command git -Arguments @('ls-files', '--error-unmatch', '--', 'place/tycoon.rbxlx')
         ./scripts/Assert-AuthoredMap.ps1
         ./scripts/Test-AuthoredMap.ps1
+        # Two small pinned Rojo builds verify that review fixtures never enter the
+        # gameplay-only handoff, while the default keeps its QA coverage intact.
+        ./scripts/Test-UiReviewPlace.ps1
         Write-Output 'Canonical snapshot is tracked; Studio save/reopen/restore still requires observed evidence.'
     }
     Write-Output 'CLI checks passed: formatting, lint, fresh build/sourcemap, Luau type analysis and failure probes, source ownership, serialized structure, and Git ignore rules. Studio integration/runtime gates are separate.'
