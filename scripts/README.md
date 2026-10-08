@@ -8,6 +8,13 @@ that feature's assertions. Normal source bootstraps and canonical scene stay int
 QA exclusion/inclusion and scene hash. Full validation discovers installed feature
 folders and runs this boundary check; no extra CI triggers or dependencies.
 
+For `-Name AimClash`, `-WithTests` injects only `AimClash.spec.luau` and its
+server runner. `AimClashClient.spec.luau` (individual real-remote replay or
+read-only observation), `AimClashDisplay.spec.luau` (actual client layout) and
+`AimClashInputFixture.luau` (Edit-only first-target timing extension) remain
+unmapped and opt-in. See [`docs/EXP_03_REVIEW.md`](../docs/EXP_03_REVIEW.md) for
+execution and restoration. The timing fixture is excluded from both previews.
+
 This folder owns the PowerShell validation used locally and by CI.
 It does not contain gameplay code or require additional packages.
 
