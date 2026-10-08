@@ -1,6 +1,7 @@
 # UX-02 combined prototype checkpoint
 
-**Implementation ready for consolidated QA.** This draft deliberately combines pending MAP-01/PR #8 and UI-01/PR #9
+**QA-01 incomplete: CLI and preview preparation passed; current-head Studio execution is environment blocked.**
+This draft deliberately combines pending MAP-01/PR #8 and UI-01/PR #9
 with the bounded UX-02 batch. Source drafts remain open and unchanged. This is
 the current approval/consolidation checkpoint; historical source packets do not
 provide approval of the combined build. No deployment or publication is authorized.
@@ -9,11 +10,13 @@ provide approval of the combined build. No deployment or publication is authoriz
 
 | Source | Exact revision |
 | --- | --- |
-| Current main, including the UX-02 plan | `2128f690b2a22534fce1fe8569e2c1caab89ab9b` |
+| Current main, including QA-01 | `2c2f04decc1a2ff1015464bf3e07e2d5de1627db` |
 | MAP-01 incorporated head | `56fb72feb538add13a863e6b4eef2f970fa9bba8` |
 | UI-01 incorporated head | `33b7f5ac46ed6e968c7ec23b8eb18352b3a6736f` |
 | Ancestry-preserving integration merge | `0ac574af850a9c7e4f50e43a11406d2c9b10f92a` |
 | UX implementation/source head | `17fe09f583b5a4db15d984129de9ca5d7010419d` |
+| QA-01 main reconciliation | `211ce37349ec6bfec2757c2dcc76de9153148f99` |
+| QA-01 preview/validation preparation | `ddffadad13c8efaf206db13cf6ac1751fda7c78c` |
 | Final draft/evidence head | The PR head; later evidence-only commits do not change tested source |
 | Scene | `place/tycoon.rbxlx`, unchanged from incorporated MAP-01 |
 | Scene SHA256 | `9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8` |
@@ -23,27 +26,42 @@ modular HUD and long-message layout, plus MAP-01's six-lot contracts and current
 source directions. Server/shared code, FIX-01 SupplyFeedback, mappings, tool pins,
 economy, event cadence/reward and scene geometry are identical to their source heads.
 
-## One local preview
+## Current preview and exact preparation
 
 Checkout:
 `C:\Users\utente\.codex\worktrees\ux-02-integrated-player-basics\roblox_tycoon`
 
-Actual disposable file:
-`C:\Users\utente\.codex\worktrees\ux-02-integrated-player-basics\roblox_tycoon\build\ui-review-ux-02.rbxlx`
+QA copy (automatic server assertions, opt-in client/display fixtures):
+`C:\Users\utente\.codex\worktrees\ux-02-integrated-player-basics\roblox_tycoon\build\ui-review-qa-01.rbxlx`
+
+Gameplay-only founder copy (no QA folders/remotes, assertion runners or display fixtures):
+`C:\Users\utente\.codex\worktrees\ux-02-integrated-player-basics\roblox_tycoon\build\ui-review-founder.rbxlx`
 
 From this checkout (installed pinned tools must be on PATH):
 
 ```powershell
 $env:PATH = "$env:USERPROFILE\.rokit\bin;$env:PATH"
 ./scripts/Validate-Project.ps1
-./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-ux-02.rbxlx
+./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-qa-01.rbxlx
+./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-founder.rbxlx -GameplayOnly
 ```
 
-Open that exact generated file in Studio and start a single-client Play session.
+Open the QA copy for execution; use the gameplay-only copy for normal review.
+Both remain generated-file evidence until their loaded Studio sources and viewport
+are verified. The default helper retains its existing automatic QA behavior.
 The helper replaces only the three reserved code folders using a fresh Rojo build;
 saved Workspace geometry is preserved. Never save Play or build over the canonical
 scene. Generated XML omits Studio's unsupported declaration. Server-side preview
-tests print executed counts. Opt-in real client tests use the actual LocalScript
+tests print executed counts for Session, SupplyEvent, SupplyFeedback, UiState,
+WorldLabels and PlayerGuidance. Before Play, invoke the Edit-only map route:
+
+```luau
+require(game.ServerScriptService.UI01QA.RunMapAssertions)()
+```
+
+It invokes the exact MapLayout suite against the saved scene; a guard rejects
+Play because that test creates/removes temporary runtime geometry. Opt-in real
+client tests use the actual LocalScript
 module cache; in the Play-client command bar:
 
 ```lua
@@ -78,7 +96,73 @@ fixtures, not gameplay proof. Stop only this preview's Play session when finishe
 - Native Activated, selection links, Close/Back, one-panel behavior, prompt gating,
   safe-area layout, reduced motion and scoped ambient labels are retained.
 
-## Execution record
+## QA-01 execution record (2026-10-08)
+
+Production Luau, tests, mappings, tool pins and canonical scene are unchanged
+from `17fe09f`. QA preparation `ddffada` adds complete existing test routes and
+the optional gameplay-only switch, with a regression check in full validation.
+There is no demonstrated gameplay defect repaired in this pass. Runtime checks
+below have **zero current-head executed assertions**, rather than historical totals.
+
+| Check | Method and current result |
+| --- | --- |
+| Full local CLI | **Passed** with QA-01 helper/validation changes: formatting, lint, build/sourcemap, source/tests analysis, 12 structure probes, 5 negative type probes, six-lot scene contract and 7 negative map probes. Log: `build/qa-01-validation.log`. |
+| Preview variants | **Passed** `Test-UiReviewPlace`: both outputs contain exact normalized mapped production sources and canonical Workspace; default contains all ten exact suite sources and correct runner classes; gameplay-only contains none of the QA fixtures; no XML declaration. This is file validation, not Luau execution. |
+| Clean-checkout preparation | **Passed** at detached `ddffada`: clean status, full Validate-Project, exact-source preview regeneration and unchanged scene hash. Log: `build/qa-01-clean-validation.log` in the parent integration checkout. **Studio reopen/start/purchase/claim/stop/restart not run**; this does not complete the engine restore gate. |
+| Scene/source preservation | **Passed** SHA256 below and Git comparisons of all Luau, scene, mappings and pins against `17fe09f`. Source PR #8/#9 heads remain the recorded incorporated SHAs. |
+| Session / SupplyEvent / SupplyFeedback / UiState / WorldLabels / PlayerGuidance | **Not run at the combined head**; automatic server route prepared, no usable current preview. |
+| MapLayout | **Not run at the combined head**; exact Edit-only route prepared. |
+| HUD lifecycle / ordering / readiness | **Not run at the combined head**; actual LocalScript route retained, including real ten-second readiness fixture. |
+| Normal desktop, touch swipe, full controller traversal and phone Standard/Large | **Environment blocked** before a current-source viewport; no normal inputs credited. Earlier UI evidence is inherited at its own revisions. |
+| Two/six live clients, private state/shared contest/disconnect/reuse | **Not run at the combined head**; the preexisting old two-client session cannot establish coverage. Seven-user domain coverage also awaits actual Session/SupplyEvent execution here. |
+| New combined screenshots | **Not captured**; old map/UI images remain inherited evidence, not images of this build. |
+| CI | Exact final PR-head result is recorded after the QA packet push; a green historical run is not a current-head check. |
+
+### Current environment and bounded recovery
+
+The installed official `%LOCALAPPDATA%\Roblox\mcp.bat` resolves to StudioMCP
+alongside Studio `0.741.19.7411056`. Its local STDIO initialization answered
+`RobloxStudio` version `1.0.0`; `tools/list` timed out after ten seconds, and
+the proxy reported "Timed out waiting for tools to become available". The
+temporary task-owned proxy was closed. No bridge, package, security preference
+or persistent connection setting was installed/changed. This follows the
+[official Studio MCP route](https://create.roblox.com/docs/studio/mcp).
+
+Fresh Computer Use inventory found the old preview Edit windows and an existing
+`ui-review-main-ready.rbxlx` parent with Server/Place1 clients; no UX-02 or QA-01
+window existed. Opening the exact newly generated QA-01 file through native
+Ctrl+O/file dialog from the idle `ui-review-main-final.rbxlx` window closed the
+dialog but did not expose a QA-01 viewport. A fresh window inventory still
+contained only the old previews/session. This failed opening attempt is retained;
+no Play was started and no loaded-source, engine, input or gameplay pass is claimed.
+
+Read-only process inspection found nine visible Studio windows plus two existing
+windowless processes. The old client log
+`0.741.19.7411056_20261007T115812Z_Studio_9F517_last.log` contains continuing
+profile-service HTTP 429 responses around 11:49 UTC on 2026-10-08. These service
+errors and the opening failure are environment observations, **not a proven
+causal diagnosis or project-script defect**. Their effect is that current-source
+runtime verification cannot start. No new multiplayer launch was attempted.
+
+Ownership of the old sessions/windows was requested once before cleanup, because
+QA-01 requires preserving unrelated/unsaved work. Until that is established,
+they stay open; no process termination, unsaved-work discard or source-worktree
+edit of PR #8/#9 is authorized by a failed opening attempt. The remaining action is to
+establish one usable current QA-01 window (confirm old QA sessions may be stopped,
+or preserve user work and reopen this exact QA copy). Codex can then execute the
+whole matrix; the user is not being asked to run individual assertions.
+
+The clean detached checkout remains available for the pending restore smoke:
+`C:\Users\utente\.codex\worktrees\ux-02-integrated-player-basics\roblox_tycoon\build\qa-01-restore`
+at `ddffadad13c8efaf206db13cf6ac1751fda7c78c`. Its `build/ui-review-qa-01.rbxlx`
+and `build/ui-review-founder.rbxlx` were freshly generated by the same commands
+above. No runtime scene/code change is hidden in either copy. Use the founder
+copy only for the combined normal play review after technical execution passes.
+The canonical scene's captured scripts remain the older MAP copies; current
+production source is loaded into these disposable previews, not saved into
+`place/tycoon.rbxlx`. No Rojo plugin connection was verified in QA-01.
+
+## Historical UX-02 execution record
 
 | Check | Current result |
 | --- | --- |
@@ -108,7 +192,7 @@ new runner/plugin or repeated multiplayer retry was used. No UX-02 Play server w
 started, so there is no new test session to stop. The preview remains available
 at the exact path above for the later consolidated QA.
 
-## Consolidated QA to run later
+## Consolidated runtime/review gates still open
 
 | Area | Status and required observation |
 | --- | --- |
