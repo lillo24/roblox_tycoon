@@ -40,8 +40,9 @@ function TycoonRuntime.start()
 		BaseIncome = Config.BaseIncome,
 	}
 	local session = Session.new(tuning, Catalogue.Definitions)
-	local supplyCenter = SupplyRuntime.inspect() -- Validate reserved names/neutral scene before writes.
-	local plots = PlotWorld.create()
+	local layout = PlotWorld.inspect() -- All authored geometry is validated before writes.
+	local supplyCenter = SupplyRuntime.inspect()
+	local plots = PlotWorld.create(layout)
 	-- Outbound only: no client purchase remote, message forwarding, or broadcast.
 	local feedback = Instance.new("RemoteEvent")
 	feedback.Name = Config.FeedbackName

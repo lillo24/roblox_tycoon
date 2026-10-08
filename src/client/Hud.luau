@@ -112,8 +112,13 @@ function Hud.start()
 		end
 		-- Keep feedback visible on short landscape/editor viewports; scroll the list.
 		local height = math.min(300, math.max(196, gui.AbsoluteSize.Y - 24))
+		-- In wide views the center cache prompt otherwise lies under the touch-active
+		-- catalogue. Keep the same HUD at the side; portrait retains its centered layout.
+		local wide = gui.AbsoluteSize.X > gui.AbsoluteSize.Y * 1.5
+		panel.AnchorPoint = if wide then Vector2.zero else Vector2.new(0.5, 0)
+		panel.Position = if wide then UDim2.fromOffset(12, 12) else UDim2.new(0.5, 0, 0, 12)
 		panel.Size = UDim2.new(0.86, 0, 0, height)
-		constraint.MaxSize = Vector2.new(360, height)
+		constraint.MaxSize = Vector2.new(if wide then 320 else 360, height)
 		upgradeList.Size = UDim2.new(1, -24, 0, height - 164)
 		result.Position = UDim2.fromOffset(12, height - 34)
 	end

@@ -63,6 +63,8 @@ try {
         Write-Output 'Studio snapshot/restoration gate PENDING: place/tycoon.rbxlx has not been saved from Studio.'
     } else {
         Invoke-CheckedNative -Command git -Arguments @('ls-files', '--error-unmatch', '--', 'place/tycoon.rbxlx')
+        ./scripts/Assert-AuthoredMap.ps1
+        ./scripts/Test-AuthoredMap.ps1
         Write-Output 'Canonical snapshot is tracked; Studio save/reopen/restore still requires observed evidence.'
     }
     Write-Output 'CLI checks passed: formatting, lint, fresh build/sourcemap, Luau type analysis and failure probes, source ownership, serialized structure, and Git ignore rules. Studio integration/runtime gates are separate.'

@@ -5,6 +5,7 @@ local EventTypes = require(game:GetService("ServerScriptService").TycoonServer.S
 local SessionTypes = require(game:GetService("ServerScriptService").TycoonServer.Session)
 local RulesTypes = require(game:GetService("ReplicatedStorage").TycoonShared.SupplyRules)
 local CatalogueTypes = require(game:GetService("ReplicatedStorage").TycoonShared.UpgradeCatalogue)
+local Config = require(game:GetService("ReplicatedStorage").TycoonShared.Config)
 
 return function(
 	Event: typeof(EventTypes),
@@ -17,6 +18,29 @@ return function(
 		assert(value, message)
 		checks += 1
 	end
+	-- Exercise production capacity as well as the deliberate four-owner fixtures below.
+	local production = Session.new(Config, Catalogue.Definitions)
+	for id = 1, 6 do
+		check(production:assign(id) ~= nil, "Production event has six owners")
+	end
+	check(production:assign(7) == nil and production:assignedCount() == 6, "Seventh owner refused")
+	local productionEvent = Event.new(Rules.Tuning)
+	productionEvent:sync(0, production:assignedCount())
+	productionEvent:sync(20, production:assignedCount())
+	local eventId = productionEvent:snapshot().id
+	check(productionEvent:claim(production, 6, "Sixth", eventId, 20), "Sixth lot can claim")
+	for id = 1, 6 do
+		local owner = production:get(id)
+		assert(owner, "Production owner missing")
+		check(owner.cash == (if id == 6 then 10 else 0) and owner.incomeRate == 1, "Six-owner reward isolation")
+	end
+	check(not productionEvent:claim(production, 1, "First", eventId, 20), "Winner consumes event once")
+	check(production:release(6) == 6, "Sixth owner releases")
+	local sixthReplacement = production:assign(7)
+	check(
+		sixthReplacement ~= nil and sixthReplacement.plotId == 6 and sixthReplacement.cash == 0,
+		"Replacement has fresh event economy"
+	)
 	local function fresh(): (EventTypes.Event, SessionTypes.Session, SessionTypes.State, SessionTypes.State)
 		local session = Session.new({ PlotCount = 4, StartingCash = 0, BaseIncome = 1 }, Catalogue.Definitions)
 		local first, second = session:assign(101), session:assign(202)

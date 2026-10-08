@@ -10,16 +10,17 @@ Round-based versus persistent/infinite progression remains unresolved.
 
 | File | Responsibility |
 | --- | --- |
-| `shared/Config.luau` | Frozen general tuning, runtime names, offsets, attribute names |
+| `shared/Config.luau` | Frozen six-owner tuning, runtime/map names and attribute names |
 | `shared/UpgradeCatalogue.luau` | Typed IDs/readonly definitions, startup validation, availability/result text, purchase attribute names |
-| `shared/SupplyRules.luau` | Frozen provisional event constants, validation, snapshot types, HUD text, neutral offset/runtime names |
+| `shared/SupplyRules.luau` | Frozen provisional event constants, validation, snapshot types, HUD text and runtime names |
 | `server/Bootstrap.server.luau` | Starts the server runtime once |
 | `server/TycoonRuntime.luau` | Player lifecycle, one income clock, prompt validation/throttling, replication, private results |
 | `server/Session.luau` | Instance-free authoritative state and non-yielding assignment/release/purchase operations |
 | `server/SupplyEvent.luau` | Supplied-time schedule, identities, phases, atomic resolution plus Session credit |
 | `server/SupplyRuntime.luau` | Exact Player/assignment/character/range guards, separate event limiter/feedback, coherent snapshot and server-bound prompts |
 | `server/SupplyWorld.luau` | Neutral footprint validation, anchored cache/marker and phase presentation |
-| `server/PlotWorld.luau` | Placement validation, temporary geometry, reconciliation of pads and purchased visuals |
+| `server/MapLayout.luau` | Saved-map contract, support/obstacle preflight and oriented footprint clearance |
+| `server/PlotWorld.luau` | Local-frame equipment/pads/signs and purchase reconciliation on saved foundations |
 | `client/Bootstrap.client.luau` | Starts the HUD once |
 | `client/Hud.luau` | Observes purchase attributes/results and current event snapshot; deadline countdown, separate feedback, safe scrolling catalogue |
 | `client/SupplyFeedback.luau` | Supplied-time private event feedback retention, matching public identity, expiry and reset/timeout protection |
@@ -46,7 +47,7 @@ cycles, and nonfinite/nonpositive/fractional costs or deltas with ID/field conte
 before Session or Workspace state is created. Session takes a validated frozen
 copy so later edits to constructor input cannot change a running economy.
 
-`Config` retains **4 plots**, **0 starting cash**, **1 base income**, and a **1-second
+`Config` provides **6 plots**, **0 starting cash**, **1 base income**, and a **1-second
 tick**. Income is base plus the deltas of the actual purchase set: the original
 booster changes 1 to 2; all four produce 12. Cash keeps accruing after completion.
 One Heartbeat accumulator accrues completed intervals, including elapsed time
@@ -92,7 +93,10 @@ The old `TycoonUpgradePurchased` attribute and Config's `UpgradeCost`/
 `UpgradedIncome` fields are removed; all call sites and type probes use the new
 catalogue API. HUD ownership comes from purchased IDs, never an inferred rate.
 On short viewports the catalogue scrolls while cash/income/results remain visible
-inside the safe area. Assignment loss/change clears stale feedback and upgrade presentation. Respawns
+inside the safe area. On wide safe areas (width > 1.5 × height), the same HUD uses
+a left anchor at (12,12) and 320px maximum width so the touch-active catalogue
+does not cover central world prompts. Portrait retains its centered 360px maximum.
+Contents, scrolling, feedback lifetime and respawn behavior are unchanged. Assignment loss/change clears stale feedback and upgrade presentation. Respawns
 preserve the session and one `ResetOnSpawn = false` safe-area HUD. Disconnect
 removes every purchase, resets visuals/pads, and clears attributes/throttle state.
 The next join can reuse the plot with a fresh economy. Full capacity still has no
@@ -108,12 +112,14 @@ new message; results for a previous plot are ignored.
 
 ## Runtime geometry and player interaction
 
-Walk approximately 42–54 studs toward world +Z from the authored spawn. Four
-10×10 floors use the existing offsets. The reserved non-archivable
-`Workspace/TycoonRuntime` owns all geometry. Startup checks the single spawn,
-samples dry terrain at nine points per floor, and rejects collidable authored
-objects before creating anything. Nothing is moved/carved or saved to the scene;
-Rojo does not own Workspace. All pads/machines stay inside the inspected footprint.
+The saved FactoryHub has six 60×70 foundations facing the shared plaza.
+MapLayout reads each saved Anchor CFrame (local -Z is the inward front).
+PlotWorld uses that frame for all pads, signs and equipment; no world-coordinate
+table or second set of runtime floors exists. Support rays include exactly the
+intended foundation/plaza. Clearance tests inspect other collidable parts.
+Missing/duplicate anchors, wrong IDs/facing, intersecting footprints and blocked
+entrances/pads/equipment fail before runtime writes. See place/README.md for safe
+editing. Workspace remains outside the live Rojo mapping.
 
 Each plot has four separated, surface-labeled pads. The built-in ProximityPrompt
 shows the upgrade, delta, and price/state near the selected pad; clickable prompts
@@ -124,10 +130,13 @@ rejection; purchased prompts retire. The HUD lists name/cost/delta plus each sta
 Completion reads "Complete — income continues".
 
 `PlotWorld.reconcile` reads the authoritative set, creating missing visuals and
-removing absent ones. Income Booster is a green tower, Workshop a blue machine,
-Booster Tuning a yellow cap, Workshop Expansion a wider purple top. Each is named
-and labeled separately below the plot's `Upgrades` folder. Repeated reconciliation
-does not duplicate parts; replicated current geometry is visible to late observers.
+removing absent ones. Purchases add anchored metal equipment with bases, supports,
+housing/hoppers, output stations and status lights; follow-ups add taller units
+and control cabinets. All use their lot's accent and local orientation.
+Only bases/housings collide; decorations have no touch processing. Reconciliation
+does not duplicate equipment, and late observers see the current replicated set.
+Nearby ownership labels are 130×36, 12px, at most 90 studs, with depth occlusion.
+
 Owner reset reconciles an empty set, restoring every prompt and removing visuals.
 
 ## Calculated purchase orders (not playtest results)
@@ -247,19 +256,16 @@ results. Safe-area clipping and the one respawn-retained HUD are preserved.
 
 ### Shared scene location and design limits
 
-`Workspace/TycoonRuntime/SupplyCache` owns the temporary 6×6 floor, one anchored
-primitive cache, built-in prompt and labeled marker. It is 28 studs toward world
-+Z from the unchanged authored spawn. Before writes, nine terrain samples must
-be dry and the seven-stud-high footprint must contain no authored collidable part.
-Reserved state/feedback/world names are checked. Runtime creation also verifies
-the actual purchase prompts are outside the combined cache/pad radii, without
-duplicating their layout. Marker text and color distinguish warning, open, result
-and waiting. No forced player teleport, camera control, terrain edits or scene save
-is part of gameplay. QA may relocate test avatars to set up input probes.
+`Workspace/TycoonRuntime/SupplyCache` owns its temporary anchored cache, shallow
+base, prompt and 180×48 marker (14px, 100-stud limit, depth occlusion). Its position
+comes from FactoryHub/CacheAnchor at the plaza center, with intended support
+validated separately from obstacles and spawn/purchase-range separation.
+No forced teleport, camera control, terrain edits or map generation occurs on Play.
 
-Inspected horizontal distance from plot centers is approximately 15 studs for
-the front pair and 27 for the rear pair. This is obvious travel asymmetry, not
-perfect fairness. Camping and repeat wins are possible; neither is silently
+Each lot entrance is 75 studs from the center, with symmetric paved access.
+Measured normal-walk entrance-to-4-stud-center-approach times are 4.73–4.90s;
+equal geometry does not establish network/gameplay fairness.
+Camping and repeat wins are possible; neither is silently
 prevented. Ordinary income continues while away from a plot, so the trip does not
 create an income opportunity cost. Rewards after completing all upgrades still
 have no further spending use. No endgame/shop, rebalancing, paid advantage,
@@ -388,3 +394,15 @@ Inspect logs, stop/restart, and confirm Edit has no runtime cache/state/QA objec
 and all live script strings match the checkout. Never save temporary QA code.
 Check phone portrait/landscape HUD and the supported emulated Touch prompt route;
 report physical-device testing separately, without inventing a new merge gate.
+
+## MAP-01 validation checkpoint
+
+See [map evidence and screenshots](../place/MAP_01_REVIEW.md). The standalone
+actual-module counts are Session 186, SupplyEvent 196, SupplyFeedback 65 and
+MapLayout 522. MapLayout.spec runs in Edit against the saved scene, restores its
+negative-probe mutations, exercises equipment at all six frames, then removes
+its temporary runtime. The deliberate four-owner event fixtures remain.
+
+Full CLI validation also checks the serialized map contract and seven negative
+scene probes. This does not execute gameplay or replace the observed six-client,
+input, lifecycle, emulated-device and clean-checkout checks.
