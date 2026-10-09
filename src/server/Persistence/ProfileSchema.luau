@@ -44,7 +44,7 @@ local function migrated(old: Legacy.Data): Data
 		objects["legacy_" .. id] = { content = id, x = p[1], z = p[2], rotation = 0, stored = false }
 	end
 	return {
-		version = 2,
+		version = 3,
 		cash = old.cash,
 		assets = old.assets,
 		placements = old.placements,
@@ -63,7 +63,7 @@ function Schema.decode(value: any): (Data?, string?)
 		return if old then migrated(old) else nil, issue
 	end
 	if
-		value.version ~= 2
+		(value.version ~= 2 and value.version ~= 3)
 		or not fields(value, { "version", "cash", "assets", "placements", "objects", "nextId", "revision", "theme" })
 	then
 		return nil, "unsupported profile schema"
@@ -123,6 +123,9 @@ function Schema.decode(value: any): (Data?, string?)
 	end
 	for id, object in data.objects do
 		local definition = Catalogue.ById[object.content]
+		if definition.fixed and not object.stored then
+			return nil, "fixed expansion must not occupy an object footprint"
+		end
 		if
 			definition.unique and owned[object.content] ~= 1
 			or definition.requires and not owned[definition.requires]

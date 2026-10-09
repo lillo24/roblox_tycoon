@@ -6,9 +6,10 @@ $hash = (Get-FileHash -LiteralPath $canonical).Hash
 foreach ($variant in @(
     @{ Backend = 'LocalPreview'; QA = $true; Name = 'inf-helper-qa.rbxlx' },
     @{ Backend = 'LocalPreview'; QA = $false; Name = 'inf-helper-play.rbxlx' },
-    @{ Backend = 'DataStore'; QA = $false; Name = 'inf-helper-real.rbxlx' }
+    @{ Backend = 'DataStore'; QA = $false; Name = 'inf-helper-real.rbxlx' },
+    @{ Backend = 'LocalPreview'; QA = $false; Showcase = $true; Name = 'inf-helper-showcase.rbxlx' }
 )) {
-    & (Join-Path $PSScriptRoot 'New-InfiniteReviewPlace.ps1') -Backend $variant.Backend -IncludeQA:$variant.QA -OutputName $variant.Name
+    & (Join-Path $PSScriptRoot 'New-InfiniteReviewPlace.ps1') -Backend $variant.Backend -IncludeQA:$variant.QA -Showcase:([bool]$variant.Showcase) -OutputName $variant.Name
     [xml]$scene = [IO.File]::ReadAllText((Join-Path $repositoryRoot "build/$($variant.Name)"))
     if ($scene.SelectSingleNode('/roblox/Item[@class="Workspace"]').OuterXml -cne $authored.SelectSingleNode('/roblox/Item[@class="Workspace"]').OuterXml) { throw 'Infinite preview changed the authored map.' }
     $mode = $scene.SelectSingleNode("/roblox/Item[@class='ReplicatedStorage']/Item[@class='StringValue'][Properties/string[@name='Name']='TycoonMode']/Properties/string[@name='Value']")
@@ -33,6 +34,8 @@ foreach ($variant in @(
         }
     }
     $fixture = $scene.SelectSingleNode("/roblox/Item[@class='ServerScriptService']/Item[Properties/string[@name='Name']='INF01Preview']")
+    $showcase = $scene.SelectSingleNode("//Item[@class='ModuleScript'][Properties/string[@name='Name']='InfiniteShowcase']")
+    if ([bool]$showcase -ne [bool]$variant.Showcase) { throw 'Development example fixture crossed its explicit preview boundary.' }
     $disabled = $scene.SelectSingleNode("/roblox/Item[@class='ServerScriptService']/Item[Properties/string[@name='Name']='TycoonServer']/Item[Properties/string[@name='Name']='Bootstrap']/Properties/bool[@name='Disabled']")
     if ($variant.Backend -eq 'DataStore') {
         if ($fixture -or ($disabled -and $disabled.InnerText -eq 'true')) { throw 'Real DataStore preview contains a fallback or disabled bootstrap.' }

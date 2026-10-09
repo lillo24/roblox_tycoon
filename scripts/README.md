@@ -161,3 +161,5 @@ production mappings. Output is restricted to `build/inf-*.rbxlx` and linked outp
 every nested source/class, and the unchanged authored map. The standard validation
 runs these small Rojo builds because startup injection is a persistence safety boundary.
 It does not execute the Luau suites or claim a real DataStore write.
+
+INF-03: `New-InfiniteReviewPlace.ps1 -Showcase` is restricted to LocalPreview. It injects two clearly labelled, rich development profiles through the same profile load path, reserving two of six lots. Human clients still start fresh with 0 cash and ordinary earnings. The optional fixtures live outside mapped roots and never enter a real-backend build. IncludeQA also injects Growth and its own separately named presets module, without enabling showcase residents. Test-InfiniteReviewPlace checks all four variants and the fixture boundary.

@@ -147,3 +147,7 @@ Platform basis: [Roblox DataStores](https://create.roblox.com/docs/cloud-service
 and [session ownership/retries](https://create.roblox.com/docs/cloud-services/data-stores/player-data-purchasing),
 consulted 2026-10-09. This implementation is project-specific; it does not copy the
 reference system or add a generic persistence framework.
+
+## INF-03 content revision
+
+Data v3 accepts/migrates v1 and v2 intentionally. It retains legacy slot metadata and every individual object/appearance, with the same store and key identity. The 64-total/48-decoration limits reserve space for progression after a full v2 inventory. Retired catalogue definitions remain decodable/renderable and keep their trusted income, while new purchases are refused. Older servers refuse v3; no lossy downgrade path is offered.

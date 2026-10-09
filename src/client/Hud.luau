@@ -18,6 +18,7 @@ local Guidance = require(script.Parent.FactoryGuidance)
 local Onboarding = require(script.Parent.Onboarding)
 local Mode = require(ReplicatedStorage.TycoonShared.GameMode)
 local Editor = require(script.Parent.PropertyEditor)
+local Activity = require(script.Parent.PropertyActivity)
 
 local Hud = {}
 
@@ -58,6 +59,7 @@ function Hud.start(): ScreenGui
 	local labels = Labels.start()
 	local view: View.Handle
 	local editor: { open: () -> (), destroy: () -> () }? = nil
+	local stopActivity = if infinite then Activity.start() else nil
 	local render: () -> () = function() end
 	local function applyPreferences()
 		if not running then
@@ -183,6 +185,9 @@ function Hud.start(): ScreenGui
 			connection:Disconnect()
 		end
 		view.destroy()
+		if stopActivity then
+			stopActivity()
+		end
 		if editor then
 			editor.destroy()
 		end

@@ -282,6 +282,10 @@ function Editor.new(hud: ScreenGui): { open: () -> (), destroy: () -> () }
 				table.sort(ids)
 				for _, id in ids do
 					local object = data.objects[id]
+					if Catalogue.ById[object.content].fixed then
+						text(scroll, Catalogue.ById[object.content].name .. " • fixed, already open", 52)
+						continue
+					end
 					button(
 						scroll,
 						Catalogue.ById[object.content].name
@@ -308,10 +312,31 @@ function Editor.new(hud: ScreenGui): { open: () -> (), destroy: () -> () }
 		else
 			text(
 				scroll,
-				"Online income continues while you arrange or store. New decorations arrive in storage. 48 belongings maximum.",
+				"Choose any direction; combine them later. Income continues in storage. 64 belongings, including up to 48 decorations.",
 				56
 			)
-			for _, item in Catalogue.Definitions do
+			local ownedIds = {}
+			for _, object in data.objects do
+				ownedIds[object.content] = true
+			end
+			local choices = table.clone(Catalogue.Definitions)
+			local function rank(item: Catalogue.Definition): number
+				return if item.unique and ownedIds[item.id]
+					then 3
+					elseif item.requires and not ownedIds[item.requires] then 2
+					elseif item.income > 0 or item.fixed then 0
+					else 1
+			end
+			table.sort(choices, function(a: Catalogue.Definition, b: Catalogue.Definition)
+				if rank(a) == rank(b) then
+					return a.cost < b.cost
+				end
+				return rank(a) < rank(b)
+			end)
+			for _, item in choices do
+				if item.retired then
+					continue
+				end
 				local owned = false
 				for _, object in data.objects do
 					if object.content == item.id then

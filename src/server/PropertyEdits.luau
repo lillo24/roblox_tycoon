@@ -24,13 +24,23 @@ function Edits.apply(data: Schema.Data, request: any): (Schema.Data?, string)
 		if not definition then
 			return nil, "Unknown catalogue item"
 		end
-		local owned, count = {}, 0
+		if definition.retired then
+			return nil, "This keepsake is no longer sold; owned copies remain yours"
+		end
+		local owned, count, decorations = {}, 0, 0
 		for _, object in data.objects do
 			owned[object.content] = true
 			count += 1
+			local item = Catalogue.ById[object.content]
+			if item.income == 0 and not item.fixed then
+				decorations += 1
+			end
 		end
 		if count >= Catalogue.MaxObjects or data.nextId >= 1000000 then
-			return nil, "48 belongings maximum. Arrange or store your existing objects."
+			return nil, "64 belongings maximum. Arrange or store your existing objects."
+		end
+		if definition.income == 0 and not definition.fixed and decorations >= Catalogue.MaxDecorations then
+			return nil, "48 decorations maximum. Space is reserved for equipment and expansion."
 		end
 		if definition.unique and owned[definition.id] then
 			return nil, "Already owned"
@@ -55,6 +65,9 @@ function Edits.apply(data: Schema.Data, request: any): (Schema.Data?, string)
 			return nil, "Choose one of your belongings"
 		end
 		local object = table.clone(data.objects[request.object])
+		if Catalogue.ById[object.content].fixed then
+			return nil, "This is a fixed property expansion"
+		end
 		object.stored = action == "store"
 		if action == "place" then
 			object.x, object.z, object.rotation = request.x, request.z, request.rotation

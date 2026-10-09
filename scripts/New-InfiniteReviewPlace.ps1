@@ -1,9 +1,11 @@
 param(
     [ValidateSet('LocalPreview', 'DataStore')][string]$Backend = 'LocalPreview',
     [switch]$IncludeQA,
+    [switch]$Showcase,
     [string]$OutputName = 'inf-review.rbxlx'
 )
 $ErrorActionPreference = 'Stop'
+if ($Showcase -and $Backend -ne 'LocalPreview') { throw 'Showcase presets are only allowed with the explicit local memory backend.' }
 $repositoryRoot = Split-Path $PSScriptRoot -Parent
 if ($OutputName -notmatch '^inf-[a-z0-9-]+\.rbxlx$') { throw 'OutputName must be an inf-*.rbxlx basename inside build.' }
 $output = Join-Path $repositoryRoot "build/$OutputName"
@@ -37,6 +39,7 @@ if ($Backend -eq 'LocalPreview' -or $IncludeQA) {
     [void](Add-Item $qa 'ModuleScript' 'ProfileMemoryStore' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/ProfileMemoryStore.luau'))))
 }
 if ($Backend -eq 'LocalPreview') {
+    if ($Showcase) { [void](Add-Item $qa 'ModuleScript' 'InfiniteShowcase' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/InfiniteShowcase.luau')))) }
     $bootstrap = $server.SelectSingleNode("Item[Properties/string[@name='Name']='TycoonServer']/Item[@class='Script'][Properties/string[@name='Name']='Bootstrap']/Properties")
     foreach ($old in @($bootstrap.SelectNodes("bool[@name='Disabled']"))) { [void]$bootstrap.RemoveChild($old) }
     $disabled = $scene.CreateElement('bool'); $disabled.SetAttribute('name', 'Disabled'); $disabled.InnerText = 'true'
@@ -44,21 +47,31 @@ if ($Backend -eq 'LocalPreview') {
     $start = @'
 -- Disposable preview only. Does not call DataStoreService and resets on Stop.
 local memory = require(script.Parent.ProfileMemoryStore).new()
+local examples
+if script.Parent:FindFirstChild("InfiniteShowcase") then
+    local showcase = require(script.Parent.InfiniteShowcase)
+    memory.values["user_-1001"] = { version = 1, data = showcase.make("Garden") }
+    memory.values["user_-1002"] = { version = 1, data = showcase.make("Sky") }
+    examples = { [-1001] = "The Glass Garden", [-1002] = "The Sky Workshop" }
+end
 require(game.ServerScriptService.TycoonServer.TycoonRuntime).start({
     update = memory.update,
     label = "Local preview • changes last only this server",
+    examples = examples,
 })
 print("INF01 LOCAL PREVIEW: memory backend, no cross-session saving evidence")
 '@
     [void](Add-Item $qa 'Script' 'StartLocalPreview' $start)
 }
 if ($IncludeQA) {
-    foreach ($test in @('Persistence', 'ProfileLifecycle', 'PropertyWorld', 'InfiniteState', 'Session', 'SupplyEvent', 'Property')) {
+    foreach ($test in @('Persistence', 'ProfileLifecycle', 'PropertyWorld', 'InfiniteState', 'Session', 'SupplyEvent', 'Property', 'Growth')) {
         [void](Add-Item $qa 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
     }
+    [void](Add-Item $qa 'ModuleScript' 'GrowthPresets' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/InfiniteShowcase.luau'))))
     $runner = @'
 local memory = require(script.Parent.ProfileMemoryStore)
 print("INF02 EXECUTED Property assertions:", require(script.Parent.Property)(memory))
+print("INF03 EXECUTED Growth assertions:", require(script.Parent.Growth)(memory, require(script.Parent.GrowthPresets)))
 print("INF01 EXECUTED Persistence assertions:", require(script.Parent.Persistence)(memory))
 print("INF01 EXECUTED ProfileLifecycle assertions:", require(script.Parent.ProfileLifecycle)(memory))
 print("INF01 EXECUTED InfiniteState assertions:", require(script.Parent.InfiniteState)())

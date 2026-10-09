@@ -28,7 +28,7 @@ return function(Memory: any): number
 	local migrated = Schema.decode(old)
 	assert(migrated, "v1 profile must migrate")
 	check(
-		migrated.version == 2 and migrated.cash == 123 and Schema.income(migrated) == 12,
+		migrated.version == 3 and migrated.cash == 123 and Schema.income(migrated) == 12,
 		"v1 cash and four earnings survive"
 	)
 	check(

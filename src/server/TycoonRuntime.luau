@@ -20,7 +20,11 @@ local started = false
 
 -- Injection is restricted to disposable Studio previews/tests; production has no
 -- in-memory fallback. The preview label replaces every save claim in that copy.
-function TycoonRuntime.start(preview: { update: (string, (any) -> any) -> any, label: string }?)
+function TycoonRuntime.start(preview: {
+	update: (string, (any) -> any) -> any,
+	label: string,
+	examples: { [number]: string }?,
+}?)
 	assert(RunService:IsServer(), "Tycoon: runtime must start on the server")
 	assert(not started, "Tycoon: runtime started twice")
 	local infinite = Mode.read() == "Infinite"
@@ -116,6 +120,14 @@ function TycoonRuntime.start(preview: { update: (string, (any) -> any) -> any, l
 				ProfileStore.new(update),
 				function(userId: number, status: string, saveStatus: string, state: Session.State?, _data: Schema.Data?)
 					local player = active[userId]
+					local example = if preview and preview.examples then preview.examples[userId] else nil
+					if example and state and _data then
+						local plot = plots[state.plotId]
+						plot.model:SetAttribute(Config.Attributes.OwnerUserId, userId)
+						plot.label.Text = example .. "\nDEVELOPMENT EXAMPLE"
+						PropertyWorld.reconcile(plot, _data)
+						return
+					end
 					if not player or player.Parent ~= Players then
 						return
 					end
@@ -139,6 +151,12 @@ function TycoonRuntime.start(preview: { update: (string, (any) -> any) -> any, l
 			)
 		else
 			warn(`Infinite persistence unavailable: {backendIssue}`)
+		end
+	end
+	if profiles and preview and preview.examples then
+		for userId, label in preview.examples do
+			assert(userId < 0 and #label <= 40, "Invalid Studio example identity")
+			profiles:join(userId)
 		end
 	end
 

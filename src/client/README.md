@@ -166,3 +166,5 @@ Settings, responsive placement, native prompts and guidance are shared. Owner
 names stay on nearby world signs; visitors can inspect but server ownership
 checks still decide every purchase. Infinite Help explains online-only income,
 temporary lot numbers, checkpoint loss limits and the finite first catalogue.
+
+INF-03 adds PropertyActivity: one 10 Hz local cosmetic loop over the runtime folder, with visible/distance gating, reduced-motion handling and removal/teardown cleanup. Discovery lists available choices before locked/owned unique items and previews their actual silhouette, footprint, price, effect and requirement. Session never starts this activity loop.
