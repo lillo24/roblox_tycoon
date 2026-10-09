@@ -141,3 +141,17 @@ changing server cash. They are unmapped and execute only in disposable previews.
 For the combined review, the helper's `-GameplayOnly` switch excludes every QA
 fixture; omit it to retain automatic assertions and opt-in client tests. See
 `scripts/README.md` for the Edit-only map route and preview boundary checks.
+
+## INF-01 mode boundary
+
+`GameMode.read()` is fixed at HUD construction. Prototype keeps its existing event
+bindings, status and session-reset help. Infinite binds only purchase feedback:
+SupplyCache state/feedback have no deadline or recovery watch. Its `Persistence`
+label shows mode/readiness and server saving status; there is no `Event` widget.
+Loading/Ready/Full/Unavailable are explicit; only a complete Ready attribute set
+enables the displayed economy. The ordinary ten-second assignment timeout does
+not misreport an explicit Loading state. Server load retries remain bounded.
+Settings, responsive placement, native prompts and guidance are shared. Owner
+names stay on nearby world signs; visitors can inspect but server ownership
+checks still decide every purchase. Infinite Help explains online-only income,
+temporary lot numbers, checkpoint loss limits and the finite first catalogue.
