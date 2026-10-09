@@ -1,5 +1,14 @@
 # Session tycoon prototype
 
+Opt-in `Experiments` subfolders contain standalone Studio prototypes. Normal
+bootstraps remain unchanged. `scripts/New-ExperimentPlace.ps1` replaces only the
+two disposable bootstrap copies; see the feature review documents under `docs`.
+`AimClash` is split between [shared rules](shared/Experiments/AimClash/README.md),
+[server judgement/queue](server/Experiments/AimClash/README.md) and
+[client input/presentation](client/Experiments/AimClash/README.md). Its unmapped
+domain, network, display and slowed-input QA routes are documented in
+[`EXP_03_REVIEW.md`](../docs/EXP_03_REVIEW.md).
+
 This source tree owns gameplay inside the existing three code-only Rojo folders.
 Bootstraps compose the feature and retain the setup startup messages. GAMEPLAY-02
 is a reversible upgrade-order experiment; costs, names, and prerequisites below
@@ -25,7 +34,8 @@ Round-based versus persistent/infinite progression remains unresolved.
 | `client/Hud.luau` | Composes the compact interface, read-only subscriptions, independent feedback lifetimes and teardown; see [client module map](client/README.md) |
 | `client/SupplyFeedback.luau` | Supplied-time private event feedback retention, matching public identity, expiry and reset/timeout protection |
 
-No packages, persistence, exclusivity, combat, prestige, finale, or round/reset rules.
+The normal factory runtime has no packages, persistence, exclusivity, combat,
+prestige, finale, or round/reset rules.
 There are separate outbound purchase/event feedback RemoteEvents, no custom
 purchase/claim remote, and no client-to-server event handler.
 
