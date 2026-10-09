@@ -68,9 +68,12 @@ Dense reconcile p95 fell from 10.421 to 0.797 ms by retaining unchanged geometry
 saved data, validation, income and Session behavior are preserved. Six actual
 owners completed 1,440 accepted edits. Verified foreground six-owner stable frame
 p95 was 20.647 ms, slightly above the provisional 20 ms desktop budget; this is
-recorded as a miss. Native departure cleared its objects/revision; native
-post-arrival reuse remains unverified after Studio input timeouts, with engine
-lot reuse regressions passing separately. Physical devices and real services
+recorded as a miss. A separate verified foreground six-owner edit run recorded
+21.518 ms churn p95 and 0.168% >50 ms spikes, also above the provisional references;
+edit latency and reconcile/snapshot p95 passed. Native departure cleared its
+objects/revision, and a single replacement owner reached Ready on the same lot
+with fresh geometry and its own 10-object profile at revision 20. This closes
+the earlier native post-arrival reuse gap. Physical devices and real services
 remain follow-ups, along with the founder's combined style/pacing review.
 
 The refreshed gameplay-only Infinite preview is reproduced with:

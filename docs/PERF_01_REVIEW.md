@@ -45,8 +45,9 @@ Sample is 30 seconds warm-up plus 120 seconds stable, visiting lots 1–6 in fix
 20-second camera stops. Churn is 180 seconds of ordinary RPC edits/editor cycles
 plus 120 seconds quiet. Inspectable account-safe JSONL and nearest-rank summaries
 are under [`perf-01/`](perf-01/); foreground and background series stay separate.
-For six clients, only owner5's foreground state was verified by native viewport
-input. Other inactive clients retained a true WindowFocused flag in Studio;
+For six clients, owner5's stable repeat and owner4's later edit/quiet run were
+verified by native viewport input. Other inactive clients retained a true
+WindowFocused flag in Studio;
 their raw flags are preserved but their actual foreground state is unverified.
 An initial fresh run with truncated long log lines was discarded and repeated
 using 64-value chunks; the exporter rejects incomplete JSON.
@@ -68,6 +69,13 @@ produced background samples. The repeated six-owner foreground export selects
 only probe records with server time 1791566070 through 1791566228 from the seven
 logs before passing those lines to the same exporter. This keeps the repeat
 separate from the earlier sample/churn in that session.
+The final focused edit follow-up reopened the identical SixOwners build, started
+a zero-client server and added six clients. Commit Studio's count with the spinner;
+typing alone previously left its internal count unchanged. After every owner was
+Ready and more than 60 seconds settled, native client input scheduled
+`task.delay(15, function() game.ReplicatedStorage.PERF01.Control:FireServer("churn") end)`
+and focused the game viewport before it fired. Export immediately after completion,
+before departure/replacement activity. This follow-up has its own raw files.
 Stop resets the explicitly injected memory backend. These probes never enter
 production startup. To reproduce the before run, use baseline `1003caa` in a
 separate checkout. Do not use the current fixed renderer as a before result.
@@ -220,6 +228,38 @@ compete on the same four-core host, so this difference alone does not identify a
 game-code defect or support disabling effects. See the
 [matched summary](perf-01/developed-matched-after-summary.json).
 
+### Focused six-owner edit follow-up
+
+The same repaired SixOwners file was reopened with six actual Garden owners,
+each visiting the next lot. Owner4's maximized 801 × 413 viewport remained
+verified foreground throughout churn **17:55:41–17:58:41 UTC** and the following
+120 seconds quiet. Other clients' raw focus flags remain ambiguous.
+See [raw samples](perf-01/six-owners-focused-churn.jsonl),
+[summary](perf-01/six-owners-focused-churn-summary.json) and
+[native capture](perf-01/six-owner-focused-churn.png).
+
+| Verified owner4 frames | Count | p50 / p95 / p99 / max ms | >50 ms |
+| --- | --- | --- | --- |
+| Simultaneous edits | 10,713 | 16.677 / 21.518 / 27.343 / 314.415 | 0.1680% (18 frames) |
+| Following quiet | 7,192 | 16.691 / 20.321 / 23.447 / 54.221 | 0.0139% (1 frame) |
+
+Both p95 results exceed 20 ms; churn also exceeds the same 0.1% spike reference.
+p99 passes. The interval spikes are retained, including the 314 ms maximum;
+there is no claim that this six-client host passed all frame budgets. One native
+capture and light log reads occurred during churn; no builds/tests or detailed
+profilers ran. These intervals do not isolate the cause of the hitches.
+
+Six owners accepted **1,435 total edits** (five ×240, owner3 ×235 within the deadline).
+Owner4 round-trip p50/p95/p99/max was **33.375/44.053/58.309/102.082 ms**.
+Server reconcile p95 was **1.806 ms**, snapshot 0.219 ms and transaction 0.337 ms;
+all synchronous p95 budgets passed. Income accrue p95 was 0.010 ms and invocation
+spacing p95 1,015.702 ms. World parts returned to 372/90; churn added/removed
+5,901 each. All clients' quiet GUI counts stayed 124, ghosts zero and instance
+counts constant. Owner4 script heap cycled 1,975–2,920 KB (2,621 -> 2,721);
+server 797–1,194 KB (797 -> 1,112), without an instance-growth finding. A rising
+endpoint alone does not establish a leak. Server send observations averaged
+7.789 during churn and 0.579 during quiet; receive remained unreliable zero.
+
 ## Native interaction and lifecycle observations
 
 Separate detailed captures used the desktop viewport after timed sampling, with
@@ -260,11 +300,23 @@ cleared PropertyRevision and left the lot empty. Retained test references had
 nil parents and unchanged server frames after 0.6 seconds. Adding a replacement
 through Studio unexpectedly launched five windows despite the edited count;
 the server reported ten connected clients, of which six could own lots. This
-happened **after all timed six-owner windows** and is excluded from them. A
+happened **after the first session's timed windows** and is excluded from them. A
 replacement lot assertion could not execute during input/capture timeouts;
-native post-arrival reuse is **unverified**, while the engine regression suite
-passed lot reuse. The parent Test -> End Session control stopped all child
-windows normally. No unrelated process was killed.
+that attempt did not establish post-arrival reuse. The parent Test -> End Session
+control stopped all child windows normally. No unrelated process was killed.
+
+The focused follow-up subsequently closed owner4, confirmed all 12 old upgrade
+instances/53 BaseParts detached and the lot revision cleared, then added exactly
+one replacement using the native count spinner. The new owner reached Ready on
+the same lot at revision 20 with 12 fresh upgrade instances/53 BaseParts; old
+references remained detached and server frames stayed stable over 0.6 seconds.
+Its ordinary profile RPC returned **10 owned / 9 placed / 1 stored**, revision 20,
+808 serialized bytes, instead of the departed owner's 15 objects/revision 260.
+This closes native post-arrival object/revision reuse; server-frame stability
+does not measure a global client callback count. See
+[native output](perf-01/six-owner-followup-native.txt) and
+[arrival capture](perf-01/six-owner-reuse.png). End Session closed all children,
+the disposable fixture was discarded, and the unchanged gameplay preview reopened.
 
 ## Validation
 
@@ -304,14 +356,14 @@ quality Automatic; no hosted settings were changed.
 
 Measured passes: dense before/after foreground frame budgets, repaired reconcile
 and snapshot p95, simultaneous six-owner edit processing, bounded editor/world
-cleanup, native departure destruction, reduced-motion/activity stop/restart and
-local failed-return recovery. Observed failure: the verified six-owner stable
-frame p95 is 20.647 ms against 20 ms. Its p99/spike rate pass. Do not describe
-this as an all-performance-checks pass or attribute that miss to a specific
-script without supporting measurements.
+cleanup, native departure and post-arrival reuse, reduced-motion/activity
+stop/restart and local failed-return recovery. Observed failures: six-owner
+stable p95 20.647 ms, focused churn p95 21.518 ms and quiet p95 20.321 ms against
+20 ms; churn >50 ms spikes 0.168% against the 0.1% reference. Their p99 passes.
+Do not describe this as an all-performance-checks pass or attribute misses to a
+specific script without supporting measurements.
 
-Unobserved: native post-arrival lot reuse after the Studio input failure,
-foreground six-owner edit-frame timing, a reliable receive-wire rate, configured
+Unobserved: a reliable receive-wire rate, configured
 frame cap, physical touch/controller comfort and device CPU/thermal behavior,
 real DataStore durability/cross-server teleport arrival, and founder style/pacing
 approval. Engine lot reuse regressions passed separately. The bounded local pass

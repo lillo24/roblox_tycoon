@@ -24,3 +24,5 @@ Canonical authored scene remains 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC75
 
 Native MicroProfiler HTML bytes inside dense-microprofile.zip:
 FE15A32C01399DA50BDFA72DCF3D8866E3B30408CE4C20D1F4F3CB2C53F947C6
+
+Focused six-owner churn and native departure/replacement follow-up (17:55-18:07 UTC) reused the identical SixOwners file above. Both that file and the delivered gameplay preview retained their recorded SHA256 after normal session cleanup.
