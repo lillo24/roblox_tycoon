@@ -12,7 +12,9 @@ Reconciled main `8d44a5e` into the existing integration branch without conflicts
 changes are four implementation briefs; gameplay and the canonical scene hash are unchanged.
 Reviewed the integrated source boundaries, map contract, runtime authority, UI recovery and
 QA evidence. Full `scripts/Validate-Project.ps1` validation passed locally after reconciliation;
-the PR's required CI must also pass on the pushed revision before merge. Prior engine observations below remain historical
+required full CI passed on reconciled head `088f9e1`
+([run 37901119410](https://github.com/lillo24/roblox_tycoon/actions/runs/37901119410)).
+PR #11 merged as `36a5caa`. Prior engine observations below remain historical
 evidence for unchanged code, not a claim that every manual scenario was rerun today.
 
 Manual follow-up remains: meaningful touch scrolling/Reset and a touch cache claim; sustained
@@ -58,16 +60,17 @@ inherited only for unchanged responsibilities, not presented as final-build capt
 
 ## One review build and reproducible preparation
 
-Integration checkout:
+Historical integration checkout (archived after merge):
 C:/Users/utente/.codex/worktrees/ux-02-integrated-player-basics/roblox_tycoon
 
-**Gameplay-only founder copy:**
-C:/Users/utente/.codex/worktrees/ux-02-integrated-player-basics/roblox_tycoon/build/ui-review-founder.rbxlx
+**Gameplay-only founder copy preserved after cleanup:**
+C:/Users/utente/Documents/GitHub/roblox_tycoon/build/foundation-11/ui-review-founder.rbxlx
+SHA256: `A93ED8A61649E05E25C25F4669572565F342846CA637D3E0C9E2BF036A1B64AE`.
 
-QA copy:
+Historical QA copy (regenerate in the current checkout):
 C:/Users/utente/.codex/worktrees/ux-02-integrated-player-basics/roblox_tycoon/build/ui-review-qa-01.rbxlx
 
-From that checkout:
+From the current checkout:
 
 ```powershell
 $env:PATH = "$env:USERPROFILE\.rokit\bin;$env:PATH"

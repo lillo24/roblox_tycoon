@@ -16,6 +16,9 @@ export type Economy = {
 	purchases: Catalogue.Purchases,
 	count: number,
 	unavailable: string?,
+	loading: boolean?,
+	infinite: boolean?,
+	saveStatus: string?,
 }
 
 function State.number(value: number): string
@@ -35,7 +38,7 @@ function State.rate(income: number, interval: number): string
 	return `+{State.number(income / interval)}/sec`
 end
 
-function State.economy(read: (string) -> any): Economy
+function State.economy(read: (string) -> any, infinite: boolean?): Economy
 	local cash, income, plot =
 		read(Config.Attributes.Cash), read(Config.Attributes.IncomeRate), read(Config.Attributes.PlotId)
 	local assignment = read(Config.Attributes.Assignment)
@@ -49,10 +52,18 @@ function State.economy(read: (string) -> any): Economy
 	if typeof(plot) == "number" and (plot < 1 or plot % 1 ~= 0) then
 		issue = "Invalid PlotId attribute"
 	end
-	if assignment ~= nil and assignment ~= "Assigned" and assignment ~= "Full" then
+	local valid = if infinite then { "Loading", "Ready", "Full", "Unavailable" } else { "Assigned", "Full" }
+	if assignment ~= nil and not table.find(valid, assignment) then
 		issue = "Invalid assignment attribute"
 	end
-	local assigned = assignment == "Assigned"
+	if infinite and assignment == "Unavailable" then
+		issue = "Your saved place is unavailable"
+	end
+	local saveStatus = if infinite then read(Config.Attributes.SaveStatus) else nil
+	if saveStatus ~= nil and typeof(saveStatus) ~= "string" then
+		issue = "Invalid saving status"
+	end
+	local assigned = assignment == (if infinite then "Ready" else "Assigned")
 		and typeof(cash) == "number"
 		and typeof(income) == "number"
 		and typeof(plot) == "number"
@@ -82,6 +93,9 @@ function State.economy(read: (string) -> any): Economy
 		purchases = purchases,
 		count = count,
 		unavailable = issue,
+		loading = infinite and assignment == "Loading",
+		infinite = infinite,
+		saveStatus = if typeof(saveStatus) == "string" then saveStatus else nil,
 	}
 end
 
@@ -96,7 +110,23 @@ function State.summary(economy: Economy): string
 	if economy.unavailable then
 		return "Factory state unavailable\nHelp and Settings remain available"
 	end
-	return if economy.full then "Factories full\nNo income this session" else "Joining…\nWaiting for factory state"
+	return if economy.full
+		then "Factories full\nNo income this session"
+		elseif economy.loading then "Loading your place…\nIncome starts when ready"
+		else "Joining…\nWaiting for factory state"
+end
+
+function State.persistence(economy: Economy): string
+	local title = if economy.assigned
+		then "Infinite • Your place is ready"
+		elseif economy.full then "Infinite • Lobby full"
+		elseif economy.unavailable then "Infinite • Place unavailable"
+		else "Infinite • Loading your place"
+	local detail = if economy.full
+		then "Rejoin another server for a lot"
+		elseif economy.saveStatus and economy.saveStatus ~= "" then economy.saveStatus
+		else "Purchases and income wait for your saved place"
+	return title .. "\n" .. detail
 end
 
 -- Validate the external atomic snapshot before its fields reach SupplyFeedback.
