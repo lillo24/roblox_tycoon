@@ -1,0 +1,13 @@
+ PERF01_NATIVE six-visitor Player1 -1 2 -2
+ PERF01_NATIVE six-visitor Player2 -2 3 -3
+ PERF01_NATIVE six-visitor Player3 -3 4 -4
+ PERF01_NATIVE six-visitor Player4 -4 5 -5
+ PERF01_NATIVE six-visitor Player5 -5 6 -6
+ PERF01_NATIVE six-visitor Player6 -6 1 -1
+ PERF01_NATIVE departure-before 6 12 53 260
+ PERF01_NATIVE departure-clear 12 53 all detached; revision cleared; frames stable
+ PERF01_NATIVE network-observation Stats.Network.ServerStatsItem.Data Ping 31.4798 (30%CV)
+ PERF01_NATIVE network-observation Stats.Network.ServerStatsItem.Data Ping 31.5994 (6%CV)
+ PERF01_NATIVE network-observation Stats.Network.ServerStatsItem.Data Ping 35.7573 (15%CV)
+ PERF01_NATIVE network-observation Stats.Network.ServerStatsItem.Data Ping 31.5206 (6%CV)
+ PERF01_NATIVE network-observation Stats.Network.ServerStatsItem.Data Ping 31.5456 (6%CV)

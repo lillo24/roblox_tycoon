@@ -1,0 +1,26 @@
+SHA256 of the actual inspected local files (generated referents may vary on rebuild).
+Source before: 1003caa, production identical to MODE-01 c26c92652c745c22cff35276d84180a04320e4e1.
+Source repaired: 3273428f835face867f9f6de81a14f0662037782.
+Matched-control fixture: 91a81b6ddb92b0f0280d9b9747968a9c4732f6e4 (production unchanged).
+
+Fresh before: build/mode-perf-fresh-v2.rbxlx
+CBE8EDFF0B12A0AD96A0FA90E002B3270A613055B555E7221B2A6FCC64E8D214
+Developed mixed-preset before: build/mode-perf-developed.rbxlx
+EA6C8F295FFAB54644AA48DA57C62C23B82EADECA5EE0AA13E5A353D05C8707A
+Dense before: build/mode-perf-dense.rbxlx
+435DF42EF627FE28B5448C96C4FF7D829C19BEB5269C1AFE30D5A058779077B8
+Repaired combined QA: build/mode-helper-infinite.rbxlx (executed 16:16 UTC, before later regeneration)
+FC3FB2942ED06D3F04211C4A7BF694F8A246A01BF0004DD8524A815CFC167944
+Dense after: build/mode-perf-dense-after.rbxlx
+E638CF9C7448C7F0566E2DD747C376B0300D11344CB3CB04ABB42ADF2BF179AC
+Six owners after: build/mode-perf-sixowners-after.rbxlx
+2DE888087F638B15A0AF24EDFFBADBA192EFF27C79DCECA99F3B8E93FD9D6BA5
+Developed matched after: build/mode-perf-developed-matched.rbxlx
+D4D7693B5D3AE70F9A73CFF2C77CA674863DA140961628E8E7ABFEDDEED9D987
+Delivered gameplay-only Infinite: build/mode-infinite-perf-review.rbxlx
+D9BFC5204345B4AB3A90CAEADE4C0D98DB3CDFB51F488F8B9C77A56D14E868DB
+
+Canonical authored scene remains 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8.
+
+Native MicroProfiler HTML bytes inside dense-microprofile.zip:
+FE15A32C01399DA50BDFA72DCF3D8866E3B30408CE4C20D1F4F3CB2C53F947C6

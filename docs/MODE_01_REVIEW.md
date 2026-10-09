@@ -59,3 +59,26 @@ The final Entry client passed five isolation assertions and one injected late-st
 Session passed five isolation and one modal-clearance assertion. An actual native purchase prompt spent earned cash and built Income Booster (+2/sec); Supply Cache remained active. Modes → Return exercised the immediate-failure adapter and left Session available. See `mode-01/session-execution.txt` and its purchase/return screenshots. `mode-01/builds.txt` records the inspected and delivered preview hashes.
 
 Physical touch/controller comfort, six simultaneous clients on target devices, real cross-server saving/teleports, and the founder's combined style/pacing judgment remain distinct follow-ups. No historical unobserved QA is marked passed by this slice. Studio hit a resource warning with earlier generated previews open; closing those copies and reconnecting the UI tool allowed the final two-client test to run.
+
+## PERF-01 follow-up on the same draft stack
+
+[PERF-01 review](PERF_01_REVIEW.md) records actual one-client and six-owner Studio
+windows, dense inventories, simultaneous edits, quiet cleanup and native profiles.
+Dense reconcile p95 fell from 10.421 to 0.797 ms by retaining unchanged geometry;
+saved data, validation, income and Session behavior are preserved. Six actual
+owners completed 1,440 accepted edits. Verified foreground six-owner stable frame
+p95 was 20.647 ms, slightly above the provisional 20 ms desktop budget; this is
+recorded as a miss. Native departure cleared its objects/revision; native
+post-arrival reuse remains unverified after Studio input timeouts, with engine
+lot reuse regressions passing separately. Physical devices and real services
+remain follow-ups, along with the founder's combined style/pacing review.
+
+The refreshed gameplay-only Infinite preview is reproduced with:
+
+```powershell
+./scripts/New-ModeReviewPlace.ps1 -Role Infinite -Showcase -OutputName mode-infinite-perf-review.rbxlx
+```
+
+Open `build/mode-infinite-perf-review.rbxlx` and Play. It uses local reset-on-Stop
+memory and a failed-return adapter, with two labelled examples and four player
+lots. It includes no PERF probes or QA runners. Do not publish this local fixture.
