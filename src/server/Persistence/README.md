@@ -1,12 +1,13 @@
 # Infinite-mode persistence
 
 This subsystem owns account data and the lifetime of the server's write permission.
-`Session` still owns non-yielding purchases and income; `PlotWorld` renders a property
+`Session` still owns cash and the income clock; `PropertyWorld` renders Infinite
 in the currently assigned lot's frame. Neither a lot number nor an Instance is saved.
 
 | File | Owns |
 | --- | --- |
-| `ProfileSchema.luau` | Strict versioned envelope/data validation, detached snapshots, asset IDs and independent named placement slots |
+| `ProfileSchema.luau` | v1→v2 migration, strict data validation, detached snapshots, individually owned objects and local footprints |
+| `LegacyProfile.luau` | Frozen v1 validator and four-asset slot capture used by the migration |
 | `ProfileStore.luau` | Atomic load/lease acquisition, fenced checkpoint/final writes, retry ordering and confirmations |
 | `Profiles.luau` | Loading reservations, ready/full/unavailable states, stale arrival/save callbacks, final saves and shutdown |
 | `DataStoreBackend.luau` | Roblox UpdateAsync adapter, metadata preservation and Studio destination guard |
@@ -24,7 +25,7 @@ state or event remote; its HUD binds only purchase feedback and shows saving sta
 Real saving uses `DataStoreService:GetDataStore("InfiniteProfiles_v1")` and account
 keys `user_<UserId>` within the current universe. No migration from the session-only
 prototype is possible: it never stored departing players' progress. No dependency,
-offline earnings, purchase remote, placement editor or experiment mechanics are added.
+offline earnings or experiment mechanics are added. INF-02 adds the owner-only editor.
 
 `StudioTestUniverseId = 0` deliberately disables real Studio access. Set it to the
 **universe ID, not the place ID**, of an isolated published test experience that
@@ -41,7 +42,7 @@ without API access and clears on Stop. It is never selected after a failed real 
 `-Backend DataStore` includes the unchanged production bootstrap and no memory
 fixture unless `-IncludeQA` explicitly requests isolated assertion modules.
 
-## Version 1 format
+## Version 1 migration input
 
 ```lua
 {
@@ -56,6 +57,24 @@ fixture unless `-IncludeQA` explicitly requests isolated assertion modules.
     lastWrite = { token = "unique-per-arrival-GUID", sequence = 4 },
 }
 ```
+
+New checkpoints keep the **same store and user keys**, envelope version 1 and lease
+protocol, but write data version 2. Cash, four assets and named slots survive.
+Each legacy asset gains a stable `legacy_<content>` object at its old local slot
+coordinates. The slots remain migration metadata; accepted movable transforms
+live in `objects`. New copies use monotonic `o1`, `o2` identities.
+`nextId`, `revision`, `theme` and object content/X/Z/quarter-turn/stored fields
+are validated; no Instances, lot IDs or world transforms are saved. At most 48
+objects and bounded primitive fields keep data below 16 KiB (the regression suite
+also measures serialization as content grows). Revision max is 2^53−1, object
+serial max 1,000,000. The editor explains limits and preserves existing objects.
+Old servers refuse v2 data; newer unknown schema/content refuses without writing.
+Deploy compatible servers together before enabling hosted access.
+
+Moving/storing does not alter ownership or income. Base income always continues;
+decoration spending cannot prevent eventual progress. Arrival epochs are separate
+from the private DataStore lease token. An accepted edit is only an in-server
+change until the existing scheduler confirms a checkpoint; there is no second saver.
 
 `lease` is absent after a confirmed departure. `lastWrite` is an idempotency receipt,
 not an income timestamp. `cash` is a nonnegative exact integer at most 2^53−1.

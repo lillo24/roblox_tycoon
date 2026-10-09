@@ -15,6 +15,7 @@ native world prompts and the atomic Supply Cache snapshot remain authoritative.
 | `Onboarding.luau` | First-purchase hint and completion/dismissal retained in client-session module memory |
 | `RuntimeBindings.luau` | Ordered runtime subscriptions, bounded startup deadline, diagnostics and late replacement recovery |
 | `WorldLabels.luau` | Scoped local styling/visibility adapters for known factory labels in both PlotWorld hierarchies |
+| `PropertyEditor.luau` | Infinite-only discovery previews, explicit purchase, inventory, local map/ghost, cancel/commit/store and palettes |
 | `SupplyFeedback.luau` | FIX-01 supplied-time retention, snapshot matching, expiry and timeout invalidation |
 
 The default HUD shows cash, income converted from `Config.IncomeInterval`, factory
@@ -143,6 +144,16 @@ fixture; omit it to retain automatic assertions and opt-in client tests. See
 `scripts/README.md` for the Edit-only map route and preview boundary checks.
 
 ## INF-01 mode boundary
+
+INF-02 changes Infinite's Factory opener to **My place**. Discover previews an
+object before a separate Buy action; Arrange selects owned instances including
+stored copies. Tap the plot map or use two-stud arrows, Rotate and Confirm.
+Cancel discards only the local candidate. The accepted world stays visible to
+visitors until a valid commit. Palette choices are free. The editor uses native
+Activated controls, minimum 48px navigation and 52px rows in a bounded scroll
+surface; normal HUD returns on Close. It locally gates prompts, never sends
+preview movement, allows one RPC at a time, fences stale responses and reports
+unconfirmed timeouts with an explicit Refresh. It closes on assignment loss.
 
 `GameMode.read()` is fixed at HUD construction. Prototype keeps its existing event
 bindings, status and session-reset help. Infinite binds only purchase feedback:

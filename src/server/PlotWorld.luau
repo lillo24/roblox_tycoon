@@ -188,6 +188,11 @@ function PlotWorld.reconcile(
 	cash: number,
 	placements: { [Catalogue.Id]: string }?
 )
+	if plot.model:GetAttribute("InfiniteProperty") then
+		plot.upgrades:ClearAllChildren()
+		plot.model:SetAttribute("PropertyRevision", nil)
+		return
+	end
 	local owned = plot.model:GetAttribute(Config.Attributes.OwnerUserId) ~= nil
 	for _, definition in Catalogue.Definitions do
 		local id = definition.Id

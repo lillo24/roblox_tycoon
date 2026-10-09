@@ -13,6 +13,7 @@ local Profiles = require(script.Parent.Persistence.Profiles)
 local ProfileStore = require(script.Parent.Persistence.ProfileStore)
 local Backend = require(script.Parent.Persistence.DataStoreBackend)
 local Schema = require(script.Parent.Persistence.ProfileSchema)
+local PropertyWorld = require(script.Parent.PropertyWorld)
 
 local TycoonRuntime = {}
 local started = false
@@ -56,6 +57,11 @@ function TycoonRuntime.start(preview: { update: (string, (any) -> any) -> any, l
 	local layout = PlotWorld.inspect() -- All authored geometry is validated before writes.
 	local supplyCenter = if infinite then nil else SupplyRuntime.inspect()
 	local plots = PlotWorld.create(layout)
+	if infinite then
+		for _, plot in plots do
+			PropertyWorld.prepare(plot)
+		end
+	end
 	-- Outbound only: no client purchase remote, message forwarding, or broadcast.
 	local feedback = Instance.new("RemoteEvent")
 	feedback.Name = Config.FeedbackName
@@ -76,7 +82,11 @@ function TycoonRuntime.start(preview: { update: (string, (any) -> any) -> any, l
 		player:SetAttribute(Config.Attributes.PlotId, state.plotId)
 		player:SetAttribute(Config.Attributes.Assignment, if infinite then "Ready" else "Assigned")
 		local data = if profiles then profiles:snapshot(player.UserId) else nil
-		PlotWorld.reconcile(plots[state.plotId], state.purchases, state.cash, if data then data.placements else nil)
+		if data then
+			PropertyWorld.reconcile(plots[state.plotId], data)
+		else
+			PlotWorld.reconcile(plots[state.plotId], state.purchases, state.cash)
+		end
 	end
 
 	local function clear(player: Player)
@@ -191,6 +201,29 @@ function TycoonRuntime.start(preview: { update: (string, (any) -> any) -> any, l
 	local function sendResult(player: Player, message: string)
 		local state = session:get(player.UserId)
 		feedback:FireClient(player, if state then state.plotId else nil, message)
+	end
+
+	if infinite then
+		local remote = Instance.new("RemoteFunction")
+		remote.Name, remote.Parent = "TycoonProperty", ReplicatedStorage
+		remote.OnServerInvoke = function(player: Player, request: any): any
+			local persistent = profiles
+			if player.Parent ~= Players or active[player.UserId] ~= player or not persistent then
+				return { available = false, message = "Property unavailable" }
+			end
+			local now = os.clock()
+			if now < (nextRequest[player.UserId] or 0) then
+				return { available = false, message = "Please wait a moment" }
+			end
+			nextRequest[player.UserId] = now + Config.RequestInterval
+			local message, accepted = "", false
+			if request ~= "read" then
+				accepted, message = persistent:edit(player.UserId, request)
+			end
+			local response = persistent:read(player.UserId)
+			response.message, response.accepted = message, accepted
+			return response
+		end
 	end
 
 	for plotId, plot in plots do

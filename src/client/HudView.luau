@@ -23,7 +23,14 @@ export type Handle = {
 	refresh: () -> (),
 	destroy: () -> (),
 }
-export type Actions = { find: () -> (), stop: () -> (), dismiss: () -> (), restart: () -> (), panel: (boolean) -> () }
+export type Actions = {
+	find: () -> (),
+	stop: () -> (),
+	dismiss: () -> (),
+	restart: () -> (),
+	panel: (boolean) -> (),
+	edit: (() -> ())?,
+}
 
 local function list(parent: Instance, gap: number)
 	local layout = Instance.new("UIListLayout")
@@ -86,7 +93,7 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 	summary.Font, summary.TextSize = Theme.StrongFont, 18
 	local navigation = frame(root, "Navigation")
 	navigation.BackgroundTransparency = 1
-	local factory = button(navigation, "Factory", "Factory")
+	local factory = button(navigation, "Factory", if infinite then "My place" else "Factory")
 	local settings = button(navigation, "Settings", "Settings")
 	local help = button(navigation, "Help", "? Help")
 	local event = text(
@@ -412,6 +419,11 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 	end
 	for _, object in { factory, settings, help } do
 		track(object.Activated:Connect(function()
+			if object == factory and infinite and actions and actions.edit then
+				setPanel(nil, nil)
+				actions.edit()
+				return
+			end
 			setPanel(State.toggle(current, object.Name :: State.Panel), object)
 		end))
 	end

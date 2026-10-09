@@ -53,11 +53,12 @@ print("INF01 LOCAL PREVIEW: memory backend, no cross-session saving evidence")
     [void](Add-Item $qa 'Script' 'StartLocalPreview' $start)
 }
 if ($IncludeQA) {
-    foreach ($test in @('Persistence', 'ProfileLifecycle', 'PropertyWorld', 'InfiniteState', 'Session', 'SupplyEvent')) {
+    foreach ($test in @('Persistence', 'ProfileLifecycle', 'PropertyWorld', 'InfiniteState', 'Session', 'SupplyEvent', 'Property')) {
         [void](Add-Item $qa 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
     }
     $runner = @'
 local memory = require(script.Parent.ProfileMemoryStore)
+print("INF02 EXECUTED Property assertions:", require(script.Parent.Property)(memory))
 print("INF01 EXECUTED Persistence assertions:", require(script.Parent.Persistence)(memory))
 print("INF01 EXECUTED ProfileLifecycle assertions:", require(script.Parent.ProfileLifecycle)(memory))
 print("INF01 EXECUTED InfiniteState assertions:", require(script.Parent.InfiniteState)())

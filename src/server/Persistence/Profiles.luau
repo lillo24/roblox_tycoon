@@ -6,6 +6,8 @@ local Session = require(script.Parent.Parent.Session)
 local Store = require(script.Parent.ProfileStore)
 local Schema = require(script.Parent.ProfileSchema)
 local Settings = require(script.Parent.Settings)
+local Edits = require(script.Parent.Parent.PropertyEdits)
+local HttpService = game:GetService("HttpService")
 local Profiles = {}
 Profiles.__index = Profiles
 type Entry = {
@@ -17,6 +19,11 @@ type Entry = {
 	nextSave: number,
 	loadDeadline: number,
 	saving: boolean,
+	epoch: string,
+	requestId: number,
+	fingerprint: string?,
+	result: string?,
+	accepted: boolean?,
 }
 type Data = {
 	session: Session.Session,
@@ -110,6 +117,8 @@ function Profiles.join(self: Profiles, userId: number)
 		nextSave = 0,
 		saving = false,
 		loadDeadline = self.store.now() + Settings.LoadSeconds,
+		epoch = HttpService:GenerateGUID(false),
+		requestId = 0,
 	}
 	self.entries[userId] = entry
 	notify(self, entry)
@@ -140,6 +149,7 @@ function Profiles.join(self: Profiles, userId: number)
 		end
 		local state = self.session:assign(userId, { cash = handle.data.cash, purchases = handle.data.assets })
 		assert(state, "Infinite: reserved lot was consumed outside the profile lifecycle")
+		state.incomeRate = Schema.income(handle.data)
 		entry.handle, entry.data = handle, handle.data
 		entry.status, entry.saveStatus = "Ready", "Place loaded • autosave active"
 		entry.nextSave = self.store.now() + Settings.AutoSaveSeconds
@@ -150,6 +160,87 @@ end
 function Profiles.ready(self: Profiles, userId: number): boolean
 	local entry = self.entries[userId]
 	return entry ~= nil and entry.status == "Ready" and entry.handle ~= nil and self.store:usable(entry.handle)
+end
+
+function Profiles.read(self: Profiles, userId: number): any
+	local entry, state = self.entries[userId], self.session:get(userId)
+	if not entry or not state or not self:ready(userId) then
+		return { available = false, message = "Your saved place is not ready" }
+	end
+	return {
+		available = true,
+		data = self:snapshot(userId),
+		epoch = entry.epoch,
+		sequence = entry.requestId,
+		plot = state.plotId,
+	}
+end
+
+function Profiles.edit(self: Profiles, userId: number, request: any): (boolean, string)
+	local entry, state = self.entries[userId], self.session:get(userId)
+	if not self:ready(userId) or not entry or not state then
+		return false, "Your saved place is not ready"
+	end
+	if typeof(request) ~= "table" then
+		return false, "Invalid edit"
+	end
+	local keys = 0
+	for key, value in request do
+		keys += 1
+		if
+			keys > 10
+			or not table.find({
+				"epoch",
+				"sequence",
+				"plot",
+				"revision",
+				"action",
+				"content",
+				"object",
+				"x",
+				"z",
+				"rotation",
+				"theme",
+			}, key)
+			or (typeof(value) ~= "string" and typeof(value) ~= "number")
+			or (typeof(value) == "string" and #value > 80)
+		then
+			return false, "Invalid edit fields"
+		end
+	end
+	if request.epoch ~= entry.epoch or request.plot ~= state.plotId then
+		return false, "This editing session has ended"
+	end
+	if
+		typeof(request.sequence) ~= "number"
+		or request.sequence % 1 ~= 0
+		or request.sequence < 1
+		or request.sequence > 1000000000
+	then
+		return false, "Invalid edit sequence"
+	end
+	local parts = {}
+	for _, key in { "revision", "action", "content", "object", "x", "z", "rotation", "theme" } do
+		table.insert(parts, tostring(request[key]))
+	end
+	local fingerprint = table.concat(parts, "|")
+	if request.sequence == entry.requestId and fingerprint == entry.fingerprint then
+		return entry.accepted == true, entry.result or "No result"
+	end
+	if request.sequence <= entry.requestId then
+		return false, "Stale edit; refresh your place"
+	end
+	local snapshot = self:snapshot(userId)
+	assert(snapshot, "Ready property has no snapshot")
+	local data, message = Edits.apply(snapshot, request)
+	entry.requestId, entry.fingerprint, entry.result, entry.accepted =
+		request.sequence, fingerprint, message, data ~= nil
+	if data then
+		entry.data = data
+		state.cash, state.purchases, state.incomeRate = data.cash, data.assets, Schema.income(data)
+		notify(self, entry)
+	end
+	return data ~= nil, message
 end
 
 function Profiles.leave(self: Profiles, userId: number)

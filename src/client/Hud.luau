@@ -17,6 +17,7 @@ local Bindings = require(script.Parent.RuntimeBindings)
 local Guidance = require(script.Parent.FactoryGuidance)
 local Onboarding = require(script.Parent.Onboarding)
 local Mode = require(ReplicatedStorage.TycoonShared.GameMode)
+local Editor = require(script.Parent.PropertyEditor)
 
 local Hud = {}
 
@@ -56,6 +57,7 @@ function Hud.start(): ScreenGui
 	local snapshot: Rules.Snapshot? = nil
 	local labels = Labels.start()
 	local view: View.Handle
+	local editor: { open: () -> (), destroy: () -> () }? = nil
 	local render: () -> () = function() end
 	local function applyPreferences()
 		if not running then
@@ -65,6 +67,11 @@ function Hud.start(): ScreenGui
 		labels.refresh(Preferences.read().labels, GuiService.PreferredTransparency)
 	end
 	view = View.new(gui, applyPreferences, {
+		edit = function()
+			if editor then
+				editor.open()
+			end
+		end,
 		find = function()
 			guidance.start()
 		end,
@@ -107,7 +114,7 @@ function Hud.start(): ScreenGui
 		view.event(if infinite then State.persistence(economy) else eventText, if snapshot then snapshot.phase else nil)
 		local supplyText = if infinite then "" else supply:read(os.clock())
 		view.feedback(purchaseText, supplyText)
-		local hint = Onboarding.text(progress, economy, os.clock())
+		local hint = if infinite then "" else Onboarding.text(progress, economy, os.clock())
 		local urgent = snapshot
 			and (snapshot.phase == "warning" or snapshot.phase == "open" or snapshot.phase == "result")
 		view.guidance(
@@ -176,6 +183,9 @@ function Hud.start(): ScreenGui
 			connection:Disconnect()
 		end
 		view.destroy()
+		if editor then
+			editor.destroy()
+		end
 		labels.destroy()
 	end))
 	for _, definition in Catalogue.Definitions do
@@ -198,6 +208,9 @@ function Hud.start(): ScreenGui
 	update()
 	applyPreferences()
 	gui.Parent = playerGui
+	if infinite then
+		editor = Editor.new(gui)
+	end
 	assignmentTimer = task.delay(Bindings.Timeout, function()
 		assignmentTimer = nil
 		assignmentExpired = true
