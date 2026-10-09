@@ -1,8 +1,25 @@
 # Combined prototype: UX-02 / QA-01 review packet
 
-**Engine and live multiplayer QA have executed. Combined visual/play approval remains pending.**
-[Draft PR #11](https://github.com/lillo24/roblox_tycoon/pull/11) is the single checkpoint.
-Keep it draft/unmerged; preserve source PRs #8/#9 and their review backups. No publishing is authorized.
+**Engine and live multiplayer QA have executed. Remaining manual QA is follow-up.**
+[PR #11](https://github.com/lillo24/roblox_tycoon/pull/11) is the shared development foundation.
+On 2026-10-09 the owner explicitly authorized its merge despite the previous founder-review
+hold, after reconciliation with latest main and required checks. This replaces the historical
+hold below; it does not authorize publication or merging experiments #14–#16 or INF-01.
+
+## Foundation integration checkpoint (2026-10-09)
+
+Reconciled main `8d44a5e` into the existing integration branch without conflicts. The incoming
+changes are four implementation briefs; gameplay and the canonical scene hash are unchanged.
+Reviewed the integrated source boundaries, map contract, runtime authority, UI recovery and
+QA evidence. Full `scripts/Validate-Project.ps1` validation passed locally after reconciliation;
+the PR's required CI must also pass on the pushed revision before merge. Prior engine observations below remain historical
+evidence for unchanged code, not a claim that every manual scenario was rerun today.
+
+Manual follow-up remains: meaningful touch scrolling/Reset and a touch cache claim; sustained
+walking and native controller world-X prompts; simultaneous live contention; live world-prompt
+insufficient-funds/non-owner attempts; combined visual/play review; live system-preference
+changes; and physical-device performance. Domain coverage is not a substitute for those
+observations. These are explicitly deferred by the owner's foundation-merge instruction.
 
 ## Provenance
 
@@ -220,10 +237,10 @@ Approve that build or identify specific adjustments once. Live system-preference
 were not exercised; implementation/fixture coverage is separate. Physical device performance
 is a hardware-dependent pre-release follow-up. Hosted maximum 6 remains a pre-publication setting.
 
-After visual approval and resolved technical gates, reconcile latest main and choose one
-consolidated merge through PR #11, retaining source ancestry. Do not independently merge/close
-#8/#9 first. No automatic merge, publishing or next feature batch is authorized. Retain integration
-and source review backups. The disposable restore checkout was removed after final verification;
+The original founder-review hold is superseded by the 2026-10-09 foundation authorization
+above. Merge through PR #11 after required checks, retaining source ancestry. Do not independently
+merge/close #8/#9 or the experiments. Publishing remains unauthorized. The disposable restore
+checkout was removed after final verification;
 task-owned Play/server/client sessions were stopped, and the independent founder copy remains open.
 
 Historical references: [MAP-01](../place/MAP_01_REVIEW.md), [UI-01](UI_01_REVIEW.md),
