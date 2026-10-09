@@ -147,3 +147,19 @@ assertions and use Studio analysis when full-place context or a discrepancy matt
 On macOS/Linux, these checks need PowerShell (`pwsh -File
 ./scripts/Validate-Project.ps1`). Alternatively, use the manual full GitHub
 Actions run described in the root README; it supplies PowerShell on the runner.
+
+## INF-01 previews
+
+`New-InfiniteReviewPlace.ps1` builds fresh sources on the unchanged canonical map.
+Default `-Backend LocalPreview` explicitly injects temporary memory storage, labeled
+in the HUD; it is never a production fallback. `-Backend DataStore` retains the normal
+bootstrap and requires the isolated universe setup in `src/server/Persistence/README.md`.
+`-IncludeQA` adds domain/lifecycle runners plus an opt-in actual-client observer outside
+production mappings. Output is restricted to `build/inf-*.rbxlx` and linked output is refused.
+
+`Test-InfiniteReviewPlace.ps1` checks the three local/QA/real-backend boundaries,
+every nested source/class, and the unchanged authored map. The standard validation
+runs these small Rojo builds because startup injection is a persistence safety boundary.
+It does not execute the Luau suites or claim a real DataStore write.
+
+INF-03: `New-InfiniteReviewPlace.ps1 -Showcase` is restricted to LocalPreview. It injects two clearly labelled, rich development profiles through the same profile load path, reserving two of six lots. Human clients still start fresh with 0 cash and ordinary earnings. The optional fixtures live outside mapped roots and never enter a real-backend build. IncludeQA also injects Growth and its own separately named presets module, without enabling showcase residents. Test-InfiniteReviewPlace checks all four variants and the fixture boundary.

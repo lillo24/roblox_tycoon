@@ -12,7 +12,13 @@ Personalization matters: the eventual game should support distinct places and ch
 
 Inspect current repository state before implementation. At briefing time, `main` (`c6c2aee`) stores cash and purchases only in the server session; leaving clears them. Its catalogue has four one-time upgrades, so persistence alone will not make progression infinite.
 
-The six-lot map and integrated player UI are in draft [PR #11](https://github.com/lillo24/roblox_tycoon/pull/11), head `ba8c813`. Use that foundation in an isolated preview branch, incorporating current main without merging the pending foundation. Keep [experiment PRs #14–#16](https://github.com/lillo24/roblox_tycoon/pulls) parked; this brief does not approve them or require their mechanics.
+The owner superseded the original starting-point instruction on 2026-10-09: first reconcile,
+validate and merge [PR #11](https://github.com/lillo24/roblox_tycoon/pull/11), then start INF-01
+in a fresh isolated worktree from updated main. PR #11 merged as `36a5caa` after full local
+validation and required CI; its remaining manual QA is documented follow-up. INF-01 starts
+from that shared six-lot/UI foundation. Keep [experiment PRs #14–#16](https://github.com/lillo24/roblox_tycoon/pulls)
+and their worktrees separate. INF-01 remains a draft for review; no game publication is authorized.
+This replaces only the starting-point requirement, not the scope or evidence requirements below.
 
 Follow repository boundaries and reuse established server-authoritative purchase/economy behavior. Leave module choices and the detailed implementation to Work.
 

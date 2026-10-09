@@ -15,6 +15,7 @@ native world prompts and the atomic Supply Cache snapshot remain authoritative.
 | `Onboarding.luau` | First-purchase hint and completion/dismissal retained in client-session module memory |
 | `RuntimeBindings.luau` | Ordered runtime subscriptions, bounded startup deadline, diagnostics and late replacement recovery |
 | `WorldLabels.luau` | Scoped local styling/visibility adapters for known factory labels in both PlotWorld hierarchies |
+| `PropertyEditor.luau` | Infinite-only discovery previews, explicit purchase, inventory, local map/ghost, cancel/commit/store and palettes |
 | `SupplyFeedback.luau` | FIX-01 supplied-time retention, snapshot matching, expiry and timeout invalidation |
 
 The default HUD shows cash, income converted from `Config.IncomeInterval`, factory
@@ -141,3 +142,29 @@ changing server cash. They are unmapped and execute only in disposable previews.
 For the combined review, the helper's `-GameplayOnly` switch excludes every QA
 fixture; omit it to retain automatic assertions and opt-in client tests. See
 `scripts/README.md` for the Edit-only map route and preview boundary checks.
+
+## INF-01 mode boundary
+
+INF-02 changes Infinite's Factory opener to **My place**. Discover previews an
+object before a separate Buy action; Arrange selects owned instances including
+stored copies. Tap the plot map or use two-stud arrows, Rotate and Confirm.
+Cancel discards only the local candidate. The accepted world stays visible to
+visitors until a valid commit. Palette choices are free. The editor uses native
+Activated controls, minimum 48px navigation and 52px rows in a bounded scroll
+surface; normal HUD returns on Close. It locally gates prompts, never sends
+preview movement, allows one RPC at a time, fences stale responses and reports
+unconfirmed timeouts with an explicit Refresh. It closes on assignment loss.
+
+`GameMode.read()` is fixed at HUD construction. Prototype keeps its existing event
+bindings, status and session-reset help. Infinite binds only purchase feedback:
+SupplyCache state/feedback have no deadline or recovery watch. Its `Persistence`
+label shows mode/readiness and server saving status; there is no `Event` widget.
+Loading/Ready/Full/Unavailable are explicit; only a complete Ready attribute set
+enables the displayed economy. The ordinary ten-second assignment timeout does
+not misreport an explicit Loading state. Server load retries remain bounded.
+Settings, responsive placement, native prompts and guidance are shared. Owner
+names stay on nearby world signs; visitors can inspect but server ownership
+checks still decide every purchase. Infinite Help explains online-only income,
+temporary lot numbers, checkpoint loss limits and the finite first catalogue.
+
+INF-03 adds PropertyActivity: one 10 Hz local cosmetic loop over the runtime folder, with visible/distance gating, reduced-motion handling and removal/teardown cleanup. Discovery lists available choices before locked/owned unique items and previews their actual silhouette, footprint, price, effect and requirement. Session never starts this activity loop.
