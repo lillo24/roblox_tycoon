@@ -1,6 +1,6 @@
 # Server responsibilities
 
-Bootstrap starts TycoonRuntime, the engine adapter for player lifecycle, attributes, prompts and income. Session owns the unchanged session economy. PlotWorld owns the authored map's factory scaffolding; MapLayout validates the map contract before writes. SupplyRuntime/SupplyEvent own Session's lobby event.
+Bootstrap starts AppRuntime, which resolves the trusted role before starting gameplay. Routing owns the manifest, transitions and teleport adapter (see its README). Entry never starts TycoonRuntime. Dedicated gameplay uses TycoonRuntime for lifecycle, attributes, prompts and income, returning prepare/recover hooks to Routing. Session owns the unchanged session economy; its optional paused flag freezes Infinite income/credits/purchases during handoff. PlotWorld owns the factory scaffolding; MapLayout validates the map contract before writes. SupplyRuntime/SupplyEvent own Session's lobby event.
 
 Infinite uses Persistence/Profiles for lifecycle and its sole checkpoint scheduler. PropertyEdits owns non-yielding purchase/layout/palette transactions. PropertyWorld renders accepted property objects by revision; it never runs for Session. Shared Infinite/Catalogue, Placement and Models own definitions, geometry rules and bounded silhouettes.
 

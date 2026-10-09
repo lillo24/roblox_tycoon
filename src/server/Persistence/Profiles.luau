@@ -24,6 +24,12 @@ type Entry = {
 	fingerprint: string?,
 	result: string?,
 	accepted: boolean?,
+	handoff: boolean?,
+	finalizing: boolean?,
+	recovering: boolean?,
+	handoffDeadline: number?,
+	departureConfirmed: boolean?,
+	loading: boolean?,
 }
 type Data = {
 	session: Session.Session,
@@ -102,7 +108,7 @@ function Profiles.join(self: Profiles, userId: number)
 	assert(not self.entries[userId], `Infinite: duplicate arrival {userId}`)
 	local reserved = 0
 	for _, entry in self.entries do
-		if entry.status == "Loading" or entry.status == "Ready" then
+		if entry.status == "Loading" or entry.recovering or self.session:get(entry.userId) then
 			reserved += 1
 		end
 	end
@@ -119,6 +125,7 @@ function Profiles.join(self: Profiles, userId: number)
 		loadDeadline = self.store.now() + Settings.LoadSeconds,
 		epoch = HttpService:GenerateGUID(false),
 		requestId = 0,
+		loading = status == "Loading",
 	}
 	self.entries[userId] = entry
 	notify(self, entry)
@@ -129,8 +136,9 @@ function Profiles.join(self: Profiles, userId: number)
 		local handle, issue = self.store:load(userId, function()
 			return self.entries[userId] == entry and entry.status == "Loading" and not self.closing
 		end)
+		entry.loading = false
 		if not handle then
-			if self.entries[userId] == entry then
+			if self.entries[userId] == entry and entry.status == "Loading" then
 				entry.status, entry.saveStatus = "Unavailable", "Your saved place could not be loaded. Rejoin to retry."
 				warn(`Infinite load user_{userId}: {issue}`)
 				notify(self, entry)
@@ -138,13 +146,17 @@ function Profiles.join(self: Profiles, userId: number)
 			return
 		end
 		if self.entries[userId] ~= entry or entry.status ~= "Loading" or self.closing then
+			entry.finalizing = true
 			finalSave(self, handle, handle.data)
+			entry.finalizing = false
 			return
 		end
 		if not self.store:usable(handle) then
+			entry.finalizing = true
 			entry.status, entry.saveStatus = "Unavailable", "Loading took too long. Rejoin to retry."
 			notify(self, entry)
 			finalSave(self, handle, handle.data)
+			entry.finalizing = false
 			return
 		end
 		local state = self.session:assign(userId, { cash = handle.data.cash, purchases = handle.data.assets })
@@ -252,7 +264,7 @@ function Profiles.leave(self: Profiles, userId: number)
 	self.entries[userId] = nil -- Invalidate callbacks before freeing/reusing the lot.
 	self.session:release(userId)
 	local handle = entry.handle
-	if handle and snapshot then
+	if handle and snapshot and not entry.handoff then
 		launch(self, function()
 			finalSave(self, handle, snapshot)
 		end)
@@ -263,6 +275,13 @@ end
 -- a late successful autosave can never revive this entry or a reused lot.
 function Profiles.step(self: Profiles)
 	for userId, entry in self.entries do
+		if entry.handoff and entry.handoffDeadline and self.store.now() >= entry.handoffDeadline then
+			if entry.status ~= "Unavailable" then
+				entry.status, entry.saveStatus =
+					"Unavailable", "Departure save is taking too long. Keep this session open; progress is paused."
+				notify(self, entry)
+			end
+		end
 		if entry.status == "Loading" and self.store.now() >= entry.loadDeadline then
 			entry.status, entry.saveStatus = "Unavailable", "Loading timed out. Rejoin to retry."
 			notify(self, entry)
@@ -279,8 +298,10 @@ function Profiles.step(self: Profiles)
 			notify(self, entry)
 			entry.handle = nil
 			if snapshot then
+				entry.finalizing = true
 				launch(self, function()
 					finalSave(self, handle, snapshot)
+					entry.finalizing = false
 				end)
 			end
 		elseif not entry.saving and self.store.now() >= entry.nextSave then
@@ -305,6 +326,154 @@ function Profiles.step(self: Profiles)
 			end)
 		end
 	end
+end
+
+-- Intentional departure owns the final writer. Freeze before capturing, then
+-- serialize after the ENTIRE autosave operation. PlayerRemoving must not queue
+-- another stale snapshot after this operation releases ownership.
+function Profiles.prepare(self: Profiles, userId: number, done: (boolean, string) -> ())
+	local entry, state = self.entries[userId], self.session:get(userId)
+	if not entry or self.closing or entry.handoff or entry.recovering or entry.finalizing or entry.loading then
+		done(false, "Profile operation still pending. Please wait.")
+		return
+	end
+	if not state and not entry.handle and entry.status ~= "Loading" then
+		done(true, "No active profile to release") -- Full/unavailable arrival can return to entry.
+		return
+	end
+	if entry.departureConfirmed and not entry.handle then
+		done(true, "Departure checkpoint already confirmed")
+		return
+	end
+	local handle = entry.handle
+	if not self:ready(userId) or not state or not handle then
+		done(false, "Your saved place is not ready to leave. Reload it first.")
+		return
+	end
+	state.paused = true
+	entry.handoff, entry.status = true, "Transferring"
+	entry.handoffDeadline = self.store.now() + Settings.HandoffSeconds
+	entry.saveStatus = "Saving before leaving… earnings and editing are paused"
+	local snapshot = self:snapshot(userId)
+	assert(snapshot, "Handoff requires a final snapshot")
+	notify(self, entry)
+	launch(self, function()
+		local deadline = entry.handoffDeadline :: number
+		while (entry.saving or handle.busy) and self.store.now() < deadline do
+			self.store.wait(0.05)
+		end
+		if self.entries[userId] ~= entry then
+			finalSave(self, handle, snapshot)
+			return
+		end
+		if entry.saving or handle.busy or not self.store:usable(handle) or self.store.now() >= deadline then
+			entry.handoff = false
+			entry.status, entry.saveStatus = "Unavailable", "Departure was not confirmed. Reload your place to resume."
+			notify(self, entry)
+			done(false, entry.saveStatus)
+			return
+		end
+		local ok, issue = self.store:save(handle, snapshot, true)
+		entry.handle, entry.handoff = nil, false -- Even an ambiguous release closes this handle.
+		entry.departureConfirmed = ok
+		if self.entries[userId] ~= entry then
+			return
+		end
+		local timely = ok and self.store.now() < deadline
+		entry.status = if timely then "Departing" else "Unavailable"
+		entry.saveStatus = if ok
+			then "Departure checkpoint confirmed • earnings paused"
+			else "Departure save unconfirmed • earnings paused"
+		if not ok then
+			warn(`Infinite handoff user_{userId}: {issue}`)
+		end
+		notify(self, entry)
+		done(
+			timely,
+			if timely then "Checkpoint confirmed" else "Departure did not finish in time. Reload your place to resume."
+		)
+	end)
+end
+
+-- Recovery after a released/ambiguous lease always claims CURRENT storage data
+-- with a fresh token. Never replay the source snapshot or force-expire a writer.
+function Profiles.recover(self: Profiles, userId: number, done: (boolean, string) -> ())
+	local entry = self.entries[userId]
+	if
+		not entry
+		or self.closing
+		or entry.handoff
+		or entry.saving
+		or entry.recovering
+		or entry.finalizing
+		or entry.loading
+		or entry.status == "Loading"
+	then
+		done(false, "A profile operation is still pending. Wait, then reload your place.")
+		return
+	end
+	local existing = self.session:get(userId)
+	if entry.handle and self.store:usable(entry.handle) and existing then
+		existing.paused = false -- No release was attempted (e.g. autosave wait deadline).
+		entry.status, entry.saveStatus = "Ready", "Departure cancelled before release • online earnings continue"
+		notify(self, entry)
+		done(true, "Your place is ready again")
+		return
+	end
+	local reserved = 0
+	for id, other in self.entries do
+		if id ~= userId and (other.status == "Loading" or other.recovering or self.session:get(id)) then
+			reserved += 1
+		end
+	end
+	if not existing and reserved >= self.session.tuning.PlotCount then
+		entry.status, entry.saveStatus = "Full", "This lobby is full. Return to modes and choose another lobby."
+		notify(self, entry)
+		done(false, entry.saveStatus)
+		return
+	end
+	entry.status, entry.recovering = "Recovering", true
+	entry.saveStatus = "Reloading current saved data… earnings remain paused"
+	entry.loadDeadline = self.store.now() + Settings.LoadSeconds
+	notify(self, entry)
+	launch(self, function()
+		local handle, issue = self.store:load(userId, function()
+			return self.entries[userId] == entry and not self.closing and self.store.now() < entry.loadDeadline
+		end, entry.data ~= nil)
+		entry.recovering = false
+		if self.entries[userId] ~= entry or self.closing then
+			if handle then
+				finalSave(self, handle, handle.data)
+			end
+			return
+		end
+		if not handle or not self.store:usable(handle) or self.store.now() >= entry.loadDeadline then
+			entry.status, entry.saveStatus =
+				"Unavailable", "Could not reacquire your saved place. Wait and reload, or return to modes."
+			if handle then
+				entry.finalizing = true
+				finalSave(self, handle, handle.data)
+				entry.finalizing = false
+			end
+			warn(`Infinite recovery user_{userId}: {issue}`)
+			notify(self, entry)
+			done(false, entry.saveStatus)
+			return
+		end
+		local state = self.session:get(userId)
+			or self.session:assign(userId, { cash = handle.data.cash, purchases = handle.data.assets })
+		assert(state, "Infinite recovery lost its reserved lot")
+		state.cash, state.purchases, state.incomeRate, state.paused =
+			handle.data.cash, handle.data.assets, Schema.income(handle.data), false
+		entry.handle, entry.data = handle, handle.data
+		entry.departureConfirmed = false
+		entry.epoch, entry.requestId, entry.fingerprint, entry.result, entry.accepted =
+			HttpService:GenerateGUID(false), 0, nil, nil, nil
+		entry.status, entry.saveStatus = "Ready", "Current saved place restored • online earnings continue"
+		entry.nextSave = self.store.now() + Settings.AutoSaveSeconds
+		notify(self, entry)
+		done(true, "Your current saved place is ready again")
+	end)
 end
 
 function Profiles.shutdown(self: Profiles)

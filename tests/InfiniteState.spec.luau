@@ -37,6 +37,14 @@ return function(): number
 	check(string.find(State.persistence(ready), "Save failed", 1, true) ~= nil, "save failure stays truthful")
 	check(string.find(State.persistence(ready), "Supply", 1, true) == nil, "calm mode has no event copy")
 	check(not State.economy(read).assigned, "prototype does not infer mode from ready attribute")
+	for _, status in { "Transferring", "Departing", "Recovering" } do
+		attrs[Config.Attributes.Assignment] = status
+		local paused = State.economy(read, true)
+		check(
+			paused.loading == true and not paused.assigned and paused.cash == nil and not paused.unavailable,
+			status .. " blocks stale displayed earnings without claiming malformed data"
+		)
+	end
 	attrs[Config.Attributes.Assignment] = "Assigned"
 	check(State.economy(read).assigned, "ordinary assigned state still works")
 	attrs[Config.Attributes.Assignment] = "Full"

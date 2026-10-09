@@ -5,7 +5,8 @@ native world prompts and the atomic Supply Cache snapshot remain authoritative.
 
 | File | Owns |
 | --- | --- |
-| `Bootstrap.client.luau` | Starts `Hud.start()` once |
+| `Bootstrap.client.luau` | Waits for the trusted server role, starts gameplay HUD only for dedicated modes, and starts ModeChooser |
+| `ModeChooser.luau` | Responsive entry/return controls, server transition status and bounded recovery UI; never selects a place ID or changes this server's mode |
 | `Hud.luau` | Subscriptions, assignment changes, independent private result lifetimes, countdown and teardown |
 | `HudView.luau` | Native controls, responsive placement, one open panel, local prompt input gate, selection and view rendering |
 | `UiState.luau` | Exact number/rate formatting and read-only economy/catalogue/event presentation |
@@ -168,3 +169,12 @@ checks still decide every purchase. Infinite Help explains online-only income,
 temporary lot numbers, checkpoint loss limits and the finite first catalogue.
 
 INF-03 adds PropertyActivity: one 10 Hz local cosmetic loop over the runtime folder, with visible/distance gating, reduced-motion handling and removal/teardown cleanup. Discovery lists available choices before locked/owned unique items and previews their actual silhouette, footprint, price, effect and requirement. Session never starts this activity loop.
+
+MODE-01 keeps the Modes launcher hidden while the property editor hides the HUD,
+so it cannot cover the editor title on portrait screens. Selecting a route scrolls
+the chooser back to its joining/failure feedback. Returning from Infinite freezes
+progress until a confirmed departure or safe current-data recovery; the chooser
+never promises cancellation of an accepted teleport.
+If the trusted role does not arrive within the 20-second startup window, gameplay
+does not start. A later ready service explicitly requests a rejoin instead of
+showing a choice with no destination controls.

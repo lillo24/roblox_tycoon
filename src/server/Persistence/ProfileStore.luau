@@ -47,7 +47,7 @@ end
 
 -- The atomic claim reads and validates before writing. Nil is the ONLY new-user
 -- case. A network exception, invalid record or another lease cannot create defaults.
-function Store.load(self: Store, userId: number, present: () -> boolean): (Handle?, string)
+function Store.load(self: Store, userId: number, present: () -> boolean, requireExisting: boolean?): (Handle?, string)
 	local key, token = `user_{userId}`, self.token()
 	local issue = "load did not complete"
 	for attempt = 1, Settings.Attempts do
@@ -62,6 +62,10 @@ function Store.load(self: Store, userId: number, present: () -> boolean): (Handl
 			end
 			local record: Schema.Record?
 			if current == nil then
+				if requireExisting then
+					issue, terminal = "saved profile disappeared during recovery", true
+					return nil
+				end
 				local fresh: Schema.Record = { version = 1, data = Schema.new() }
 				record = fresh
 			else

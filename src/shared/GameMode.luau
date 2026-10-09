@@ -1,13 +1,19 @@
 --!strict
 
--- Studio-owned ReplicatedStorage/TycoonMode StringValue, fixed before startup.
--- Absent means the existing session-only prototype. Never infer mode from a
--- missing event dependency: that could hide a broken ordinary-mode server.
+-- AppRuntime publishes the trusted server role before gameplay. The authored
+-- StringValue is only a Studio preview selector; absent preserves Prototype.
+-- Hosted resolution never trusts a client or teleport payload (Routing/README).
 local Mode = {}
 Mode.Name = "TycoonMode"
 
 function Mode.read(): string
 	local root = game:GetService("ReplicatedStorage")
+	local trusted = root:GetAttribute("TycoonServerRole")
+	if trusted ~= nil then
+		assert(typeof(trusted) == "string", "Server role must be a string")
+		assert(table.find({ "Prototype", "Infinite", "Entry", "Unavailable" }, trusted), "Invalid server role")
+		return trusted :: string
+	end
 	local object = root:FindFirstChild(Mode.Name)
 	local count = 0
 	for _, child in root:GetChildren() do
@@ -20,7 +26,10 @@ function Mode.read(): string
 		return "Prototype"
 	end
 	assert(object:IsA("StringValue"), "TycoonMode must be a StringValue")
-	assert(object.Value == "Prototype" or object.Value == "Infinite", "TycoonMode must be Prototype or Infinite")
+	assert(
+		table.find({ "Prototype", "Infinite", "Entry" }, object.Value),
+		"TycoonMode must be Prototype, Infinite or Entry"
+	)
 	return object.Value
 end
 

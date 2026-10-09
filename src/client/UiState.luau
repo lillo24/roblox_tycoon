@@ -52,7 +52,9 @@ function State.economy(read: (string) -> any, infinite: boolean?): Economy
 	if typeof(plot) == "number" and (plot < 1 or plot % 1 ~= 0) then
 		issue = "Invalid PlotId attribute"
 	end
-	local valid = if infinite then { "Loading", "Ready", "Full", "Unavailable" } else { "Assigned", "Full" }
+	local valid = if infinite
+		then { "Loading", "Ready", "Full", "Unavailable", "Transferring", "Departing", "Recovering" }
+		else { "Assigned", "Full" }
 	if assignment ~= nil and not table.find(valid, assignment) then
 		issue = "Invalid assignment attribute"
 	end
@@ -93,7 +95,7 @@ function State.economy(read: (string) -> any, infinite: boolean?): Economy
 		purchases = purchases,
 		count = count,
 		unavailable = issue,
-		loading = infinite and assignment == "Loading",
+		loading = infinite and table.find({ "Loading", "Transferring", "Departing", "Recovering" }, assignment) ~= nil,
 		infinite = infinite,
 		saveStatus = if typeof(saveStatus) == "string" then saveStatus else nil,
 	}

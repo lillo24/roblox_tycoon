@@ -20,14 +20,17 @@ local started = false
 
 -- Injection is restricted to disposable Studio previews/tests; production has no
 -- in-memory fallback. The preview label replaces every save claim in that copy.
-function TycoonRuntime.start(preview: {
+export type Preview = {
 	update: (string, (any) -> any) -> any,
 	label: string,
 	examples: { [number]: string }?,
-}?)
+}
+function TycoonRuntime.start(preview: Preview?)
 	assert(RunService:IsServer(), "Tycoon: runtime must start on the server")
 	assert(not started, "Tycoon: runtime started twice")
-	local infinite = Mode.read() == "Infinite"
+	local role = Mode.read()
+	assert(role == "Prototype" or role == "Infinite", "Entry must not start gameplay")
+	local infinite = role == "Infinite"
 	assert(
 		not preview or RunService:IsStudio() and infinite and #preview.label > 0,
 		"Tycoon: preview backend is Studio-only"
@@ -314,11 +317,29 @@ function TycoonRuntime.start(preview: {
 		session:accrue(ticks)
 		for userId, player in active do
 			local state = session:get(userId)
-			if state then
+			if state and (not profiles or profiles:ready(userId)) then
 				publish(player, state)
 			end -- Full-capacity players have no economy.
 		end
 	end)
+	return {
+		prepare = function(userId: number, done: (boolean, string) -> ())
+			if profiles then
+				profiles:prepare(userId, done)
+			else
+				done(true, "No persistent profile")
+			end
+		end,
+		recover = function(userId: number, done: (boolean, string) -> ())
+			if profiles then
+				profiles:recover(userId, done)
+			elseif infinite then
+				done(false, "Saving is not configured. Return to modes or rejoin after setup.")
+			else
+				done(true, "Session remains available")
+			end
+		end,
+	}
 end
 
 return TycoonRuntime

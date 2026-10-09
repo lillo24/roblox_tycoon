@@ -54,7 +54,7 @@ if script.Parent:FindFirstChild("InfiniteShowcase") then
     memory.values["user_-1002"] = { version = 1, data = showcase.make("Sky") }
     examples = { [-1001] = "The Glass Garden", [-1002] = "The Sky Workshop" }
 end
-require(game.ServerScriptService.TycoonServer.TycoonRuntime).start({
+require(game.ServerScriptService.TycoonServer.AppRuntime).start({
     update = memory.update,
     label = "Local preview • changes last only this server",
     examples = examples,

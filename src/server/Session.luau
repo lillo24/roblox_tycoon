@@ -15,6 +15,7 @@ export type State = {
 	cash: number,
 	incomeRate: number,
 	purchases: Catalogue.Purchases,
+	paused: boolean?, -- Only Infinite handoff sets this; ordinary Session is unchanged.
 }
 
 local Session = {}
@@ -126,7 +127,7 @@ end
 function Session.credit(self: Session, userId: number, amount: number): boolean
 	assert(amount > 0 and amount < math.huge and amount % 1 == 0, "Tycoon: credit must be a finite positive integer")
 	local state = self.states[userId]
-	if not state or self.owners[state.plotId] ~= userId then
+	if not state or state.paused or self.owners[state.plotId] ~= userId then
 		return false
 	end
 	state.cash = math.min(state.cash + amount, self.tuning.CashLimit or math.huge)
@@ -136,6 +137,9 @@ end
 function Session.accrue(self: Session, ticks: number)
 	assert(ticks >= 0 and ticks % 1 == 0, "Tycoon: income ticks must be nonnegative integers")
 	for _, state in self.states do
+		if state.paused then
+			continue
+		end
 		-- Persistent integer storage has an exact-integer ceiling; Prototype leaves
 		-- CashLimit absent and retains its existing behavior.
 		state.cash = math.min(state.cash + state.incomeRate * ticks, self.tuning.CashLimit or math.huge)
@@ -152,7 +156,7 @@ function Session.purchase(
 	upgradeId: string
 ): (boolean, Catalogue.PurchaseReason, number)
 	local state = self.states[userId]
-	if not state then
+	if not state or state.paused then
 		return false, "inactive", 0
 	end
 	if state.plotId ~= plotId or self.owners[plotId] ~= userId then

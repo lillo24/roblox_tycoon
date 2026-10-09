@@ -1,5 +1,9 @@
 # Infinite-mode persistence
 
+MODE-01 adds Profiles.prepare/recover as the intentional departure contract. Prepare freezes Session.paused before the last snapshot, waits behind the entire autosave, and requires a confirmed final release within Settings.HandoffSeconds (25). While a service call is still in flight, the source stays unavailable/paused; no cancellation or concurrent writer is introduced. PlayerRemoving delegates to the already-running final writer. A late confirmation cannot authorize a teleport.
+
+Recover may reuse a usable handle only when release was never attempted and prior work has finished. After release (including an ambiguous result), it loads current storage with a new token, refreshes the editor epoch and rebuilds cash/assets/income. ProfileStore.load's optional requireExisting flag refuses a missing record on recovery of an existing account. Another writer is never force-expired. Initial loads, cleanup, saves and recovery are fenced against retries and departure. No current-data claim means no earning/editing. These safeguards retain the documented autosave/crash-loss limits.
+
 This subsystem owns account data and the lifetime of the server's write permission.
 `Session` still owns cash and the income clock; `PropertyWorld` renders Infinite
 in the currently assigned lot's frame. Neither a lot number nor an Instance is saved.

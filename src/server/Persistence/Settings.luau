@@ -11,4 +11,5 @@ return table.freeze({
 	SafetySeconds = 15,
 	Attempts = 4,
 	ShutdownSeconds = 25,
+	HandoffSeconds = 25, -- Deadline to confirm intentional departure; never cancel an in-flight write.
 })
