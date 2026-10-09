@@ -2,7 +2,7 @@
 
 -- Provisional session tuning; catalogue prices/effects live only in UpgradeCatalogue.
 return table.freeze({
-	PlotCount = 4,
+	PlotCount = 6,
 	StartingCash = 0,
 	BaseIncome = 1,
 	IncomeInterval = 1,
@@ -14,13 +14,8 @@ return table.freeze({
 	FeedbackName = "TycoonPurchaseFeedback",
 	RuntimeName = "TycoonRuntime",
 	HudName = "TycoonHud",
-	-- World X/Z offsets from the authored spawn, in the inspected clear corridor.
-	PlotOffsets = table.freeze({
-		Vector3.new(-6, 0, 42),
-		Vector3.new(6, 0, 42),
-		Vector3.new(-6, 0, 54),
-		Vector3.new(6, 0, 54),
-	}),
+	-- Layout belongs to the saved scene; see place/README.md for the anchor contract.
+	MapName = "FactoryHub",
 	Attributes = table.freeze({
 		Cash = "TycoonCash",
 		PlotId = "TycoonPlotId",

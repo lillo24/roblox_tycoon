@@ -3,6 +3,45 @@
 This folder owns the PowerShell validation used locally and by CI.
 It does not contain gameplay code or require additional packages.
 
+- `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
+  `build/`, combining the unchanged canonical scene with current mapped source.
+  Play runs exact SupplyFeedback, UiState and WorldLabels tests via temporary
+  unmapped QA instances. It rejects linked outputs and verifies the canonical
+  hash. Run from the checkout whose scene/runtime you intend to review; default
+  output is `ui-review-main.rbxlx`, or use `-OutputName ui-review-map.rbxlx` in an
+  isolated map compatibility checkout. This helper never saves a canonical scene.
+  Disposable output omits the XML declaration because Studio's place reader
+  rejects that header even when the authored input is valid general-purpose XML.
+  Opt-in HUD tests use `UI01ClientQA/RunClientAssertions`, cloned into the Play
+  client's PlayerScripts. Direct command-bar module requires have a separate
+  module cache. Keep the runner until Stop Play so its recreated HUD connections
+  remain alive; see `docs/UI_01_REVIEW.md` for the exact route.
+  `UI01ClientQA/RunDisplayFixture` is an opt-in LocalScript for labelled synthetic
+  large balances, long names and independent messages in the actual HudView.
+  It checks safe-area Close, short-view panel separation and native jump clearance;
+  it never writes economy attributes. Stop Play removes all QA instances.
+  UX-02 also runs `PlayerGuidance.spec` automatically in Play and adds
+  `HudReadiness.spec` to the opt-in client runner (about 11 seconds for the real
+  timeout). Generate the combined checkout with
+  `./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-ux-02.rbxlx`.
+  See `docs/UX_02_REVIEW.md` for current provenance and consolidated QA.
+  QA-01 additionally includes Session/SupplyEvent in the automatic server route.
+  Before Play, run `require(game.ServerScriptService.UI01QA.RunMapAssertions)()`
+  in Edit for the actual MapLayout suite; its guard rejects Play because the test
+  creates/removes runtime geometry. `-GameplayOnly` omits all QA folders/remotes,
+  assertion runners and synthetic fixtures while retaining identical mapped
+  production source and Workspace. The default still includes the QA routes:
+
+  ```powershell
+  ./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-qa-01.rbxlx
+  ./scripts/New-UiReviewPlace.ps1 -OutputName ui-review-founder.rbxlx -GameplayOnly
+  ```
+
+  `Test-UiReviewPlace.ps1` builds both variants and checks exact mapped source,
+  unchanged Workspace/scene hash, fixture inclusion/exclusion and exact test source.
+  Full validation runs this check when the authored scene exists; the two additional
+  pinned Rojo builds verify the handoff boundary without starting Studio or a server.
+
 - `Get-ValidationScope.ps1` returns whether the complete CLI suite is required:
   manual runs always require it, while PRs skip it only when every changed file is
   Markdown. The workflow supplies paths from the PR merge commit's diff against
@@ -24,6 +63,14 @@ It does not contain gameplay code or require additional packages.
 - `Test-ProjectStructure.ps1` mutates copies of a fresh build and config in memory
   to ensure missing/duplicate/wrong-class instances, stale code, and broadened
   ownership or server binding are rejected. It never changes mapped Luau or a scene.
+- `Assert-AuthoredMap.ps1` checks the canonical scene's six inward frames, dimensions,
+  SAT separation, anchored geometry, single spawn, script ownership and no saved
+  runtime/old terrain. `Test-AuthoredMap.ps1` runs seven malformed-scene probes on
+  in-memory copies. Both run in full validation. For an authoring checkpoint,
+  `./scripts/Assert-AuthoredMap.ps1 -CheckSnapshotCode` additionally verifies the
+  captured script classes/counts and current source (CRLF/LF normalized). That
+  option is not a permanent code-only save requirement: Git/Rojo remains the code
+  authority, and later code-only work may leave captured scene scripts older.
 - `Test-LuauAnalysis.ps1` receives the exact analyzer options from the full entry
   point. It uses one generated file below `build/` for a passing Roblox/Rojo
   control and five expected TypeErrors: ordinary scalar mismatch, Roblox

@@ -1,0 +1,70 @@
+QA-01 actual Studio excerpts, UTC; Studio 0.741.19.7411056.
+Final behavior: ebbd8c1e0c8d23361145bd9806e2a02dd30a5126. Canonical scene SHA256: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8.
+Command echoes/raw platform/account diagnostics excluded; solo account name replaced with SoloPlayer. Counts are actual engine output, not static validation or historical sums.
+
+Source log: 0.741.19.7411056_20261008T133428Z_Studio_DBDCA_last.log
+2026-10-08T18:18:05.636Z,17016.636719,4a68,6,Info [FLog::CreatorOutput] QA01 EXACT SOURCES PASSED 37 ebbd8c1 QA clean
+2026-10-08T18:18:05.667Z,17016.667969,4a68,6,Info [FLog::CreatorOutput] QA01 EXECUTED MapLayout assertions: 522
+2026-10-08T18:44:10.347Z,18581.347656,4a68,6,Info [FLog::CreatorOutput] QA01 EXACT SOURCES PASSED 22 ebbd8c1 gameplay-only clean
+2026-10-08T18:49:15.388Z,18886.388672,5cfc,6,Info [FLog::CreatorOutput] QA01 FINAL PORTRAIT DISPLAY FIXTURE Enum.ScreenOrientation.Sensor
+2026-10-08T18:51:03.234Z,18994.234375,4a68,6,Info [FLog::CreatorOutput] QA01 FINAL POSITION ONLY CACHE TOUCH true
+2026-10-08T18:51:14.802Z,19005.802734,28cc,6,Info [FLog::CreatorOutput] QA01 FINAL TOUCH TAP 1 false
+2026-10-08T18:51:33.234Z,19024.234375,28cc,6,Info [FLog::CreatorOutput] QA01 FINAL TOUCH TAP 1 true
+2026-10-08T18:52:03.835Z,19054.835938,28cc,6,Info [FLog::CreatorOutput] QA01 FINAL TOUCH TAP 1 true
+2026-10-08T18:52:36.298Z,19087.298828,28cc,6,Info [FLog::CreatorOutput] QA01 FINAL TOUCH TAP 1 false
+2026-10-08T18:52:50.013Z,19101.013672,28cc,6,Info [FLog::CreatorOutput] QA01 FINAL TOUCH TAP 1 false
+2026-10-08T18:53:30.781Z,19141.781250,28cc,6,Info [FLog::CreatorOutput] QA01 FINAL TOUCH TAP 1 false
+2026-10-08T18:53:30.828Z,19141.828125,5cfc,6,Info [FLog::CreatorOutput] QA01 FINAL CASH DELTA SoloPlayer -10 429 1
+2026-10-08T18:53:30.845Z,19141.845703,3db4,6,Info [FLog::CreatorOutput] QA01 FINAL PRIVATE SoloPlayer TycoonPurchaseFeedback 1 Purchased Income Booster
+
+Source log: 0.741.19.7411056_20261008T181825Z_Studio_5E66C_last.log
+2026-10-08T18:18:34.581Z,8.581786,603c,6,Info [FLog::CreatorOutput] QA01 EXECUTED Session assertions: 186
+2026-10-08T18:18:34.584Z,8.584784,603c,6,Info [FLog::CreatorOutput] QA01 EXECUTED SupplyEvent assertions: 196
+2026-10-08T18:18:34.590Z,8.590777,603c,6,Info [FLog::CreatorOutput] UI01 EXECUTED SupplyFeedback assertions: 65 UiState assertions: 40 WorldLabels assertions: 13
+2026-10-08T18:18:35.600Z,9.600128,1750,6,Info [FLog::CreatorOutput] UX02 EXECUTED guidance/readiness assertions: 59
+
+Source log: 0.741.19.7411056_20261008T181926Z_Studio_3360E_last.log
+2026-10-08T18:25:30.668Z,364.668427,4850,6,Info [FLog::CreatorOutput] QA01 EXACT SOURCES PASSED 14 ebbd8c1 client
+2026-10-08T18:25:30.672Z,364.672424,4850,6,Error [FLog::CreatorError] Error: Players.Player1.PlayerScripts.RunClientAssertions:1: Expected ')' (to close '(' at column 91), got 'phase'
+2026-10-08T18:26:49.031Z,443.031433,4850,6,Info [FLog::CreatorOutput] UI01 ACTUAL lifecycle assertions: 15
+2026-10-08T18:26:52.683Z,446.683105,6040,6,Info [FLog::CreatorOutput] UI01 ACTUAL ordering assertions: 7
+2026-10-08T18:27:03.660Z,457.660431,6040,6,Info [FLog::CreatorOutput] UX02 ACTUAL HUD readiness assertions: 8
+2026-10-08T18:32:28.102Z,782.102722,4850,6,Info [FLog::CreatorOutput] QA01 FINAL OBSERVER ATTACHED Player1 1 774
+2026-10-08T18:35:42.662Z,976.662354,4850,6,Info [FLog::CreatorOutput] QA01 FINAL CASH DELTA Player1 -10 959 1
+2026-10-08T18:35:42.917Z,976.917786,6040,6,Info [FLog::CreatorOutput] QA01 FINAL PRIVATE Player1 TycoonPurchaseFeedback 1 Purchased Income Booster
+2026-10-08T18:36:32.691Z,1026.691040,6040,6,Info [FLog::CreatorOutput] QA01 FINAL CASH DELTA Player1 10 1069 2
+2026-10-08T18:36:32.692Z,1026.692139,6040,6,Info [FLog::CreatorOutput] QA01 FINAL PUBLIC Player1 {"closesAt":1791484593.69723,"id":34,"winnerName":"Player1","winnerUserId":-1,"deadline":1791484595.82221,"reward":10,"nextOpensAt":1791484613.69723,"phase":"result","opensAt":1791484583.69723}
+2026-10-08T18:36:32.693Z,1026.693115,6040,6,Info [FLog::CreatorOutput] QA01 FINAL PRIVATE Player1 TycoonSupplyFeedback 34 Claimed +10 cash
+2026-10-08T18:38:49.155Z,1163.155029,59b8,6,Info [FLog::CreatorOutput] QA01 FINAL CASH DELTA Player1 -25 1316 2
+2026-10-08T18:38:49.388Z,1163.388428,6040,6,Info [FLog::CreatorOutput] QA01 FINAL PRIVATE Player1 TycoonPurchaseFeedback 1 Purchased Workshop
+2026-10-08T18:40:02.180Z,1236.180908,4850,6,Info [FLog::CreatorOutput] QA01 FINAL CASH DELTA Player1 10 1691 5
+2026-10-08T18:40:02.617Z,1236.617920,6040,6,Info [FLog::CreatorOutput] QA01 FINAL PUBLIC Player1 {"closesAt":1791484803.69723,"id":41,"winnerName":"Player1","winnerUserId":-1,"deadline":1791484805.298123,"reward":10,"nextOpensAt":1791484823.69723,"phase":"result","opensAt":1791484793.69723}
+2026-10-08T18:40:02.618Z,1236.618896,6040,6,Info [FLog::CreatorOutput] QA01 FINAL PRIVATE Player1 TycoonSupplyFeedback 41 Claimed +10 cash
+
+Source log: 0.741.19.7411056_20261008T182319Z_Studio_66CBD_last.log
+2026-10-08T18:37:35.941Z,856.941223,4f90,6,Info [FLog::CreatorOutput] QA01 EXACT SOURCES PASSED 14 ebbd8c1 client
+2026-10-08T18:37:35.942Z,856.942261,4f90,6,Info [FLog::CreatorOutput] QA01 FINAL OBSERVER ATTACHED Player6 6 822
+2026-10-08T18:40:02.352Z,1003.352966,4118,6,Info [FLog::CreatorOutput] QA01 FINAL PUBLIC Player6 {"closesAt":1791484803.69723,"id":41,"winnerName":"Player1","winnerUserId":-1,"deadline":1791484805.298123,"reward":10,"nextOpensAt":1791484823.69723,"phase":"result","opensAt":1791484793.69723}
+
+Historical live capacity/reuse at 04c45324d9961cd34cf739a4d6badd6b2e770111 (server owner unchanged in final):
+Source log: 0.741.19.7411056_20261008T173526Z_Studio_4046E_last.log
+2026-10-08T18:01:08.711Z,1541.711304,4b40,6,Info [FLog::CreatorOutput] QA01 REAL DISCONNECT 5 nil 0
+2026-10-08T18:01:09.713Z,1542.713257,5a5c,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player1 -1 1 1440 1 false -1 0
+2026-10-08T18:01:09.713Z,1542.713257,5a5c,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player2 -2 2 1380 1 false -2 0
+2026-10-08T18:01:09.716Z,1542.716309,5a5c,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player4 -4 4 914 1 false -4 0
+2026-10-08T18:01:09.716Z,1542.716309,5a5c,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player5 -5 5 914 1 false -5 0
+2026-10-08T18:01:09.716Z,1542.716309,5a5c,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player6 -6 6 907 1 false -6 0
+2026-10-08T18:02:03.777Z,1596.777832,4b40,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player7 -7 3 1 1 false -7 0
+2026-10-08T18:02:14.575Z,1607.575684,4b40,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player8 -8 nil nil nil nil nil nil
+2026-10-08T18:02:14.975Z,1607.975586,6450,6,Info [FLog::CreatorOutput] QA01 LIVE LIFECYCLE Player9 -9 nil nil nil nil nil nil
+2026-10-08T18:04:34.975Z,1747.975342,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player1 -1 Assigned 1 1645 1 false -1 0
+2026-10-08T18:04:34.975Z,1747.975342,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player2 -2 Assigned 2 1585 1 false -2 0
+2026-10-08T18:04:34.975Z,1747.975342,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player4 -4 Assigned 4 1119 1 false -4 0
+2026-10-08T18:04:34.975Z,1747.975342,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player5 -5 Assigned 5 1119 1 false -5 0
+2026-10-08T18:04:34.976Z,1747.976318,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player6 -6 Assigned 6 1112 1 false -6 0
+2026-10-08T18:04:34.976Z,1747.976318,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player7 -7 Assigned 3 152 1 false -7 0
+2026-10-08T18:04:34.976Z,1747.976318,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player8 -8 Full nil nil nil nil nil nil
+2026-10-08T18:04:34.976Z,1747.976318,4b40,6,Info [FLog::CreatorOutput] QA01 CAPACITY AND REUSE Player9 -9 Full nil nil nil nil nil nil
+
+Final founder Edit cleanup (source log DBDCA):
+2026-10-08T18:57:45.134Z,19396.134766,4a68,6,Info [FLog::CreatorOutput] QA01 FINAL FOUNDER STOP RESTORED 6 no runtime/event/player residue

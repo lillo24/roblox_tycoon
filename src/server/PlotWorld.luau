@@ -1,8 +1,9 @@
 --!strict
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Config = require(ReplicatedStorage.TycoonShared.Config)
-local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
+local Shared = game:GetService("ReplicatedStorage").TycoonShared
+local Config = require(Shared.Config)
+local Catalogue = require(Shared.UpgradeCatalogue)
+local MapLayout = require(script.Parent.MapLayout)
 
 export type Pad = { part: Part, prompt: ProximityPrompt, label: TextLabel }
 export type Plot = {
@@ -10,183 +11,166 @@ export type Plot = {
 	pads: { [Catalogue.Id]: Pad },
 	upgrades: Folder,
 	label: TextLabel,
-	center: Vector3,
+	frame: CFrame,
 	color: Color3,
 }
-
 local PlotWorld = {}
-local colors = {
-	Color3.fromRGB(51, 127, 184),
-	Color3.fromRGB(139, 88, 179),
-	Color3.fromRGB(193, 113, 47),
-	Color3.fromRGB(43, 146, 124),
+-- Local geometry only. World positions/orientation come exclusively from saved anchors.
+local layouts: { [Catalogue.Id]: { pad: Vector3, machine: Vector3 } } = {
+	income_booster = { pad = Vector3.new(-10, 0, -15), machine = Vector3.new(-18, 0, -10) },
+	booster_tuning = { pad = Vector3.new(-10, 0, 0), machine = Vector3.new(-18, 0, 5) },
+	workshop = { pad = Vector3.new(10, 0, -15), machine = Vector3.new(18, 0, -10) },
+	workshop_expansion = { pad = Vector3.new(10, 0, 0), machine = Vector3.new(18, 0, 5) },
 }
 
--- Geometry only: costs, effects, prerequisites, and state text come from the catalogue.
-local layouts: { [Catalogue.Id]: { pad: Vector3, visual: Vector3, size: Vector3, color: Color3 } } = {
-	income_booster = {
-		pad = Vector3.new(-2.8, 0.7, -3),
-		visual = Vector3.new(-2.8, 2, 2.6),
-		size = Vector3.new(2.2, 3, 2.2),
-		color = Color3.fromRGB(92, 232, 117),
-	},
-	workshop = {
-		pad = Vector3.new(2.8, 0.7, -3),
-		visual = Vector3.new(2.8, 2, 2.6),
-		size = Vector3.new(2.2, 3, 2.2),
-		color = Color3.fromRGB(94, 173, 255),
-	},
-	booster_tuning = {
-		pad = Vector3.new(-2.8, 0.7, 0),
-		visual = Vector3.new(-2.8, 4.2, 2.6),
-		size = Vector3.new(1.6, 1.4, 1.6),
-		color = Color3.fromRGB(244, 222, 85),
-	},
-	workshop_expansion = {
-		pad = Vector3.new(2.8, 0.7, 0),
-		visual = Vector3.new(2.8, 4.5, 2.6),
-		size = Vector3.new(2.8, 2, 2.8),
-		color = Color3.fromRGB(197, 126, 255),
-	},
-}
-
-local function block(parent: Instance, name: string, size: Vector3, position: Vector3, color: Color3): Part
+local function block(parent: Instance, name: string, size: Vector3, frame: CFrame, color: Color3, solid: boolean?): Part
 	local part = Instance.new("Part")
-	part.Name = name
-	part.Size = size
-	part.Position = position
-	part.Color = color
+	part.Name, part.Size, part.CFrame, part.Color = name, size, frame, color
 	part.Anchored = true
-	part.Material = Enum.Material.SmoothPlastic
-	part.TopSurface = Enum.SurfaceType.Smooth
-	part.BottomSurface = Enum.SurfaceType.Smooth
+	part.CanCollide = solid == true
+	part.CanTouch = false
+	part.Material = Enum.Material.Metal
+	part.TopSurface, part.BottomSurface = Enum.SurfaceType.Smooth, Enum.SurfaceType.Smooth
 	part.Parent = parent
 	return part
 end
 
 local function surfaceLabel(part: Part, face: Enum.NormalId): TextLabel
 	local surface = Instance.new("SurfaceGui")
-	surface.Name = "UpgradeLabel"
-	surface.Face = face
-	surface.CanvasSize = Vector2.new(260, 160)
+	surface.Name, surface.Face = "Label", face
+	surface.CanvasSize = Vector2.new(420, 220)
 	surface.Parent = part
 	local label = Instance.new("TextLabel")
 	label.Size = UDim2.fromScale(1, 1)
 	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(15, 20, 28)
-	label.Font = Enum.Font.GothamBold
-	label.TextSize = 25
-	label.TextWrapped = true
+	label.TextColor3 = Color3.fromRGB(235, 242, 247)
+	label.Font, label.TextSize, label.TextWrapped = Enum.Font.GothamBold, 30, true
 	label.Parent = surface
 	return label
 end
 
-local function centerAboveTerrain(spawn: SpawnLocation, offset: Vector3, plotId: number): Vector3
-	local position = spawn.Position + offset
-	local params = RaycastParams.new()
-	params.FilterType = Enum.RaycastFilterType.Include
-	local terrain = workspace.Terrain
-	assert(terrain, "Tycoon: plot placement requires Workspace Terrain")
-	params.FilterDescendantsInstances = { terrain }
-	local high = -math.huge
-	-- Sample the floor's corners, edges, and center; never carve or move terrain.
-	for x = -5, 5, 5 do
-		for z = -5, 5, 5 do
-			local hit = workspace:Raycast(
-				Vector3.new(position.X + x, spawn.Position.Y + 100, position.Z + z),
-				Vector3.new(0, -250, 0),
-				params
-			)
-			assert(
-				hit and hit.Material ~= Enum.Material.Water,
-				`Tycoon: plot {plotId} needs dry terrain near the spawn`
-			)
-			high = math.max(high, hit.Position.Y)
-		end
+-- Anchored equipment silhouettes; only the base/housing collide. No moving products.
+local function machine(parent: Instance, name: string, frame: CFrame, color: Color3, extended: boolean): Model
+	local model = Instance.new("Model")
+	model.Name, model.Parent = name, parent
+	local steel = Color3.fromRGB(49, 60, 68)
+	local height = if extended then 6 else 4
+	block(model, "Base", Vector3.new(7, 0.5, 7), frame * CFrame.new(0, 0.25, 0), steel, true)
+	for _, x in { -2.6, 2.6 } do
+		block(model, "Support", Vector3.new(0.6, height, 0.7), frame * CFrame.new(x, height / 2 + 0.5, 2.3), steel)
 	end
-	-- Floor bottom is 0.1 studs above the sampled terrain; all furniture stays in this box.
-	local center = Vector3.new(position.X, high + 0.6, position.Z)
-	for _, part in workspace:GetPartBoundsInBox(CFrame.new(center + Vector3.new(0, 5.5, 0)), Vector3.new(10, 12, 10)) do
-		assert(
-			not part.CanCollide,
-			`Tycoon: plot {plotId} overlaps authored part {part:GetFullName()}; update PlotOffsets`
+	local housing = block(model, "Housing", Vector3.new(5, 2.6, 3.5), frame * CFrame.new(0, height, 1), steel, true)
+	block(model, "Hopper", Vector3.new(5.6, 0.7, 4), frame * CFrame.new(0, height + 1.6, 1), color)
+	block(
+		model,
+		"Output",
+		Vector3.new(2.2, 1, 2),
+		frame * CFrame.new(0, height - 0.5, -1.5),
+		Color3.fromRGB(137, 148, 154)
+	)
+	block(model, "WorkStation", Vector3.new(4.5, 0.4, 2), frame * CFrame.new(0, 1.3, -2), steel)
+	block(
+		model,
+		"StatusLight",
+		Vector3.new(0.6, 0.4, 0.12),
+		frame * CFrame.new(1.7, height + 0.6, -0.81),
+		Color3.fromRGB(145, 217, 187)
+	).Material =
+		Enum.Material.Neon
+	surfaceLabel(housing, Enum.NormalId.Front).Text = if name == "Generator"
+		then "STARTER UNIT\n+1 / sec"
+		else Catalogue.ById[name :: Catalogue.Id].DisplayName
+	if extended then
+		block(model, "ControlCabinet", Vector3.new(1.5, 3, 2), frame * CFrame.new(2.3, 2, -0.5), color)
+		block(
+			model,
+			"UpperPipe",
+			Vector3.new(0.7, 3, 0.7),
+			frame * CFrame.new(-1.8, height + 1, 1.5),
+			Color3.fromRGB(142, 155, 166)
 		)
 	end
-	return center
+	return model
 end
 
-function PlotWorld.create(): { Plot }
+function PlotWorld.inspect(): MapLayout.Layout
 	assert(
 		not workspace:FindFirstChild(Config.RuntimeName),
 		`Tycoon: reserved Workspace/{Config.RuntimeName} already exists`
 	)
-	assert(#Config.PlotOffsets == Config.PlotCount, "Tycoon: PlotOffsets must match PlotCount")
-	local spawns: { SpawnLocation } = {}
-	for _, instance in workspace:GetDescendants() do
-		if instance:IsA("SpawnLocation") then
-			table.insert(spawns, instance)
+	local layout = MapLayout.inspect()
+	for id, lot in layout.lots do
+		MapLayout.clear(
+			lot.frame * CFrame.new(-19, 0, -25),
+			Vector3.new(8, 10, 8),
+			lot.foundation,
+			`Lot{id} starter machine`
+		)
+		for upgradeId, slot in layouts do
+			MapLayout.clear(
+				lot.frame * CFrame.new(slot.machine),
+				Vector3.new(8, 11, 8),
+				lot.foundation,
+				`Lot{id}/{upgradeId} equipment`
+			)
+			MapLayout.clear(
+				lot.frame * CFrame.new(slot.pad),
+				Vector3.new(5, 7, 5),
+				lot.foundation,
+				`Lot{id}/{upgradeId} interaction`
+			)
+			assert(
+				(lot.frame:PointToWorldSpace(slot.pad) - layout.cache.Position).Magnitude > 10,
+				`Lot{id}/{upgradeId} overlaps cache prompt range`
+			)
 		end
 	end
-	assert(#spawns == 1, `Tycoon: expected one authored SpawnLocation, found {#spawns}`)
-	local centers = {}
-	for id, offset in Config.PlotOffsets do
-		centers[id] = centerAboveTerrain(spawns[1], offset, id)
-	end
+	return layout
+end
 
+function PlotWorld.create(layout: MapLayout.Layout): { Plot }
 	local folder = Instance.new("Folder")
-	folder.Name = Config.RuntimeName
-	folder.Archivable = false
+	folder.Name, folder.Archivable = Config.RuntimeName, false
 	local plots: { Plot } = {}
-	for id, center in centers do
+	for id, lot in layout.lots do
 		local model = Instance.new("Model")
 		model.Name = `Plot{id}`
 		model:SetAttribute(Config.Attributes.PlotId, id)
 		model.Parent = folder
 		local upgrades = Instance.new("Folder")
-		upgrades.Name = "Upgrades"
-		upgrades.Parent = model
-		local color = colors[(id - 1) % #colors + 1]
-		block(model, "Floor", Vector3.new(10, 1, 10), center, color)
-		local generator = block(model, "Generator", Vector3.new(1.4, 2, 1.4), center + Vector3.new(0, 1.5, 2.6), color)
+		upgrades.Name, upgrades.Parent = "Upgrades", model
+		machine(model, "Generator", lot.frame * CFrame.new(-19, 0, -25), lot.accent, false)
 		local pads: { [Catalogue.Id]: Pad } = {}
 		for _, definition in Catalogue.Definitions do
-			local part = block(
+			local p = block(
 				model,
 				`Pad_{definition.Id}`,
-				Vector3.new(2.2, 0.4, 1.8),
-				center + layouts[definition.Id].pad,
+				Vector3.new(4, 0.3, 3),
+				lot.frame * CFrame.new(layouts[definition.Id].pad + Vector3.new(0, 0.15, 0)),
 				Color3.fromRGB(90, 90, 90)
 			)
 			local prompt = Instance.new("ProximityPrompt")
-			prompt.Name = "Purchase"
-			prompt.ObjectText = `{definition.DisplayName} (+{definition.IncomeDelta}/tick)`
+			prompt.Name, prompt.ObjectText = "Purchase", `{definition.DisplayName} (+{definition.IncomeDelta}/tick)`
 			prompt.MaxActivationDistance = Config.PurchasePromptDistance
-			prompt.RequiresLineOfSight = false
+			prompt.RequiresLineOfSight, prompt.ClickablePrompt = false, true
 			prompt.Exclusivity = Enum.ProximityPromptExclusivity.OnePerButton
-			prompt.ClickablePrompt = true
-			prompt.HoldDuration = 0
-			prompt.Enabled = false
-			prompt.Parent = part
-			pads[definition.Id] = { part = part, prompt = prompt, label = surfaceLabel(part, Enum.NormalId.Top) }
+			prompt.HoldDuration, prompt.Enabled, prompt.Parent = 0, false, p
+			pads[definition.Id] = { part = p, prompt = prompt, label = surfaceLabel(p, Enum.NormalId.Top) }
 		end
+		local signPart =
+			block(model, "OwnerPanel", Vector3.new(7, 2.5, 0.4), lot.frame * CFrame.new(23, 3, -30), lot.accent)
 		local sign = Instance.new("BillboardGui")
-		sign.Name = "Ownership"
-		sign.Size = UDim2.fromOffset(180, 64)
-		sign.StudsOffset = Vector3.new(0, 6.5, 0)
-		sign.AlwaysOnTop = true
-		sign.MaxDistance = 75
-		sign.Parent = generator
+		sign.Name, sign.Size = "Ownership", UDim2.fromOffset(130, 36)
+		sign.StudsOffset = Vector3.new(0, 1.5, 0)
+		-- Show nearby ownership without six large labels filling the plaza view.
+		sign.AlwaysOnTop, sign.MaxDistance, sign.Parent = false, 90, signPart
 		local label = Instance.new("TextLabel")
 		label.Size = UDim2.fromScale(1, 1)
-		label.BackgroundColor3 = Color3.fromRGB(24, 28, 36)
-		label.BackgroundTransparency = 0.15
-		label.TextColor3 = Color3.new(1, 1, 1)
-		label.Font = Enum.Font.GothamBold
-		label.TextSize = 16
-		label.TextWrapped = true
-		label.Text = `Plot {id}\nAvailable`
-		label.Parent = sign
-		plots[id] = { model = model, pads = pads, upgrades = upgrades, label = label, center = center, color = color }
+		label.BackgroundColor3, label.BackgroundTransparency = Color3.fromRGB(24, 28, 36), 0.25
+		label.TextColor3, label.Font, label.TextSize = Color3.new(1, 1, 1), Enum.Font.GothamBold, 12
+		label.TextWrapped, label.Parent = true, sign
+		plots[id] =
+			{ model = model, pads = pads, upgrades = upgrades, label = label, frame = lot.frame, color = lot.accent }
 		PlotWorld.setOwner(plots[id], nil)
 	end
 	folder.Parent = workspace
@@ -200,9 +184,13 @@ function PlotWorld.reconcile(plot: Plot, purchases: Catalogue.Purchases, cash: n
 		local purchased = purchases[id] == true
 		local visual = plot.upgrades:FindFirstChild(id)
 		if purchased and not visual then
-			local layout = layouts[id]
-			local part = block(plot.upgrades, id, layout.size, plot.center + layout.visual, layout.color)
-			surfaceLabel(part, Enum.NormalId.Front).Text = definition.DisplayName
+			machine(
+				plot.upgrades,
+				id,
+				plot.frame * CFrame.new(layouts[id].machine),
+				plot.color,
+				id == "booster_tuning" or id == "workshop_expansion"
+			)
 		elseif not purchased and visual then
 			visual:Destroy()
 		end
@@ -212,22 +200,19 @@ function PlotWorld.reconcile(plot: Plot, purchases: Catalogue.Purchases, cash: n
 		local state = if owned then Catalogue.stateText(definition, purchases, cash) else "No owner"
 		pad.label.Text = `{definition.DisplayName}\n{definition.Cost} cash • +{definition.IncomeDelta}/tick\n{state}`
 		pad.prompt.ActionText = if availability == "affordable" then `Buy ({definition.Cost} cash)` else state
-		-- Locked/unaffordable prompts remain usable, so the server can explain rejection.
 		pad.prompt.Enabled = owned and not purchased
 		pad.part.Color = if not owned or availability == "locked"
-			then Color3.fromRGB(130, 130, 140)
-			elseif purchased then Color3.fromRGB(92, 232, 117)
-			elseif availability == "affordable" then Color3.fromRGB(95, 220, 218)
-			else Color3.fromRGB(242, 192, 73)
+			then Color3.fromRGB(86, 96, 105)
+			elseif purchased then Color3.fromRGB(92, 186, 137)
+			elseif availability == "affordable" then Color3.fromRGB(67, 158, 157)
+			else Color3.fromRGB(192, 148, 62)
 	end
 end
 
 function PlotWorld.setOwner(plot: Plot, player: Player?)
 	plot.model:SetAttribute(Config.Attributes.OwnerUserId, if player then player.UserId else nil)
-	plot.label.Text = if player
-		then `Plot {plot.model:GetAttribute(Config.Attributes.PlotId)}\n{player.DisplayName}`
-		else `Plot {plot.model:GetAttribute(Config.Attributes.PlotId)}\nAvailable`
+	plot.label.Text = `FACTORY {plot.model:GetAttribute(Config.Attributes.PlotId)}\n`
+		.. (if player then player.DisplayName else "Available")
 	PlotWorld.reconcile(plot, {}, 0)
 end
-
 return PlotWorld
