@@ -23,3 +23,5 @@ seconds. Frame intervals distinguish WindowFocused/background signals, and all
 stats retain their actual side/phase. The camera visits the same six slots at
 20-second stops. Memory checkpoint work is not DataStore latency. Wrappers do not
 measure total script CPU. No global connection-count claim is made.
+Final probes additionally record Session.accrue work and actual invocation spacing;
+the latter is income cadence, not CPU time, and does not include attribute/world publish.

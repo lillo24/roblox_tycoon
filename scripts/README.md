@@ -3,6 +3,17 @@
 This folder owns the PowerShell validation used locally and by CI.
 It does not contain gameplay code or require additional packages.
 
+- `New-PerformanceReviewPlace.ps1 -Workload Fresh|Developed|Dense|SixOwners`
+  injects bounded, unmapped probes into a local-memory Infinite copy. See
+  `tests/fixtures/Performance/README.md` and `docs/PERF_01_REVIEW.md` for the route,
+  timings and distinctions between six rendered properties and six actual owners.
+  `Export-PerformanceEvidence.ps1 -LogPaths <Studio log paths> -Name <run-name>`
+  extracts account-safe JSON and nearest-rank summaries under `docs/perf-01`.
+  It rejects truncated records. `Test-PerformanceReviewPlace.ps1` verifies exact
+  fixture sources/startup, unchanged authored geometry and exclusion from production.
+  Full CLI/CI adds two small Rojo builds for this boundary check; it does not run
+  clients or claim runtime performance from generated geometry.
+
 - `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
   `build/`, combining the unchanged canonical scene with current mapped source.
   Play runs exact SupplyFeedback, UiState and WorldLabels tests via temporary

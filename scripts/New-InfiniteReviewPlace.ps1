@@ -64,7 +64,7 @@ print("INF01 LOCAL PREVIEW: memory backend, no cross-session saving evidence")
     [void](Add-Item $qa 'Script' 'StartLocalPreview' $start)
 }
 if ($IncludeQA) {
-    foreach ($test in @('Persistence', 'ProfileLifecycle', 'PropertyWorld', 'InfiniteState', 'Session', 'SupplyEvent', 'Property', 'Growth')) {
+    foreach ($test in @('Persistence', 'ProfileLifecycle', 'PropertyWorld', 'PropertyRendering', 'InfiniteState', 'Session', 'SupplyEvent', 'Property', 'Growth')) {
         [void](Add-Item $qa 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
     }
     [void](Add-Item $qa 'ModuleScript' 'GrowthPresets' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/InfiniteShowcase.luau'))))
@@ -72,6 +72,7 @@ if ($IncludeQA) {
 local memory = require(script.Parent.ProfileMemoryStore)
 print("INF02 EXECUTED Property assertions:", require(script.Parent.Property)(memory))
 print("INF03 EXECUTED Growth assertions:", require(script.Parent.Growth)(memory, require(script.Parent.GrowthPresets)))
+print("PERF01 EXECUTED PropertyRendering assertions:", require(script.Parent.PropertyRendering)())
 print("INF01 EXECUTED Persistence assertions:", require(script.Parent.Persistence)(memory))
 print("INF01 EXECUTED ProfileLifecycle assertions:", require(script.Parent.ProfileLifecycle)(memory))
 print("INF01 EXECUTED InfiniteState assertions:", require(script.Parent.InfiniteState)())

@@ -5,6 +5,7 @@ Specs are engine-run ModuleScripts, outside production Rojo mappings. The PowerS
 - Session/SupplyEvent cover the existing economy, purchases, ownership and event rules. SupplyFeedback/UiState/WorldLabels/PlayerGuidance cover their client state and presentation boundaries.
 - Persistence/ProfileLifecycle cover atomic profile storage, lease/receipt fences, stale callbacks and shutdown. Property/PropertyWorld cover editing, migration, lot frames and reconstruction. InfiniteState covers the calm UI state.
 - Growth covers catalogue rules, old-schema preservation, ordinary-earnings pacing, limits and six developed properties.
+- PropertyRendering verifies selective reconstruction, storage/re-placement, palette identity and exact fresh-model color equivalence across all silhouettes, plus departure/reuse metadata cleanup. It runs with Infinite IncludeQA, outside timed performance scenes.
 - Routing covers trusted configuration, choices, duplicates, immediate/late failures, bounded retry and stale callbacks. Handoff covers freeze/snapshot ordering behind an autosave, failed writes, current-data reacquisition, source/destination overlap, late cleanup and deadlines.
 - `fixtures` contains explicit memory backends, isolated examples and actual-client observers. These are omitted from production and are never automatic fallbacks for service errors.
 

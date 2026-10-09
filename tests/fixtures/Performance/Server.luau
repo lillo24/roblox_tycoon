@@ -36,11 +36,13 @@ function Fixture.start(workload)
 		end
 		return result
 	end
+	local lastIncome: number? = nil
 	for _, descriptor in
 		{
 			{ require(Server.Persistence.Profiles), "snapshot", "snapshotWorkMs" },
 			{ require(Server.PropertyWorld), "reconcile", "worldWorkMs" },
 			{ require(Server.PropertyEdits), "apply", "transactionWorkMs" },
+			{ require(Server.Session), "accrue", "incomeWorkMs" },
 		}
 	do
 		local target, method, metric = descriptor[1], descriptor[2], descriptor[3]
@@ -50,6 +52,12 @@ function Fixture.start(workload)
 			local result = table.pack(original(...))
 			if control:GetAttribute("Phase") ~= "Idle" then
 				sampler.add(metric .. ":" .. control:GetAttribute("Phase"), (os.clock() - started) * 1000)
+				if method == "accrue" and lastIncome then
+					sampler.add("incomeTickIntervalMs:" .. control:GetAttribute("Phase"), (started - lastIncome) * 1000)
+				end
+			end
+			if method == "accrue" then
+				lastIncome = started
 			end
 			return table.unpack(result, 1, result.n)
 		end
