@@ -10,7 +10,10 @@ Export-PerformanceEvidence reads only probe JSON, removes account identifiers an
 rejects incomplete records; nearest-rank percentiles keep foreground samples separate.
 
 Fresh is one empty actual owner. Developed is one actual Garden owner plus five
-labelled synthetic properties, solely a same-scene control. SixOwners seeds actual
+labelled synthetic Garden properties, solely a same-scene control for SixOwners'
+six Garden arrivals. The earlier baseline used alternating Garden/Sky examples;
+its recorded result is not an exact scene match for six actual Garden owners.
+SixOwners seeds actual
 arrivals without taking any lots with examples and requires six real clients.
 Dense owns all 14 unique equipment/expansion items and 48 lantern decorations;
 the current catalogue can reach 62 of the 64 global ceiling. Greedy valid packing
@@ -23,5 +26,9 @@ seconds. Frame intervals distinguish WindowFocused/background signals, and all
 stats retain their actual side/phase. The camera visits the same six slots at
 20-second stops. Memory checkpoint work is not DataStore latency. Wrappers do not
 measure total script CPU. No global connection-count claim is made.
+Studio can leave WindowFocused true in inactive test windows. Confirm the actual
+foreground observer through native input and record that client separately; do
+not pool clients based on this flag alone. Preserve ambiguous raw flags and label
+those clients' foreground/background state unverified in the review.
 Final probes additionally record Session.accrue work and actual invocation spacing;
 the latter is income cadence, not CPU time, and does not include attribute/world publish.

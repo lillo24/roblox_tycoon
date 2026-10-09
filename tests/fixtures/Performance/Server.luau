@@ -17,8 +17,7 @@ function Fixture.start(workload)
 	if workload == "Developed" then
 		examples = {}
 		for id = -2005, -2001 do
-			memory.values["user_" .. id] =
-				{ version = 1, data = presets.make(if id % 2 == 0 then "Sky" else "Garden", showcase) }
+			memory.values["user_" .. id] = { version = 1, data = presets.make("Garden", showcase) }
 			examples[id] = "PERF CONTROL EXAMPLE"
 		end
 	end
