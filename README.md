@@ -10,11 +10,23 @@ Studio scene; ownership, equipment, prompts and UI are created only during Play.
 See [the MAP-01 checkpoint and visual review](place/MAP_01_REVIEW.md). See [gameplay behavior,
 tuning, source responsibilities, and QA](src/README.md).
 
-The **combined draft** includes MAP-01, UI-01 and UX-02 factory guidance,
+The **merged shared foundation** includes MAP-01, UI-01 and UX-02 factory guidance,
 first-purchase hints and recoverable startup states. Use the
 [UX-02 preview and consolidated QA checkpoint](docs/UX_02_REVIEW.md) for current
 startup/review instructions. The source review packets retain historical evidence;
-final approval and consolidation belong to this combined checkpoint.
+remaining manual QA is follow-up after the explicitly authorized PR #11 merge.
+
+INF-01 adds a separately reviewed **Infinite** mode: account-owned cash/assets,
+temporary lot assignment, owner-only actions and a calm HUD without SupplyCache.
+Prototype behavior above remains the default. Read [the INF-01 review](docs/INF_01_REVIEW.md)
+and [save format/setup](src/server/Persistence/README.md). The four-upgrade catalogue
+is only the first persistent slice, not unlimited content.
+
+Build a local playable copy with `./scripts/New-InfiniteReviewPlace.ps1` after
+installing the pinned tools. Open `build/inf-review.rbxlx` in Studio and press Play.
+Its explicit memory preview resets on Stop and labels that limitation in the HUD.
+Real DataStore testing needs the isolated published test universe setup; this
+change does not publish a game or enable Studio access to production data.
 
 ## Prerequisites
 
@@ -229,5 +241,5 @@ dashboard and API; the temporary server was stopped after checking it. Routing
 container preservation flags and Git's build-output ignore rule were checked.
 Current remote validation results are recorded in PR checks and GitHub Actions.
 
-Wally, packages, gameplay frameworks, persistence, custom purchase remotes, binary assets,
+Wally, packages, gameplay frameworks, custom purchase remotes, binary assets,
 Git LFS, and publishing automation are deferred until there is an actual need.

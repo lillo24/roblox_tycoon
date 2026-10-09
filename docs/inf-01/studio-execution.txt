@@ -1,0 +1,22 @@
+2026-10-09T08:23:46.786Z,56.786655,648c,6,Info [FLog::CreatorOutput] INF01 EXECUTED PropertyWorld assertions: 66
+2026-10-09T08:25:20.352Z,150.352798,5ff8,6,Info [FLog::CreatorOutput] INF01 EXACT source and class verification: 28 files
+2026-10-09T08:27:22.754Z,7.754933,3f24,6,Info [FLog::CreatorOutput] INF01 EXECUTED Persistence assertions: 46
+2026-10-09T08:27:22.757Z,7.757930,3f24,6,Info [FLog::CreatorOutput] INF01 EXECUTED ProfileLifecycle assertions: 21
+2026-10-09T08:27:22.759Z,7.759928,3f24,6,Info [FLog::CreatorOutput] INF01 EXECUTED InfiniteState assertions: 11
+2026-10-09T08:27:22.761Z,7.761926,3f24,6,Info [FLog::CreatorOutput] INF01 EXECUTED Session regression assertions: 186
+2026-10-09T08:27:22.764Z,7.764923,3f24,6,Info [FLog::CreatorOutput] INF01 EXECUTED SupplyEvent regression assertions: 196
+2026-10-09T08:27:22.776Z,7.776910,3f24,6,Info [FLog::CreatorOutput] INF01 LOCAL PREVIEW: memory backend, no cross-session saving evidence
+2026-10-09T08:28:33.112Z,78.112396,4ea8,6,Info [FLog::CreatorOutput] INF01 MULTIPLAYER ready Player1 1 Player2 2
+2026-10-09T08:28:33.113Z,78.113403,4ea8,6,Info [FLog::CreatorOutput] INF01 positioning fixture only: visitor on owner pad Player2
+2026-10-09T08:28:59.644Z,104.644745,4ea8,6,Info [FLog::CreatorOutput] INF01 ACTUAL visitor prompt rejected; both accounts and owner equipment unchanged Player2
+2026-10-09T08:29:29.677Z,134.677200,4ea8,6,Info [FLog::CreatorOutput] INF01 positioning fixture only: owner on purchase pad, visitor remains in property
+2026-10-09T08:29:50.225Z,155.225540,577c,6,Info [FLog::CreatorOutput] INF01 ACTUAL owner prompt bought Income Booster; income 2; equipment 1 Player1
+2026-10-09T08:30:53.189Z,218.189255,3f24,6,Info [FLog::CreatorOutput] INF01 ACTUAL online income continues while owner visits second property
+2026-10-09T08:31:13.838Z,238.838760,577c,6,Info [FLog::CreatorOutput] INF01 ACTUAL departure cleared owner, equipment and four prompts
+2026-10-09T08:32:05.552Z,290.552643,577c,6,Info [FLog::CreatorOutput] INF01 ACTUAL lot 1 reused by new account; no old cash, assets or income Player3
+2026-10-09T08:32:15.552Z,300.552399,5284,6,Info [FLog::CreatorOutput] INF01 ACTUAL replacement still isolated after delayed callback window
+2026-10-09T08:27:44.379Z,21.379011,29ac,6,Info [FLog::CreatorOutput] INF01 ACTUAL client calm-mode assertions: 6 Player1
+2026-10-09T08:27:45.374Z,21.374495,1af4,6,Info [FLog::CreatorOutput] INF01 ACTUAL client calm-mode assertions: 6 Player2
+2026-10-09T08:32:13.753Z,21.753956,5088,6,Info [FLog::CreatorOutput] INF01 ACTUAL client calm-mode assertions: 6 Player3
+2026-10-09T08:35:22.877Z,752.877869,3b50,6,Info [FLog::CreatorOutput] INF01 ACTUAL unpublished real backend: unavailable, no cash/lot/owner, no event HUD
+2026-10-09T08:36:58.324Z,848.324585,5ff8,6,Info [FLog::CreatorOutput] INF01 ACTUAL Prototype regression: assigned, income, event HUD/state/feedback/world restored

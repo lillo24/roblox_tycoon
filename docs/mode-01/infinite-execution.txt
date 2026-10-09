@@ -1,0 +1,17 @@
+MODE01 EXECUTED Routing assertions: 33
+MODE01 EXECUTED Handoff assertions: 35
+MODE01 EXECUTED Session regression assertions: 186
+MODE01 EXECUTED SupplyEvent regression assertions: 196
+INF02 EXECUTED Property assertions: 246
+INF03 EXECUTED Growth assertions: 296
+INF01 EXECUTED Persistence assertions: 46
+INF01 EXECUTED ProfileLifecycle assertions: 21
+INF01 EXECUTED InfiniteState assertions: 11
+INF01 EXECUTED Session regression assertions: 186
+INF01 EXECUTED SupplyEvent regression assertions: 196
+INF01 LOCAL PREVIEW: memory backend, no cross-session saving evidence
+INF01 ACTUAL client calm-mode assertions: 6
+MODE01 ACTUAL Infinite isolation assertions: 3
+INF03 ACTUAL late-metadata activity assertion: 1
+MODE01 LOCAL route intent: Entry LateFailure
+MODE01 ACTUAL released-lease recovery assertions: 4; new editor epoch, placed nursery, cash preserved, Ready resumed
