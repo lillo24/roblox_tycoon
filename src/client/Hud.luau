@@ -16,10 +16,13 @@ local Labels = require(script.Parent.WorldLabels)
 local Bindings = require(script.Parent.RuntimeBindings)
 local Guidance = require(script.Parent.FactoryGuidance)
 local Onboarding = require(script.Parent.Onboarding)
+local Mode = require(ReplicatedStorage.TycoonShared.GameMode)
+local Editor = require(script.Parent.PropertyEditor)
 
 local Hud = {}
 
 function Hud.start(): ScreenGui
+	local infinite = Mode.read() == "Infinite"
 	local player = Players.LocalPlayer
 	assert(player, "Tycoon HUD requires a LocalPlayer")
 	local playerGui = player:WaitForChild("PlayerGui")
@@ -50,10 +53,11 @@ function Hud.start(): ScreenGui
 	local progress = Onboarding.session()
 	local economy = State.economy(function(attribute: string)
 		return player:GetAttribute(attribute)
-	end)
+	end, infinite)
 	local snapshot: Rules.Snapshot? = nil
 	local labels = Labels.start()
 	local view: View.Handle
+	local editor: { open: () -> (), destroy: () -> () }? = nil
 	local render: () -> () = function() end
 	local function applyPreferences()
 		if not running then
@@ -63,6 +67,11 @@ function Hud.start(): ScreenGui
 		labels.refresh(Preferences.read().labels, GuiService.PreferredTransparency)
 	end
 	view = View.new(gui, applyPreferences, {
+		edit = function()
+			if editor then
+				editor.open()
+			end
+		end,
 		find = function()
 			guidance.start()
 		end,
@@ -102,10 +111,10 @@ function Hud.start(): ScreenGui
 		then
 			eventText = "Supply Cache\nWaiting for feedback channels"
 		end
-		view.event(eventText, if snapshot then snapshot.phase else nil)
-		local supplyText = supply:read(os.clock())
+		view.event(if infinite then State.persistence(economy) else eventText, if snapshot then snapshot.phase else nil)
+		local supplyText = if infinite then "" else supply:read(os.clock())
 		view.feedback(purchaseText, supplyText)
-		local hint = Onboarding.text(progress, economy, os.clock())
+		local hint = if infinite then "" else Onboarding.text(progress, economy, os.clock())
 		local urgent = snapshot
 			and (snapshot.phase == "warning" or snapshot.phase == "open" or snapshot.phase == "result")
 		view.guidance(
@@ -128,8 +137,14 @@ function Hud.start(): ScreenGui
 		end
 		local nextEconomy = State.economy(function(attribute: string)
 			return player:GetAttribute(attribute)
-		end)
-		if not nextEconomy.assigned and not nextEconomy.full and assignmentExpired and not nextEconomy.unavailable then
+		end, infinite)
+		if
+			not nextEconomy.assigned
+			and not nextEconomy.full
+			and not nextEconomy.loading
+			and assignmentExpired
+			and not nextEconomy.unavailable
+		then
 			nextEconomy.unavailable = "Factory assignment timed out"
 		end
 		if nextEconomy.unavailable and nextEconomy.unavailable ~= reportedEconomy then
@@ -168,13 +183,22 @@ function Hud.start(): ScreenGui
 			connection:Disconnect()
 		end
 		view.destroy()
+		if editor then
+			editor.destroy()
+		end
 		labels.destroy()
 	end))
 	for _, definition in Catalogue.Definitions do
 		track(player:GetAttributeChangedSignal(Catalogue.purchaseAttribute(definition.Id)):Connect(update))
 	end
 	for _, attribute in
-		{ Config.Attributes.Cash, Config.Attributes.IncomeRate, Config.Attributes.PlotId, Config.Attributes.Assignment }
+		{
+			Config.Attributes.Cash,
+			Config.Attributes.IncomeRate,
+			Config.Attributes.PlotId,
+			Config.Attributes.Assignment,
+			Config.Attributes.SaveStatus,
+		}
 	do
 		track(player:GetAttributeChangedSignal(attribute):Connect(update))
 	end
@@ -184,6 +208,9 @@ function Hud.start(): ScreenGui
 	update()
 	applyPreferences()
 	gui.Parent = playerGui
+	if infinite then
+		editor = Editor.new(gui)
+	end
 	assignmentTimer = task.delay(Bindings.Timeout, function()
 		assignmentTimer = nil
 		assignmentExpired = true
@@ -191,7 +218,7 @@ function Hud.start(): ScreenGui
 	end)
 	-- FIX-01: ordered non-yielding binding attaches feedback before snapshot reads,
 	-- including dependencies arriving after the documented ten-second deadline.
-	runtime = Bindings.start(ReplicatedStorage, {
+	local specs: { Bindings.Spec } = {
 		{
 			name = Rules.FeedbackName,
 			class = "RemoteEvent",
@@ -295,7 +322,14 @@ function Hud.start(): ScreenGui
 				end
 			end,
 		},
-	}, render)
+	}
+	if infinite then
+		-- Keep only purchase feedback. Deliberately absent SupplyCache services
+		-- have no listeners/deadlines/recovery watches in this mode.
+		table.remove(specs, 3)
+		table.remove(specs, 1)
+	end
+	runtime = Bindings.start(ReplicatedStorage, specs, render)
 	render()
 	local elapsed = 0
 	track(RunService.Heartbeat:Connect(function(delta: number)

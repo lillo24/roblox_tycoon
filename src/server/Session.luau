@@ -6,6 +6,7 @@ export type Tuning = {
 	read PlotCount: number,
 	read StartingCash: number,
 	read BaseIncome: number,
+	read CashLimit: number?,
 }
 
 export type State = {
@@ -34,11 +35,19 @@ function Session.new(tuning: Tuning, definitions: { Catalogue.Definition }): Ses
 		"Tycoon: StartingCash must be a nonnegative integer"
 	)
 	assert(tuning.BaseIncome > 0 and tuning.BaseIncome % 1 == 0, "Tycoon: BaseIncome must be a positive integer")
+	assert(
+		not tuning.CashLimit
+			or tuning.CashLimit >= tuning.StartingCash
+				and tuning.CashLimit < math.huge
+				and tuning.CashLimit % 1 == 0,
+		"Tycoon: CashLimit must be a finite integer at least StartingCash"
+	)
 	local byId = Catalogue.validate(definitions)
 	local snapshot = table.freeze({
 		PlotCount = tuning.PlotCount,
 		StartingCash = tuning.StartingCash,
 		BaseIncome = tuning.BaseIncome,
+		CashLimit = tuning.CashLimit,
 	})
 	return setmetatable({ tuning = snapshot, definitions = byId, states = {}, owners = {} }, Session)
 end
@@ -47,7 +56,32 @@ function Session.get(self: Session, userId: number): State?
 	return self.states[userId]
 end
 
-function Session.assign(self: Session, userId: number): State?
+-- Optional restoration is server-owned, validated before allocation. Income is
+-- always rebuilt from this session's trusted catalogue, never a saved rate.
+function Session.assign(
+	self: Session,
+	userId: number,
+	initial: { cash: number, purchases: Catalogue.Purchases }?
+): State?
+	local cash, purchases, rate = self.tuning.StartingCash, {}, self.tuning.BaseIncome
+	if initial then
+		assert(
+			initial.cash >= 0 and initial.cash < math.huge and initial.cash % 1 == 0,
+			"Tycoon: invalid restored cash"
+		)
+		cash = initial.cash
+		assert(not self.tuning.CashLimit or cash <= self.tuning.CashLimit, "Tycoon: restored cash exceeds CashLimit")
+		for id, owned in initial.purchases do
+			local definition = self.definitions[id]
+			assert(definition and owned == true, "Tycoon: invalid restored purchase")
+			assert(
+				not definition.Requires or initial.purchases[definition.Requires],
+				"Tycoon: missing restored prerequisite"
+			)
+			purchases[id] = true
+			rate += definition.IncomeDelta
+		end
+	end
 	local existing = self.states[userId]
 	if existing then
 		return existing
@@ -57,9 +91,9 @@ function Session.assign(self: Session, userId: number): State?
 			local state: State = {
 				userId = userId,
 				plotId = plotId,
-				cash = self.tuning.StartingCash,
-				incomeRate = self.tuning.BaseIncome,
-				purchases = {},
+				cash = cash,
+				incomeRate = rate,
+				purchases = purchases,
 			}
 			self.owners[plotId] = userId
 			self.states[userId] = state
@@ -95,14 +129,16 @@ function Session.credit(self: Session, userId: number, amount: number): boolean
 	if not state or self.owners[state.plotId] ~= userId then
 		return false
 	end
-	state.cash += amount
+	state.cash = math.min(state.cash + amount, self.tuning.CashLimit or math.huge)
 	return true
 end
 
 function Session.accrue(self: Session, ticks: number)
 	assert(ticks >= 0 and ticks % 1 == 0, "Tycoon: income ticks must be nonnegative integers")
 	for _, state in self.states do
-		state.cash += state.incomeRate * ticks
+		-- Persistent integer storage has an exact-integer ceiling; Prototype leaves
+		-- CashLimit absent and retains its existing behavior.
+		state.cash = math.min(state.cash + state.incomeRate * ticks, self.tuning.CashLimit or math.huge)
 	end
 end
 
