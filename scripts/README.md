@@ -1,5 +1,13 @@
 # Repository validation
 
+`New-ExperimentPlace.ps1 -Name <feature> [-WithTests]` regenerates a disposable
+preview with experimental server/client entry modules. It reuses the gameplay-only
+map-copy helper, changes only the output's two bootstraps, and optionally injects
+that feature's assertions. Normal source bootstraps and canonical scene stay intact.
+`Test-ExperimentPlace.ps1` checks exact module sources/classes, opt-in entry points,
+QA exclusion/inclusion and scene hash. Full validation discovers installed feature
+folders and runs this boundary check; no extra CI triggers or dependencies.
+
 This folder owns the PowerShell validation used locally and by CI.
 It does not contain gameplay code or require additional packages.
 
