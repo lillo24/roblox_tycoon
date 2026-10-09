@@ -12,9 +12,13 @@ local SupplyRuntime = require(script.Parent.SupplyRuntime)
 local TycoonRuntime = {}
 local started = false
 
-function TycoonRuntime.start()
+-- Default remains native prompts. Only the disposable EXP-02 entry opts in.
+function TycoonRuntime.start(options: { walkOn: boolean }?)
 	assert(RunService:IsServer(), "Tycoon: runtime must start on the server")
 	assert(not started, "Tycoon: runtime started twice")
+	local walkOn = if options and options.walkOn
+		then require(script.Parent.Experiments.FactoryPurchases.WalkOn)
+		else nil
 	local numbers: { [string]: number } = {
 		IncomeInterval = Config.IncomeInterval,
 		PromptDistance = Config.PromptDistance,
@@ -61,6 +65,9 @@ function TycoonRuntime.start()
 		player:SetAttribute(Config.Attributes.PlotId, state.plotId)
 		player:SetAttribute(Config.Attributes.Assignment, "Assigned")
 		PlotWorld.reconcile(plots[state.plotId], state.purchases, state.cash)
+		if walkOn then
+			walkOn.presentation(plots[state.plotId])
+		end
 	end
 
 	local function clear(player: Player)
@@ -114,39 +121,52 @@ function TycoonRuntime.start()
 		feedback:FireClient(player, if state then state.plotId else nil, message)
 	end
 
-	for plotId, plot in plots do
-		for upgradeId, pad in plot.pads do
-			pad.prompt.Triggered:Connect(function(player: Player)
-				-- Attributes and prompt visibility are presentation, never eligibility inputs.
-				if player.Parent ~= Players or active[player.UserId] ~= player then
-					return
-				end
-				-- Bound both processing and private result messages to four attempts/sec.
-				-- Excess attempts are dropped; balance/ownership checks still decide purchases.
-				local now = os.clock()
-				if now < (nextRequest[player.UserId] or 0) then
-					return
-				end
-				nextRequest[player.UserId] = now + Config.RequestInterval
-				local character = player.Character
-				local root = if character then character:FindFirstChild("HumanoidRootPart") else nil
-				local humanoid = if character then character:FindFirstChildWhichIsA("Humanoid") else nil
-				if not root or not root:IsA("BasePart") or not humanoid or humanoid.Health <= 0 then
-					sendResult(player, "Respawn before buying")
-					return
-				end
-				if (root.Position - pad.part.Position).Magnitude > Config.PromptDistance then
-					sendResult(player, "Move closer to the pad")
-					return
-				end
-				local accepted, reason, missing = session:purchase(player.UserId, plotId, upgradeId)
-				if accepted then
-					local state = session:get(player.UserId)
-					assert(state, "Tycoon: purchased assignment disappeared")
-					publish(player, state)
-				end
-				sendResult(player, Catalogue.resultMessage(upgradeId, reason, missing))
-			end)
+	local function purchase(player: Player, plotId: number, upgradeId: Catalogue.Id, pad: PlotWorld.Pad)
+		-- Attributes and prompt visibility are presentation, never eligibility inputs.
+		if player.Parent ~= Players or active[player.UserId] ~= player then
+			return
+		end
+		-- Bound both processing and private result messages to four attempts/sec.
+		-- Excess attempts are dropped; balance/ownership checks still decide purchases.
+		local now = os.clock()
+		if now < (nextRequest[player.UserId] or 0) then
+			return
+		end
+		nextRequest[player.UserId] = now + Config.RequestInterval
+		local character = player.Character
+		local root = if character then character:FindFirstChild("HumanoidRootPart") else nil
+		local humanoid = if character then character:FindFirstChildWhichIsA("Humanoid") else nil
+		if not root or not root:IsA("BasePart") or not humanoid or humanoid.Health <= 0 then
+			sendResult(player, "Respawn before buying")
+			return
+		end
+		if (root.Position - pad.part.Position).Magnitude > Config.PromptDistance then
+			sendResult(player, "Move closer to the pad")
+			return
+		end
+		local accepted, reason, missing = session:purchase(player.UserId, plotId, upgradeId)
+		if accepted then
+			local state = session:get(player.UserId)
+			assert(state, "Tycoon: purchased assignment disappeared")
+			publish(player, state)
+		end
+		sendResult(player, Catalogue.resultMessage(upgradeId, reason, missing))
+	end
+	if walkOn then
+		walkOn.start(plots, function(player: Player, id: Catalogue.Id): number?
+			if player.Parent ~= Players or active[player.UserId] ~= player then
+				return nil
+			end
+			local state = session:get(player.UserId)
+			return if state and not state.purchases[id] then state.plotId else nil
+		end, purchase)
+	else
+		for plotId, plot in plots do
+			for upgradeId, pad in plot.pads do
+				pad.prompt.Triggered:Connect(function(player: Player)
+					purchase(player, plotId, upgradeId, pad)
+				end)
+			end
 		end
 	end
 	Players.PlayerAdded:Connect(join)
