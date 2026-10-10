@@ -1,0 +1,8 @@
+MODE01 EXECUTED Routing assertions: 35
+MODE01 EXECUTED Handoff assertions: 35
+MODE01 EXECUTED Session regression assertions: 186
+MODE01 EXECUTED SupplyEvent regression assertions: 196
+MODE01 ACTUAL Session isolation assertions: 5
+MODE01 ACTUAL modal clearance assertion: 1
+MODE01 Session owner moved to actual purchase pad; no money changed
+MODE01 LOCAL route intent: Entry ImmediateFailure

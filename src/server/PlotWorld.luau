@@ -4,6 +4,7 @@ local Shared = game:GetService("ReplicatedStorage").TycoonShared
 local Config = require(Shared.Config)
 local Catalogue = require(Shared.UpgradeCatalogue)
 local MapLayout = require(script.Parent.MapLayout)
+local Schema = require(script.Parent.Persistence.ProfileSchema)
 
 export type Pad = { part: Part, prompt: ProximityPrompt, label: TextLabel }
 export type Plot = {
@@ -22,6 +23,10 @@ local layouts: { [Catalogue.Id]: { pad: Vector3, machine: Vector3 } } = {
 	workshop = { pad = Vector3.new(10, 0, -15), machine = Vector3.new(18, 0, -10) },
 	workshop_expansion = { pad = Vector3.new(10, 0, 0), machine = Vector3.new(18, 0, 5) },
 }
+local slots: { [string]: Vector3 } = {}
+for id, layout in layouts do
+	slots[Schema.DefaultSlots[id]] = layout.machine
+end
 
 local function block(parent: Instance, name: string, size: Vector3, frame: CFrame, color: Color3, solid: boolean?): Part
 	local part = Instance.new("Part")
@@ -177,20 +182,39 @@ function PlotWorld.create(layout: MapLayout.Layout): { Plot }
 	return plots
 end
 
-function PlotWorld.reconcile(plot: Plot, purchases: Catalogue.Purchases, cash: number)
+function PlotWorld.reconcile(
+	plot: Plot,
+	purchases: Catalogue.Purchases,
+	cash: number,
+	placements: { [Catalogue.Id]: string }?
+)
+	if plot.model:GetAttribute("InfiniteProperty") then
+		plot.upgrades:ClearAllChildren()
+		plot.model:SetAttribute("PropertyRevision", nil)
+		return
+	end
 	local owned = plot.model:GetAttribute(Config.Attributes.OwnerUserId) ~= nil
 	for _, definition in Catalogue.Definitions do
 		local id = definition.Id
 		local purchased = purchases[id] == true
 		local visual = plot.upgrades:FindFirstChild(id)
+		local slot = if placements then placements[id] else Schema.DefaultSlots[id]
+		if purchased then
+			assert(slot and slots[slot], `Plot: missing placement for {id}`)
+		end
+		if visual and purchased and visual:GetAttribute("PropertySlot") ~= slot then
+			visual:Destroy()
+			visual = nil
+		end
 		if purchased and not visual then
-			machine(
+			local created = machine(
 				plot.upgrades,
 				id,
-				plot.frame * CFrame.new(layouts[id].machine),
+				plot.frame * CFrame.new(slots[slot :: string]),
 				plot.color,
 				id == "booster_tuning" or id == "workshop_expansion"
 			)
+			created:SetAttribute("PropertySlot", slot)
 		elseif not purchased and visual then
 			visual:Destroy()
 		end
