@@ -1,0 +1,5002 @@
+{
+  "input": "microprofile-20261010-105856.html",
+  "exportUtc": 1791622736,
+  "platform": {
+    "Build": "Studio",
+    "Version": "742",
+    "Configuration": "Release",
+    "Platform": "Win64",
+    "OS": "Windows 11 - PlatformId 2, Version 10.0, Build 22000",
+    "CpuMake": "Intel(R) Core(TM) i5-4690 CPU @ 3.50GHz",
+    "CoreCount": "4 (4)",
+    "SystemMemoryMB": "16325",
+    "GpuName": "NVIDIA GeForce GTX 1660 SUPER",
+    "GpuDriver": "32.0.16.1088",
+    "FeatureLevel": "D3D11.1",
+    "ShadingLanguage": "d3d11",
+    "VideoMemoryMB": "14128",
+    "Technology": "Unified",
+    "UnifiedLighting": "(Style: Realistic, PrioritizeLighting: true)",
+    "DisplaySize": "604 x 279",
+    "DrawSize": "604 x 279",
+    "ScreenDpiScale": "1",
+    "QualityLevel": "21 (auto)"
+  },
+  "frameCount": 506,
+  "spanMs": 8433.570312,
+  "above50": 0,
+  "worst": {
+    "index": 435,
+    "startMs": 7249.038086,
+    "endMs": 7268.187988,
+    "intervalMs": 19.14990200000011,
+    "gpuMs": 2.41,
+    "usedMemoryMB": 1030.5,
+    "freeMemoryMB": 5201.6
+  },
+  "frames": [
+    {
+      "index": 0,
+      "startMs": 0,
+      "endMs": 17.058264,
+      "intervalMs": 17.058264,
+      "gpuMs": 2.6,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 1,
+      "startMs": 17.058264,
+      "endMs": 33.874744,
+      "intervalMs": 16.81648,
+      "gpuMs": 5.38,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 2,
+      "startMs": 33.874744,
+      "endMs": 50.895943,
+      "intervalMs": 17.021199000000003,
+      "gpuMs": 2.16,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 3,
+      "startMs": 50.895943,
+      "endMs": 67.530373,
+      "intervalMs": 16.634429999999995,
+      "gpuMs": 2.01,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 4,
+      "startMs": 67.530373,
+      "endMs": 82.683739,
+      "intervalMs": 15.153366000000005,
+      "gpuMs": 3.22,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 5,
+      "startMs": 82.683739,
+      "endMs": 100.313179,
+      "intervalMs": 17.629440000000002,
+      "gpuMs": 2.75,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 6,
+      "startMs": 100.313179,
+      "endMs": 117.310753,
+      "intervalMs": 16.997574,
+      "gpuMs": 1.89,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 7,
+      "startMs": 117.310753,
+      "endMs": 134.386581,
+      "intervalMs": 17.075828,
+      "gpuMs": 2.46,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 8,
+      "startMs": 134.386581,
+      "endMs": 150.278198,
+      "intervalMs": 15.891616999999997,
+      "gpuMs": 2.2,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 9,
+      "startMs": 150.278198,
+      "endMs": 167.267914,
+      "intervalMs": 16.989715999999987,
+      "gpuMs": 2.46,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 10,
+      "startMs": 167.267914,
+      "endMs": 184.335297,
+      "intervalMs": 17.067383000000007,
+      "gpuMs": 2.84,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 11,
+      "startMs": 184.335297,
+      "endMs": 199.435287,
+      "intervalMs": 15.099989999999991,
+      "gpuMs": 2.6,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 12,
+      "startMs": 199.435287,
+      "endMs": 217.182434,
+      "intervalMs": 17.747147000000012,
+      "gpuMs": 2.29,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 13,
+      "startMs": 217.182434,
+      "endMs": 234.161743,
+      "intervalMs": 16.979309,
+      "gpuMs": 2.94,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 14,
+      "startMs": 234.161743,
+      "endMs": 250.153427,
+      "intervalMs": 15.991683999999992,
+      "gpuMs": 5.45,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 15,
+      "startMs": 250.153427,
+      "endMs": 267.140228,
+      "intervalMs": 16.986800999999986,
+      "gpuMs": 2.48,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 16,
+      "startMs": 267.140228,
+      "endMs": 283.123016,
+      "intervalMs": 15.982788000000028,
+      "gpuMs": 2.34,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 17,
+      "startMs": 283.123016,
+      "endMs": 300.124084,
+      "intervalMs": 17.001067999999975,
+      "gpuMs": 1.71,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 18,
+      "startMs": 300.124084,
+      "endMs": 316.117584,
+      "intervalMs": 15.99350000000004,
+      "gpuMs": 2.33,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 19,
+      "startMs": 316.117584,
+      "endMs": 334.245575,
+      "intervalMs": 18.127990999999952,
+      "gpuMs": 2.58,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 20,
+      "startMs": 334.245575,
+      "endMs": 349.131958,
+      "intervalMs": 14.886383000000023,
+      "gpuMs": 2.22,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 21,
+      "startMs": 349.131958,
+      "endMs": 367.048004,
+      "intervalMs": 17.916045999999994,
+      "gpuMs": 2.25,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 22,
+      "startMs": 367.048004,
+      "endMs": 383.00943,
+      "intervalMs": 15.961426000000017,
+      "gpuMs": 2.28,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 23,
+      "startMs": 383.00943,
+      "endMs": 400.032562,
+      "intervalMs": 17.023131999999976,
+      "gpuMs": 3.52,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 24,
+      "startMs": 400.032562,
+      "endMs": 416.979401,
+      "intervalMs": 16.94683900000001,
+      "gpuMs": 1.83,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 25,
+      "startMs": 416.979401,
+      "endMs": 433.329681,
+      "intervalMs": 16.350279999999998,
+      "gpuMs": 2.35,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 26,
+      "startMs": 433.329681,
+      "endMs": 449.937286,
+      "intervalMs": 16.607604999999978,
+      "gpuMs": 3.16,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 27,
+      "startMs": 449.937286,
+      "endMs": 467.321899,
+      "intervalMs": 17.384613,
+      "gpuMs": 2.7,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 28,
+      "startMs": 467.321899,
+      "endMs": 483.987244,
+      "intervalMs": 16.665345000000002,
+      "gpuMs": 2.47,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 29,
+      "startMs": 483.987244,
+      "endMs": 499.906281,
+      "intervalMs": 15.919037000000003,
+      "gpuMs": 2.14,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 30,
+      "startMs": 499.906281,
+      "endMs": 516.877686,
+      "intervalMs": 16.97140500000006,
+      "gpuMs": 2.55,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 31,
+      "startMs": 516.877686,
+      "endMs": 533.923645,
+      "intervalMs": 17.045958999999925,
+      "gpuMs": 3.08,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 32,
+      "startMs": 533.923645,
+      "endMs": 549.840088,
+      "intervalMs": 15.916443000000072,
+      "gpuMs": 2.31,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 33,
+      "startMs": 549.840088,
+      "endMs": 566.813293,
+      "intervalMs": 16.973205000000007,
+      "gpuMs": 2.1,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 34,
+      "startMs": 566.813293,
+      "endMs": 583.806091,
+      "intervalMs": 16.992797999999993,
+      "gpuMs": 2.4,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 35,
+      "startMs": 583.806091,
+      "endMs": 600.218079,
+      "intervalMs": 16.41198799999995,
+      "gpuMs": 1.96,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 36,
+      "startMs": 600.218079,
+      "endMs": 616.815186,
+      "intervalMs": 16.59710700000005,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 37,
+      "startMs": 616.815186,
+      "endMs": 633.758484,
+      "intervalMs": 16.943297999999913,
+      "gpuMs": 4.27,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 38,
+      "startMs": 633.758484,
+      "endMs": 650.734314,
+      "intervalMs": 16.975830000000087,
+      "gpuMs": 3.96,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 39,
+      "startMs": 650.734314,
+      "endMs": 666.771423,
+      "intervalMs": 16.037108999999987,
+      "gpuMs": 2.3,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 40,
+      "startMs": 666.771423,
+      "endMs": 683.704285,
+      "intervalMs": 16.932862,
+      "gpuMs": 2.44,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 41,
+      "startMs": 683.704285,
+      "endMs": 699.68866,
+      "intervalMs": 15.984375,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 42,
+      "startMs": 699.68866,
+      "endMs": 716.710388,
+      "intervalMs": 17.02172799999994,
+      "gpuMs": 4.67,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 43,
+      "startMs": 716.710388,
+      "endMs": 733.710571,
+      "intervalMs": 17.000182999999993,
+      "gpuMs": 2.19,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 44,
+      "startMs": 733.710571,
+      "endMs": 749.631836,
+      "intervalMs": 15.921265000000062,
+      "gpuMs": 1.7,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 45,
+      "startMs": 749.631836,
+      "endMs": 766.618347,
+      "intervalMs": 16.98651099999995,
+      "gpuMs": 2.72,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 46,
+      "startMs": 766.618347,
+      "endMs": 783.598389,
+      "intervalMs": 16.980042000000026,
+      "gpuMs": 2.47,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 47,
+      "startMs": 783.598389,
+      "endMs": 800.922058,
+      "intervalMs": 17.323668999999995,
+      "gpuMs": 2.6,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 48,
+      "startMs": 800.922058,
+      "endMs": 816.572266,
+      "intervalMs": 15.65020800000002,
+      "gpuMs": 2.76,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 49,
+      "startMs": 816.572266,
+      "endMs": 833.547485,
+      "intervalMs": 16.97521900000004,
+      "gpuMs": 2.17,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 50,
+      "startMs": 833.547485,
+      "endMs": 850.528625,
+      "intervalMs": 16.981139999999982,
+      "gpuMs": 3.13,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 51,
+      "startMs": 850.528625,
+      "endMs": 866.862915,
+      "intervalMs": 16.33429000000001,
+      "gpuMs": 2.21,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 52,
+      "startMs": 866.862915,
+      "endMs": 883.494934,
+      "intervalMs": 16.6320189999999,
+      "gpuMs": 2.2,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 53,
+      "startMs": 883.494934,
+      "endMs": 900.483215,
+      "intervalMs": 16.98828100000003,
+      "gpuMs": 2.14,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 54,
+      "startMs": 900.483215,
+      "endMs": 917.466919,
+      "intervalMs": 16.98370399999999,
+      "gpuMs": 2.08,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 55,
+      "startMs": 917.466919,
+      "endMs": 933.894958,
+      "intervalMs": 16.428039000000012,
+      "gpuMs": 3.41,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 56,
+      "startMs": 933.894958,
+      "endMs": 949.454346,
+      "intervalMs": 15.559388000000013,
+      "gpuMs": 2.53,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 57,
+      "startMs": 949.454346,
+      "endMs": 966.519958,
+      "intervalMs": 17.065611999999987,
+      "gpuMs": 2.42,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 58,
+      "startMs": 966.519958,
+      "endMs": 983.395203,
+      "intervalMs": 16.875245000000064,
+      "gpuMs": 2.38,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 59,
+      "startMs": 983.395203,
+      "endMs": 1000.401245,
+      "intervalMs": 17.00604199999998,
+      "gpuMs": 2.17,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 60,
+      "startMs": 1000.401245,
+      "endMs": 1017.358093,
+      "intervalMs": 16.956848000000036,
+      "gpuMs": 2.33,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 61,
+      "startMs": 1017.358093,
+      "endMs": 1033.346558,
+      "intervalMs": 15.988464999999906,
+      "gpuMs": 2.28,
+      "usedMemoryMB": 1029.9,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 62,
+      "startMs": 1033.346558,
+      "endMs": 1050.335205,
+      "intervalMs": 16.988647000000128,
+      "gpuMs": 4.82,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 63,
+      "startMs": 1050.335205,
+      "endMs": 1067.879272,
+      "intervalMs": 17.544066999999814,
+      "gpuMs": 2.81,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.6
+    },
+    {
+      "index": 64,
+      "startMs": 1067.879272,
+      "endMs": 1083.292847,
+      "intervalMs": 15.413575000000037,
+      "gpuMs": 1.69,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 65,
+      "startMs": 1083.292847,
+      "endMs": 1100.27478,
+      "intervalMs": 16.981933000000026,
+      "gpuMs": 2.7,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 66,
+      "startMs": 1100.27478,
+      "endMs": 1117.38623,
+      "intervalMs": 17.111450000000104,
+      "gpuMs": 4.07,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 67,
+      "startMs": 1117.38623,
+      "endMs": 1133.350098,
+      "intervalMs": 15.96386799999982,
+      "gpuMs": 2.98,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 68,
+      "startMs": 1133.350098,
+      "endMs": 1150.214966,
+      "intervalMs": 16.864868000000115,
+      "gpuMs": 2.34,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 69,
+      "startMs": 1150.214966,
+      "endMs": 1167.203369,
+      "intervalMs": 16.988403000000062,
+      "gpuMs": 3.16,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 70,
+      "startMs": 1167.203369,
+      "endMs": 1184.181519,
+      "intervalMs": 16.978149999999914,
+      "gpuMs": 1.8,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 71,
+      "startMs": 1184.181519,
+      "endMs": 1200.259155,
+      "intervalMs": 16.077635999999984,
+      "gpuMs": 2.89,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 72,
+      "startMs": 1200.259155,
+      "endMs": 1216.751831,
+      "intervalMs": 16.492676000000074,
+      "gpuMs": 2.4,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 73,
+      "startMs": 1216.751831,
+      "endMs": 1233.748535,
+      "intervalMs": 16.99670399999991,
+      "gpuMs": 2.44,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 74,
+      "startMs": 1233.748535,
+      "endMs": 1249.712158,
+      "intervalMs": 15.963623000000098,
+      "gpuMs": 3.79,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 75,
+      "startMs": 1249.712158,
+      "endMs": 1266.94397,
+      "intervalMs": 17.23181199999999,
+      "gpuMs": 3.29,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.2
+    },
+    {
+      "index": 76,
+      "startMs": 1266.94397,
+      "endMs": 1282.694458,
+      "intervalMs": 15.750487999999905,
+      "gpuMs": 2.83,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.1
+    },
+    {
+      "index": 77,
+      "startMs": 1282.694458,
+      "endMs": 1298.862793,
+      "intervalMs": 16.16833500000007,
+      "gpuMs": 3.55,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.1
+    },
+    {
+      "index": 78,
+      "startMs": 1298.862793,
+      "endMs": 1316.674438,
+      "intervalMs": 17.811645,
+      "gpuMs": 5.26,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.8
+    },
+    {
+      "index": 79,
+      "startMs": 1316.674438,
+      "endMs": 1335.064941,
+      "intervalMs": 18.39050300000008,
+      "gpuMs": 3.82,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 80,
+      "startMs": 1335.064941,
+      "endMs": 1349.187256,
+      "intervalMs": 14.122314999999844,
+      "gpuMs": 3.88,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 81,
+      "startMs": 1349.187256,
+      "endMs": 1366.655273,
+      "intervalMs": 17.468017000000145,
+      "gpuMs": 3.01,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.7
+    },
+    {
+      "index": 82,
+      "startMs": 1366.655273,
+      "endMs": 1382.588989,
+      "intervalMs": 15.933716000000004,
+      "gpuMs": 3.57,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.5
+    },
+    {
+      "index": 83,
+      "startMs": 1382.588989,
+      "endMs": 1399.695679,
+      "intervalMs": 17.106689999999844,
+      "gpuMs": 3.18,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.5
+    },
+    {
+      "index": 84,
+      "startMs": 1399.695679,
+      "endMs": 1416.555176,
+      "intervalMs": 16.859497000000147,
+      "gpuMs": 3.62,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.5
+    },
+    {
+      "index": 85,
+      "startMs": 1416.555176,
+      "endMs": 1433.620117,
+      "intervalMs": 17.064940999999862,
+      "gpuMs": 3.59,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.5
+    },
+    {
+      "index": 86,
+      "startMs": 1433.620117,
+      "endMs": 1450.483398,
+      "intervalMs": 16.863281000000143,
+      "gpuMs": 3.61,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 87,
+      "startMs": 1450.483398,
+      "endMs": 1466.680054,
+      "intervalMs": 16.196655999999848,
+      "gpuMs": 4.28,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 88,
+      "startMs": 1466.680054,
+      "endMs": 1483.456177,
+      "intervalMs": 16.776123000000098,
+      "gpuMs": 3.71,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 89,
+      "startMs": 1483.456177,
+      "endMs": 1500.437744,
+      "intervalMs": 16.98156700000004,
+      "gpuMs": 2.89,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 90,
+      "startMs": 1500.437744,
+      "endMs": 1516.462769,
+      "intervalMs": 16.025024999999914,
+      "gpuMs": 5.27,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 91,
+      "startMs": 1516.462769,
+      "endMs": 1534.863647,
+      "intervalMs": 18.40087799999992,
+      "gpuMs": 5.76,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.4
+    },
+    {
+      "index": 92,
+      "startMs": 1534.863647,
+      "endMs": 1549.389771,
+      "intervalMs": 14.526124000000209,
+      "gpuMs": 3.32,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 93,
+      "startMs": 1549.389771,
+      "endMs": 1567.465942,
+      "intervalMs": 18.07617099999993,
+      "gpuMs": 3.19,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 94,
+      "startMs": 1567.465942,
+      "endMs": 1582.510254,
+      "intervalMs": 15.04431199999999,
+      "gpuMs": 4.31,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 95,
+      "startMs": 1582.510254,
+      "endMs": 1599.530029,
+      "intervalMs": 17.01977499999998,
+      "gpuMs": 2.75,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.3
+    },
+    {
+      "index": 96,
+      "startMs": 1599.530029,
+      "endMs": 1616.314331,
+      "intervalMs": 16.784302000000025,
+      "gpuMs": 2.87,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.2
+    },
+    {
+      "index": 97,
+      "startMs": 1616.314331,
+      "endMs": 1632.300293,
+      "intervalMs": 15.985961999999972,
+      "gpuMs": 3.12,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.1
+    },
+    {
+      "index": 98,
+      "startMs": 1632.300293,
+      "endMs": 1650.55603,
+      "intervalMs": 18.255736999999954,
+      "gpuMs": 3.23,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.1
+    },
+    {
+      "index": 99,
+      "startMs": 1650.55603,
+      "endMs": 1667.265503,
+      "intervalMs": 16.709473000000116,
+      "gpuMs": 4.52,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.2
+    },
+    {
+      "index": 100,
+      "startMs": 1667.265503,
+      "endMs": 1682.239014,
+      "intervalMs": 14.973510999999917,
+      "gpuMs": 3.07,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.2
+    },
+    {
+      "index": 101,
+      "startMs": 1682.239014,
+      "endMs": 1700.228271,
+      "intervalMs": 17.989256999999952,
+      "gpuMs": 3.28,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.2
+    },
+    {
+      "index": 102,
+      "startMs": 1700.228271,
+      "endMs": 1717.196777,
+      "intervalMs": 16.96850600000016,
+      "gpuMs": 4.4,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.2
+    },
+    {
+      "index": 103,
+      "startMs": 1717.196777,
+      "endMs": 1733.326172,
+      "intervalMs": 16.12939499999993,
+      "gpuMs": 2.02,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5184.2
+    },
+    {
+      "index": 104,
+      "startMs": 1733.326172,
+      "endMs": 1750.239502,
+      "intervalMs": 16.91332999999986,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.8
+    },
+    {
+      "index": 105,
+      "startMs": 1750.239502,
+      "endMs": 1767.216919,
+      "intervalMs": 16.97741700000006,
+      "gpuMs": 2.57,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 106,
+      "startMs": 1767.216919,
+      "endMs": 1782.219971,
+      "intervalMs": 15.003052000000025,
+      "gpuMs": 3.01,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 107,
+      "startMs": 1782.219971,
+      "endMs": 1800.161011,
+      "intervalMs": 17.94103999999993,
+      "gpuMs": 3.09,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 108,
+      "startMs": 1800.161011,
+      "endMs": 1816.10083,
+      "intervalMs": 15.93981900000017,
+      "gpuMs": 2.1,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 109,
+      "startMs": 1816.10083,
+      "endMs": 1834.14917,
+      "intervalMs": 18.048339999999826,
+      "gpuMs": 2.36,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 110,
+      "startMs": 1834.14917,
+      "endMs": 1850.67334,
+      "intervalMs": 16.52417000000014,
+      "gpuMs": 5.07,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 111,
+      "startMs": 1850.67334,
+      "endMs": 1866.658936,
+      "intervalMs": 15.985595999999987,
+      "gpuMs": 2.88,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 112,
+      "startMs": 1866.658936,
+      "endMs": 1883.759033,
+      "intervalMs": 17.100097000000005,
+      "gpuMs": 2.48,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 113,
+      "startMs": 1883.759033,
+      "endMs": 1899.611084,
+      "intervalMs": 15.852050999999847,
+      "gpuMs": 2.17,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 114,
+      "startMs": 1899.611084,
+      "endMs": 1916.595215,
+      "intervalMs": 16.98413100000016,
+      "gpuMs": 2.59,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 115,
+      "startMs": 1916.595215,
+      "endMs": 1933.096313,
+      "intervalMs": 16.501097999999956,
+      "gpuMs": 3.75,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 116,
+      "startMs": 1933.096313,
+      "endMs": 1950.562866,
+      "intervalMs": 17.466552999999976,
+      "gpuMs": 2.13,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 117,
+      "startMs": 1950.562866,
+      "endMs": 1966.560303,
+      "intervalMs": 15.99743699999999,
+      "gpuMs": 4.33,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 118,
+      "startMs": 1966.560303,
+      "endMs": 1983.532959,
+      "intervalMs": 16.972655999999915,
+      "gpuMs": 3.4,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.7
+    },
+    {
+      "index": 119,
+      "startMs": 1983.532959,
+      "endMs": 1999.535156,
+      "intervalMs": 16.002197000000024,
+      "gpuMs": 2.44,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.6
+    },
+    {
+      "index": 120,
+      "startMs": 1999.535156,
+      "endMs": 2016.581299,
+      "intervalMs": 17.04614300000003,
+      "gpuMs": 2.56,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.6
+    },
+    {
+      "index": 121,
+      "startMs": 2016.581299,
+      "endMs": 2032.475342,
+      "intervalMs": 15.89404300000001,
+      "gpuMs": 2.14,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.6
+    },
+    {
+      "index": 122,
+      "startMs": 2032.475342,
+      "endMs": 2050.542725,
+      "intervalMs": 18.067382999999836,
+      "gpuMs": 3.06,
+      "usedMemoryMB": 1030,
+      "freeMemoryMB": 5183.6
+    },
+    {
+      "index": 123,
+      "startMs": 2050.542725,
+      "endMs": 2066.065186,
+      "intervalMs": 15.522461000000021,
+      "gpuMs": 2.97,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5183.6
+    },
+    {
+      "index": 124,
+      "startMs": 2066.065186,
+      "endMs": 2082.437744,
+      "intervalMs": 16.372558000000026,
+      "gpuMs": 2.46,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.6
+    },
+    {
+      "index": 125,
+      "startMs": 2082.437744,
+      "endMs": 2099.468994,
+      "intervalMs": 17.03125,
+      "gpuMs": 3.1,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 126,
+      "startMs": 2099.468994,
+      "endMs": 2117.397461,
+      "intervalMs": 17.928467000000182,
+      "gpuMs": 6.15,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 127,
+      "startMs": 2117.397461,
+      "endMs": 2133.536377,
+      "intervalMs": 16.13891599999988,
+      "gpuMs": 2.44,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 128,
+      "startMs": 2133.536377,
+      "endMs": 2150.356689,
+      "intervalMs": 16.820312000000285,
+      "gpuMs": 1.99,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 129,
+      "startMs": 2150.356689,
+      "endMs": 2166.327393,
+      "intervalMs": 15.970703999999841,
+      "gpuMs": 3.93,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 130,
+      "startMs": 2166.327393,
+      "endMs": 2183.364258,
+      "intervalMs": 17.036865000000034,
+      "gpuMs": 3.35,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 131,
+      "startMs": 2183.364258,
+      "endMs": 2199.54541,
+      "intervalMs": 16.18115200000011,
+      "gpuMs": 3.37,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 132,
+      "startMs": 2199.54541,
+      "endMs": 2216.281494,
+      "intervalMs": 16.736083999999664,
+      "gpuMs": 2.28,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 133,
+      "startMs": 2216.281494,
+      "endMs": 2233.272461,
+      "intervalMs": 16.990967000000182,
+      "gpuMs": 2.31,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 134,
+      "startMs": 2233.272461,
+      "endMs": 2250.245605,
+      "intervalMs": 16.973144000000048,
+      "gpuMs": 5.8,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 135,
+      "startMs": 2250.245605,
+      "endMs": 2266.515381,
+      "intervalMs": 16.269776000000093,
+      "gpuMs": 2.88,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 136,
+      "startMs": 2266.515381,
+      "endMs": 2283.222412,
+      "intervalMs": 16.707030999999915,
+      "gpuMs": 2.01,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 137,
+      "startMs": 2283.222412,
+      "endMs": 2300.232178,
+      "intervalMs": 17.009766000000127,
+      "gpuMs": 2.68,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 138,
+      "startMs": 2300.232178,
+      "endMs": 2317.182617,
+      "intervalMs": 16.950438999999733,
+      "gpuMs": 5.36,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5182.5
+    },
+    {
+      "index": 139,
+      "startMs": 2317.182617,
+      "endMs": 2333.381348,
+      "intervalMs": 16.198730999999952,
+      "gpuMs": 3.07,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.5
+    },
+    {
+      "index": 140,
+      "startMs": 2333.381348,
+      "endMs": 2350.14917,
+      "intervalMs": 16.76782200000025,
+      "gpuMs": 2.3,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 141,
+      "startMs": 2350.14917,
+      "endMs": 2367.119385,
+      "intervalMs": 16.970214999999826,
+      "gpuMs": 5.19,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 142,
+      "startMs": 2367.119385,
+      "endMs": 2383.117188,
+      "intervalMs": 15.997803000000204,
+      "gpuMs": 4.45,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 143,
+      "startMs": 2383.117188,
+      "endMs": 2400.140381,
+      "intervalMs": 17.023192999999992,
+      "gpuMs": 5.61,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 144,
+      "startMs": 2400.140381,
+      "endMs": 2417.078369,
+      "intervalMs": 16.937987999999677,
+      "gpuMs": 2.09,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 145,
+      "startMs": 2417.078369,
+      "endMs": 2433.052979,
+      "intervalMs": 15.974610000000212,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 146,
+      "startMs": 2433.052979,
+      "endMs": 2450.770752,
+      "intervalMs": 17.717772999999852,
+      "gpuMs": 2.04,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 147,
+      "startMs": 2450.770752,
+      "endMs": 2466.765137,
+      "intervalMs": 15.994384999999966,
+      "gpuMs": 3.69,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 148,
+      "startMs": 2466.765137,
+      "endMs": 2483.753418,
+      "intervalMs": 16.988280999999915,
+      "gpuMs": 2.41,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 149,
+      "startMs": 2483.753418,
+      "endMs": 2500.668945,
+      "intervalMs": 16.91552700000011,
+      "gpuMs": 4.39,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 150,
+      "startMs": 2500.668945,
+      "endMs": 2516.628418,
+      "intervalMs": 15.959472999999889,
+      "gpuMs": 2.64,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 151,
+      "startMs": 2516.628418,
+      "endMs": 2532.94165,
+      "intervalMs": 16.313232000000426,
+      "gpuMs": 4.29,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 152,
+      "startMs": 2532.94165,
+      "endMs": 2550.593994,
+      "intervalMs": 17.65234399999963,
+      "gpuMs": 2.53,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 153,
+      "startMs": 2550.593994,
+      "endMs": 2566.57373,
+      "intervalMs": 15.97973600000023,
+      "gpuMs": 2.89,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 154,
+      "startMs": 2566.57373,
+      "endMs": 2582.569824,
+      "intervalMs": 15.996094000000085,
+      "gpuMs": 2.64,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 155,
+      "startMs": 2582.569824,
+      "endMs": 2600.346436,
+      "intervalMs": 17.77661199999966,
+      "gpuMs": 2.5,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 156,
+      "startMs": 2600.346436,
+      "endMs": 2616.5896,
+      "intervalMs": 16.24316399999998,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 157,
+      "startMs": 2616.5896,
+      "endMs": 2633.562256,
+      "intervalMs": 16.97265600000037,
+      "gpuMs": 2.24,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 158,
+      "startMs": 2633.562256,
+      "endMs": 2650.485596,
+      "intervalMs": 16.923339999999826,
+      "gpuMs": 2.86,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 159,
+      "startMs": 2650.485596,
+      "endMs": 2667.103516,
+      "intervalMs": 16.61792000000014,
+      "gpuMs": 2.26,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 160,
+      "startMs": 2667.103516,
+      "endMs": 2683.461426,
+      "intervalMs": 16.35790999999972,
+      "gpuMs": 2.2,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.4
+    },
+    {
+      "index": 161,
+      "startMs": 2683.461426,
+      "endMs": 2699.430176,
+      "intervalMs": 15.96875,
+      "gpuMs": 2.05,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.5
+    },
+    {
+      "index": 162,
+      "startMs": 2699.430176,
+      "endMs": 2716.522949,
+      "intervalMs": 17.092773000000307,
+      "gpuMs": 1.63,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.8
+    },
+    {
+      "index": 163,
+      "startMs": 2716.522949,
+      "endMs": 2732.542236,
+      "intervalMs": 16.019286999999622,
+      "gpuMs": 2.33,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 164,
+      "startMs": 2732.542236,
+      "endMs": 2749.501953,
+      "intervalMs": 16.959717000000182,
+      "gpuMs": 2,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 165,
+      "startMs": 2749.501953,
+      "endMs": 2766.452637,
+      "intervalMs": 16.95068399999991,
+      "gpuMs": 2.68,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 166,
+      "startMs": 2766.452637,
+      "endMs": 2783.432861,
+      "intervalMs": 16.980223999999907,
+      "gpuMs": 3.09,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 167,
+      "startMs": 2783.432861,
+      "endMs": 2800.555176,
+      "intervalMs": 17.12231500000007,
+      "gpuMs": 2.68,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 168,
+      "startMs": 2800.555176,
+      "endMs": 2816.177734,
+      "intervalMs": 15.622558000000026,
+      "gpuMs": 2.03,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 169,
+      "startMs": 2816.177734,
+      "endMs": 2833.178223,
+      "intervalMs": 17.000489000000016,
+      "gpuMs": 1.59,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 170,
+      "startMs": 2833.178223,
+      "endMs": 2850.164795,
+      "intervalMs": 16.98657200000025,
+      "gpuMs": 1.7,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 171,
+      "startMs": 2850.164795,
+      "endMs": 2867.14209,
+      "intervalMs": 16.977294999999685,
+      "gpuMs": 2.37,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 172,
+      "startMs": 2867.14209,
+      "endMs": 2883.136963,
+      "intervalMs": 15.994873000000098,
+      "gpuMs": 2.26,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 173,
+      "startMs": 2883.136963,
+      "endMs": 2900.105469,
+      "intervalMs": 16.96850600000016,
+      "gpuMs": 2.37,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 174,
+      "startMs": 2900.105469,
+      "endMs": 2916.104492,
+      "intervalMs": 15.999022999999852,
+      "gpuMs": 3.84,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 175,
+      "startMs": 2916.104492,
+      "endMs": 2933.849121,
+      "intervalMs": 17.74462900000026,
+      "gpuMs": 2.59,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 176,
+      "startMs": 2933.849121,
+      "endMs": 2949.674561,
+      "intervalMs": 15.825439999999617,
+      "gpuMs": 2,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 177,
+      "startMs": 2949.674561,
+      "endMs": 2966.639404,
+      "intervalMs": 16.9648430000002,
+      "gpuMs": 2.22,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5186.9
+    },
+    {
+      "index": 178,
+      "startMs": 2966.639404,
+      "endMs": 2983.616943,
+      "intervalMs": 16.97753899999998,
+      "gpuMs": 2.21,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5187.3
+    },
+    {
+      "index": 179,
+      "startMs": 2983.616943,
+      "endMs": 2999.62915,
+      "intervalMs": 16.012207000000217,
+      "gpuMs": 3.12,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5187.3
+    },
+    {
+      "index": 180,
+      "startMs": 2999.62915,
+      "endMs": 3016.578125,
+      "intervalMs": 16.94897499999979,
+      "gpuMs": 2.36,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5187.3
+    },
+    {
+      "index": 181,
+      "startMs": 3016.578125,
+      "endMs": 3032.637207,
+      "intervalMs": 16.059082000000217,
+      "gpuMs": 2.11,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5187.3
+    },
+    {
+      "index": 182,
+      "startMs": 3032.637207,
+      "endMs": 3050.083496,
+      "intervalMs": 17.44628899999998,
+      "gpuMs": 1.88,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5187.3
+    },
+    {
+      "index": 183,
+      "startMs": 3050.083496,
+      "endMs": 3067.568604,
+      "intervalMs": 17.485107999999855,
+      "gpuMs": 2.53,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5187.3
+    },
+    {
+      "index": 184,
+      "startMs": 3067.568604,
+      "endMs": 3083.026611,
+      "intervalMs": 15.458006999999725,
+      "gpuMs": 2.48,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5185.4
+    },
+    {
+      "index": 185,
+      "startMs": 3083.026611,
+      "endMs": 3100.012207,
+      "intervalMs": 16.98559600000044,
+      "gpuMs": 2.8,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 186,
+      "startMs": 3100.012207,
+      "endMs": 3117.042236,
+      "intervalMs": 17.03002899999956,
+      "gpuMs": 2.16,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 187,
+      "startMs": 3117.042236,
+      "endMs": 3133.791016,
+      "intervalMs": 16.74878000000035,
+      "gpuMs": 2.24,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 188,
+      "startMs": 3133.791016,
+      "endMs": 3149.970215,
+      "intervalMs": 16.1791989999997,
+      "gpuMs": 2.07,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 189,
+      "startMs": 3149.970215,
+      "endMs": 3166.956055,
+      "intervalMs": 16.98584000000028,
+      "gpuMs": 2.2,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 190,
+      "startMs": 3166.956055,
+      "endMs": 3183.931396,
+      "intervalMs": 16.975340999999844,
+      "gpuMs": 2.24,
+      "usedMemoryMB": 1030.1,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 191,
+      "startMs": 3183.931396,
+      "endMs": 3199.990967,
+      "intervalMs": 16.059571000000233,
+      "gpuMs": 1.61,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 192,
+      "startMs": 3199.990967,
+      "endMs": 3216.902344,
+      "intervalMs": 16.911376999999902,
+      "gpuMs": 2.04,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 193,
+      "startMs": 3216.902344,
+      "endMs": 3232.926758,
+      "intervalMs": 16.02441399999998,
+      "gpuMs": 2.54,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 194,
+      "startMs": 3232.926758,
+      "endMs": 3250.2229,
+      "intervalMs": 17.296142000000145,
+      "gpuMs": 2.33,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 195,
+      "startMs": 3250.2229,
+      "endMs": 3267.669189,
+      "intervalMs": 17.44628899999998,
+      "gpuMs": 4.46,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 196,
+      "startMs": 3267.669189,
+      "endMs": 3282.176514,
+      "intervalMs": 14.507325000000037,
+      "gpuMs": 1.74,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 197,
+      "startMs": 3282.176514,
+      "endMs": 3300.165527,
+      "intervalMs": 17.989012999999886,
+      "gpuMs": 2.22,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 198,
+      "startMs": 3300.165527,
+      "endMs": 3317.393066,
+      "intervalMs": 17.22753899999998,
+      "gpuMs": 3.44,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 199,
+      "startMs": 3317.393066,
+      "endMs": 3333.740479,
+      "intervalMs": 16.34741299999996,
+      "gpuMs": 2.05,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 200,
+      "startMs": 3333.740479,
+      "endMs": 3350.125,
+      "intervalMs": 16.38452099999995,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 201,
+      "startMs": 3350.125,
+      "endMs": 3367.104736,
+      "intervalMs": 16.979735999999775,
+      "gpuMs": 2.97,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 202,
+      "startMs": 3367.104736,
+      "endMs": 3383.086426,
+      "intervalMs": 15.981690000000071,
+      "gpuMs": 1.55,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 203,
+      "startMs": 3383.086426,
+      "endMs": 3400.076172,
+      "intervalMs": 16.989746000000196,
+      "gpuMs": 2.59,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 204,
+      "startMs": 3400.076172,
+      "endMs": 3416.052734,
+      "intervalMs": 15.97656199999983,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 205,
+      "startMs": 3416.052734,
+      "endMs": 3434.035889,
+      "intervalMs": 17.98315500000035,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 206,
+      "startMs": 3434.035889,
+      "endMs": 3450.127197,
+      "intervalMs": 16.09130799999957,
+      "gpuMs": 3.12,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 207,
+      "startMs": 3450.127197,
+      "endMs": 3467.823975,
+      "intervalMs": 17.696777999999995,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 208,
+      "startMs": 3467.823975,
+      "endMs": 3483.085205,
+      "intervalMs": 15.261230000000069,
+      "gpuMs": 2.3,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 209,
+      "startMs": 3483.085205,
+      "endMs": 3499.049316,
+      "intervalMs": 15.96411100000023,
+      "gpuMs": 1.59,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 210,
+      "startMs": 3499.049316,
+      "endMs": 3516.076172,
+      "intervalMs": 17.026855999999952,
+      "gpuMs": 4.61,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 211,
+      "startMs": 3516.076172,
+      "endMs": 3533.255615,
+      "intervalMs": 17.179442999999992,
+      "gpuMs": 4.53,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 212,
+      "startMs": 3533.255615,
+      "endMs": 3550.023682,
+      "intervalMs": 16.768066999999974,
+      "gpuMs": 3,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 213,
+      "startMs": 3550.023682,
+      "endMs": 3566.001709,
+      "intervalMs": 15.978027000000111,
+      "gpuMs": 3.56,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 214,
+      "startMs": 3566.001709,
+      "endMs": 3582.992676,
+      "intervalMs": 16.990966999999728,
+      "gpuMs": 6.64,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 215,
+      "startMs": 3582.992676,
+      "endMs": 3600.66626,
+      "intervalMs": 17.67358400000012,
+      "gpuMs": 5.7,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 216,
+      "startMs": 3600.66626,
+      "endMs": 3615.959473,
+      "intervalMs": 15.293212999999923,
+      "gpuMs": 3.08,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 217,
+      "startMs": 3615.959473,
+      "endMs": 3632.918701,
+      "intervalMs": 16.959228000000167,
+      "gpuMs": 4.03,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 218,
+      "startMs": 3632.918701,
+      "endMs": 3649.904053,
+      "intervalMs": 16.985352000000148,
+      "gpuMs": 5.16,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 219,
+      "startMs": 3649.904053,
+      "endMs": 3667.722168,
+      "intervalMs": 17.81811499999958,
+      "gpuMs": 3.9,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 220,
+      "startMs": 3667.722168,
+      "endMs": 3683.975586,
+      "intervalMs": 16.253418000000238,
+      "gpuMs": 3.16,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 221,
+      "startMs": 3683.975586,
+      "endMs": 3699.856201,
+      "intervalMs": 15.880615000000034,
+      "gpuMs": 3.11,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 222,
+      "startMs": 3699.856201,
+      "endMs": 3716.82373,
+      "intervalMs": 16.967529000000013,
+      "gpuMs": 2.83,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 223,
+      "startMs": 3716.82373,
+      "endMs": 3733.095703,
+      "intervalMs": 16.27197299999989,
+      "gpuMs": 3.2,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 224,
+      "startMs": 3733.095703,
+      "endMs": 3749.802734,
+      "intervalMs": 16.707030999999915,
+      "gpuMs": 3.13,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 225,
+      "startMs": 3749.802734,
+      "endMs": 3766.785645,
+      "intervalMs": 16.98291100000006,
+      "gpuMs": 3.28,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 226,
+      "startMs": 3766.785645,
+      "endMs": 3783.778564,
+      "intervalMs": 16.992919000000256,
+      "gpuMs": 3.53,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 227,
+      "startMs": 3783.778564,
+      "endMs": 3799.932861,
+      "intervalMs": 16.154296999999588,
+      "gpuMs": 3.32,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 228,
+      "startMs": 3799.932861,
+      "endMs": 3816.718018,
+      "intervalMs": 16.785157000000254,
+      "gpuMs": 3.37,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 229,
+      "startMs": 3816.718018,
+      "endMs": 3833.715088,
+      "intervalMs": 16.997069999999894,
+      "gpuMs": 3.62,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 230,
+      "startMs": 3833.715088,
+      "endMs": 3849.696533,
+      "intervalMs": 15.981444999999894,
+      "gpuMs": 3.02,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 231,
+      "startMs": 3849.696533,
+      "endMs": 3866.749756,
+      "intervalMs": 17.053223000000344,
+      "gpuMs": 3.95,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 232,
+      "startMs": 3866.749756,
+      "endMs": 3883.713623,
+      "intervalMs": 16.963866999999937,
+      "gpuMs": 3.2,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 233,
+      "startMs": 3883.713623,
+      "endMs": 3899.636719,
+      "intervalMs": 15.923095999999987,
+      "gpuMs": 3.14,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 234,
+      "startMs": 3899.636719,
+      "endMs": 3916.635254,
+      "intervalMs": 16.99853499999972,
+      "gpuMs": 5.07,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 235,
+      "startMs": 3916.635254,
+      "endMs": 3933.636963,
+      "intervalMs": 17.00170900000012,
+      "gpuMs": 4.32,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 236,
+      "startMs": 3933.636963,
+      "endMs": 3949.58667,
+      "intervalMs": 15.949707000000217,
+      "gpuMs": 3.11,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 237,
+      "startMs": 3949.58667,
+      "endMs": 3966.563965,
+      "intervalMs": 16.977294999999685,
+      "gpuMs": 3.81,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 238,
+      "startMs": 3966.563965,
+      "endMs": 3982.558105,
+      "intervalMs": 15.994140000000243,
+      "gpuMs": 6.64,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 239,
+      "startMs": 3982.558105,
+      "endMs": 3998.743896,
+      "intervalMs": 16.18579099999988,
+      "gpuMs": 4.24,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 240,
+      "startMs": 3998.743896,
+      "endMs": 4015.562256,
+      "intervalMs": 16.81836000000021,
+      "gpuMs": 3.02,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 241,
+      "startMs": 4015.562256,
+      "endMs": 4033.614014,
+      "intervalMs": 18.051758000000063,
+      "gpuMs": 2.95,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 242,
+      "startMs": 4033.614014,
+      "endMs": 4050.604492,
+      "intervalMs": 16.99047799999971,
+      "gpuMs": 4.8,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 243,
+      "startMs": 4050.604492,
+      "endMs": 4067.452393,
+      "intervalMs": 16.847901000000093,
+      "gpuMs": 3.38,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 244,
+      "startMs": 4067.452393,
+      "endMs": 4083.618652,
+      "intervalMs": 16.166259000000082,
+      "gpuMs": 3.97,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 245,
+      "startMs": 4083.618652,
+      "endMs": 4100.526855,
+      "intervalMs": 16.908202999999958,
+      "gpuMs": 6.85,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 246,
+      "startMs": 4100.526855,
+      "endMs": 4115.618652,
+      "intervalMs": 15.091797000000042,
+      "gpuMs": 5.11,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 247,
+      "startMs": 4115.618652,
+      "endMs": 4133.507324,
+      "intervalMs": 17.888672000000042,
+      "gpuMs": 2.68,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 248,
+      "startMs": 4133.507324,
+      "endMs": 4150.488281,
+      "intervalMs": 16.980956999999762,
+      "gpuMs": 2.35,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 249,
+      "startMs": 4150.488281,
+      "endMs": 4166.561523,
+      "intervalMs": 16.07324200000039,
+      "gpuMs": 2.14,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 250,
+      "startMs": 4166.561523,
+      "endMs": 4183.647949,
+      "intervalMs": 17.086425999999847,
+      "gpuMs": 2.26,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 251,
+      "startMs": 4183.647949,
+      "endMs": 4199.468262,
+      "intervalMs": 15.82031300000017,
+      "gpuMs": 3.16,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 252,
+      "startMs": 4199.468262,
+      "endMs": 4216.478027,
+      "intervalMs": 17.00976499999979,
+      "gpuMs": 2.47,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 253,
+      "startMs": 4216.478027,
+      "endMs": 4233.398926,
+      "intervalMs": 16.920898999999736,
+      "gpuMs": 2.08,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 254,
+      "startMs": 4233.398926,
+      "endMs": 4250.384766,
+      "intervalMs": 16.98584000000028,
+      "gpuMs": 1.67,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 255,
+      "startMs": 4250.384766,
+      "endMs": 4266.689941,
+      "intervalMs": 16.305174999999508,
+      "gpuMs": 4,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 256,
+      "startMs": 4266.689941,
+      "endMs": 4283.379883,
+      "intervalMs": 16.689941999999974,
+      "gpuMs": 2.09,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 257,
+      "startMs": 4283.379883,
+      "endMs": 4300.325195,
+      "intervalMs": 16.94531200000074,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030.2,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 258,
+      "startMs": 4300.325195,
+      "endMs": 4316.319824,
+      "intervalMs": 15.994628999999804,
+      "gpuMs": 1.83,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 259,
+      "startMs": 4316.319824,
+      "endMs": 4333.379395,
+      "intervalMs": 17.059570999999778,
+      "gpuMs": 3.7,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 260,
+      "startMs": 4333.379395,
+      "endMs": 4349.434082,
+      "intervalMs": 16.05468699999983,
+      "gpuMs": 2.19,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 261,
+      "startMs": 4349.434082,
+      "endMs": 4366.262207,
+      "intervalMs": 16.828125,
+      "gpuMs": 1.98,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 262,
+      "startMs": 4366.262207,
+      "endMs": 4383.257812,
+      "intervalMs": 16.99560500000007,
+      "gpuMs": 2.56,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 263,
+      "startMs": 4383.257812,
+      "endMs": 4400.363281,
+      "intervalMs": 17.105469000000085,
+      "gpuMs": 2.3,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 264,
+      "startMs": 4400.363281,
+      "endMs": 4417.203613,
+      "intervalMs": 16.840331999999762,
+      "gpuMs": 2.03,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 265,
+      "startMs": 4417.203613,
+      "endMs": 4433.191895,
+      "intervalMs": 15.988282000000254,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 266,
+      "startMs": 4433.191895,
+      "endMs": 4449.949219,
+      "intervalMs": 16.757324000000153,
+      "gpuMs": 5.44,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 267,
+      "startMs": 4449.949219,
+      "endMs": 4467.187988,
+      "intervalMs": 17.238768999999593,
+      "gpuMs": 2.41,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 268,
+      "startMs": 4467.187988,
+      "endMs": 4483.891113,
+      "intervalMs": 16.703125,
+      "gpuMs": 2.34,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 269,
+      "startMs": 4483.891113,
+      "endMs": 4499.887207,
+      "intervalMs": 15.996094000000085,
+      "gpuMs": 3.04,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 270,
+      "startMs": 4499.887207,
+      "endMs": 4516.868652,
+      "intervalMs": 16.98144500000035,
+      "gpuMs": 1.8,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 271,
+      "startMs": 4516.868652,
+      "endMs": 4534.154785,
+      "intervalMs": 17.28613299999961,
+      "gpuMs": 3.14,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 272,
+      "startMs": 4534.154785,
+      "endMs": 4549.675293,
+      "intervalMs": 15.520508000000518,
+      "gpuMs": 2.25,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 273,
+      "startMs": 4549.675293,
+      "endMs": 4566.637695,
+      "intervalMs": 16.96240200000011,
+      "gpuMs": 2.19,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 274,
+      "startMs": 4566.637695,
+      "endMs": 4583.640625,
+      "intervalMs": 17.00292999999965,
+      "gpuMs": 2.28,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 275,
+      "startMs": 4583.640625,
+      "endMs": 4600.723633,
+      "intervalMs": 17.08300799999961,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 276,
+      "startMs": 4600.723633,
+      "endMs": 4616.595703,
+      "intervalMs": 15.872070000000349,
+      "gpuMs": 1.89,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 277,
+      "startMs": 4616.595703,
+      "endMs": 4633.733398,
+      "intervalMs": 17.13769500000035,
+      "gpuMs": 1.81,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 278,
+      "startMs": 4633.733398,
+      "endMs": 4648.655762,
+      "intervalMs": 14.922364000000016,
+      "gpuMs": 4.75,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 279,
+      "startMs": 4648.655762,
+      "endMs": 4666.90918,
+      "intervalMs": 18.25341799999933,
+      "gpuMs": 2.26,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 280,
+      "startMs": 4666.90918,
+      "endMs": 4683.528809,
+      "intervalMs": 16.619629000000714,
+      "gpuMs": 2.17,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 281,
+      "startMs": 4683.528809,
+      "endMs": 4700.54541,
+      "intervalMs": 17.016600999999355,
+      "gpuMs": 1.98,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 282,
+      "startMs": 4700.54541,
+      "endMs": 4715.498047,
+      "intervalMs": 14.952637000000323,
+      "gpuMs": 2.69,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 283,
+      "startMs": 4715.498047,
+      "endMs": 4734.368164,
+      "intervalMs": 18.87011700000039,
+      "gpuMs": 2.51,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 284,
+      "startMs": 4734.368164,
+      "endMs": 4750.486816,
+      "intervalMs": 16.1186519999992,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 285,
+      "startMs": 4750.486816,
+      "endMs": 4766.71875,
+      "intervalMs": 16.231934000000365,
+      "gpuMs": 1.99,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 286,
+      "startMs": 4766.71875,
+      "endMs": 4783.505371,
+      "intervalMs": 16.786621000000196,
+      "gpuMs": 2.22,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 287,
+      "startMs": 4783.505371,
+      "endMs": 4799.616699,
+      "intervalMs": 16.111327999999958,
+      "gpuMs": 1.85,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 288,
+      "startMs": 4799.616699,
+      "endMs": 4815.407715,
+      "intervalMs": 15.791016000000127,
+      "gpuMs": 3.37,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 289,
+      "startMs": 4815.407715,
+      "endMs": 4833.379395,
+      "intervalMs": 17.97167999999965,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 290,
+      "startMs": 4833.379395,
+      "endMs": 4850.359863,
+      "intervalMs": 16.980467999999746,
+      "gpuMs": 2.47,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 291,
+      "startMs": 4850.359863,
+      "endMs": 4866.452637,
+      "intervalMs": 16.092774000000645,
+      "gpuMs": 1.78,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 292,
+      "startMs": 4866.452637,
+      "endMs": 4883.336914,
+      "intervalMs": 16.88427700000011,
+      "gpuMs": 2.1,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 293,
+      "startMs": 4883.336914,
+      "endMs": 4899.322266,
+      "intervalMs": 15.985351999999693,
+      "gpuMs": 2.11,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 294,
+      "startMs": 4899.322266,
+      "endMs": 4915.367676,
+      "intervalMs": 16.04540999999972,
+      "gpuMs": 3.01,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 295,
+      "startMs": 4915.367676,
+      "endMs": 4932.450684,
+      "intervalMs": 17.083008000000518,
+      "gpuMs": 2.63,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 296,
+      "startMs": 4932.450684,
+      "endMs": 4950.251953,
+      "intervalMs": 17.801268999999593,
+      "gpuMs": 2.04,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.5
+    },
+    {
+      "index": 297,
+      "startMs": 4950.251953,
+      "endMs": 4966.237305,
+      "intervalMs": 15.985351999999693,
+      "gpuMs": 2.15,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 298,
+      "startMs": 4966.237305,
+      "endMs": 4983.273926,
+      "intervalMs": 17.036621000000196,
+      "gpuMs": 1.94,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 299,
+      "startMs": 4983.273926,
+      "endMs": 5001.044922,
+      "intervalMs": 17.770996000000196,
+      "gpuMs": 3.26,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 300,
+      "startMs": 5001.044922,
+      "endMs": 5016.29248,
+      "intervalMs": 15.247558000000026,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 301,
+      "startMs": 5016.29248,
+      "endMs": 5033.161621,
+      "intervalMs": 16.869141000000127,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.4
+    },
+    {
+      "index": 302,
+      "startMs": 5033.161621,
+      "endMs": 5050.17627,
+      "intervalMs": 17.014648999999736,
+      "gpuMs": 4.17,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.5
+    },
+    {
+      "index": 303,
+      "startMs": 5050.17627,
+      "endMs": 5066.544922,
+      "intervalMs": 16.36865200000011,
+      "gpuMs": 2.93,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.5
+    },
+    {
+      "index": 304,
+      "startMs": 5066.544922,
+      "endMs": 5083.662598,
+      "intervalMs": 17.117675999999847,
+      "gpuMs": 2.22,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 305,
+      "startMs": 5083.662598,
+      "endMs": 5100.095703,
+      "intervalMs": 16.43310500000007,
+      "gpuMs": 2.28,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 306,
+      "startMs": 5100.095703,
+      "endMs": 5117.144043,
+      "intervalMs": 17.04834000000028,
+      "gpuMs": 3.14,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 307,
+      "startMs": 5117.144043,
+      "endMs": 5133.17041,
+      "intervalMs": 16.026366999999482,
+      "gpuMs": 1.91,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 308,
+      "startMs": 5133.17041,
+      "endMs": 5150.046387,
+      "intervalMs": 16.875977000000603,
+      "gpuMs": 2.1,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 309,
+      "startMs": 5150.046387,
+      "endMs": 5166.01709,
+      "intervalMs": 15.970702999999958,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 310,
+      "startMs": 5166.01709,
+      "endMs": 5183.02002,
+      "intervalMs": 17.00292999999965,
+      "gpuMs": 1.48,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 311,
+      "startMs": 5183.02002,
+      "endMs": 5200,
+      "intervalMs": 16.97998000000007,
+      "gpuMs": 3.6,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 312,
+      "startMs": 5200,
+      "endMs": 5215.977539,
+      "intervalMs": 15.977539000000434,
+      "gpuMs": 1.97,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 313,
+      "startMs": 5215.977539,
+      "endMs": 5231.986816,
+      "intervalMs": 16.0092769999992,
+      "gpuMs": 2.07,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 314,
+      "startMs": 5231.986816,
+      "endMs": 5248.97168,
+      "intervalMs": 16.984864000000016,
+      "gpuMs": 1.62,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 315,
+      "startMs": 5248.97168,
+      "endMs": 5267.026367,
+      "intervalMs": 18.05468700000074,
+      "gpuMs": 2.66,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 316,
+      "startMs": 5267.026367,
+      "endMs": 5282.896484,
+      "intervalMs": 15.870116999999482,
+      "gpuMs": 2.13,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 317,
+      "startMs": 5282.896484,
+      "endMs": 5299.885742,
+      "intervalMs": 16.989258000000518,
+      "gpuMs": 2.01,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 318,
+      "startMs": 5299.885742,
+      "endMs": 5316.888184,
+      "intervalMs": 17.002441999999974,
+      "gpuMs": 2.6,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 319,
+      "startMs": 5316.888184,
+      "endMs": 5332.867676,
+      "intervalMs": 15.979491999999482,
+      "gpuMs": 2.33,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 320,
+      "startMs": 5332.867676,
+      "endMs": 5349.826172,
+      "intervalMs": 16.958496000000196,
+      "gpuMs": 2.03,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 321,
+      "startMs": 5349.826172,
+      "endMs": 5365.820801,
+      "intervalMs": 15.994628999999804,
+      "gpuMs": 1.56,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 322,
+      "startMs": 5365.820801,
+      "endMs": 5383.798828,
+      "intervalMs": 17.97802700000011,
+      "gpuMs": 2.89,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 323,
+      "startMs": 5383.798828,
+      "endMs": 5399.029785,
+      "intervalMs": 15.230956999999762,
+      "gpuMs": 2.51,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 324,
+      "startMs": 5399.029785,
+      "endMs": 5416.755371,
+      "intervalMs": 17.725586000000476,
+      "gpuMs": 2.01,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 325,
+      "startMs": 5416.755371,
+      "endMs": 5432.736816,
+      "intervalMs": 15.98144499999944,
+      "gpuMs": 2.91,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 326,
+      "startMs": 5432.736816,
+      "endMs": 5449.725586,
+      "intervalMs": 16.98876999999993,
+      "gpuMs": 1.5,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 327,
+      "startMs": 5449.725586,
+      "endMs": 5466.718262,
+      "intervalMs": 16.992676000000756,
+      "gpuMs": 2.66,
+      "usedMemoryMB": 1030.3,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 328,
+      "startMs": 5466.718262,
+      "endMs": 5483.689453,
+      "intervalMs": 16.971190999999635,
+      "gpuMs": 1.67,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 329,
+      "startMs": 5483.689453,
+      "endMs": 5499.678711,
+      "intervalMs": 15.989257999999609,
+      "gpuMs": 2.1,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 330,
+      "startMs": 5499.678711,
+      "endMs": 5516.648926,
+      "intervalMs": 16.97021500000028,
+      "gpuMs": 5.12,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 331,
+      "startMs": 5516.648926,
+      "endMs": 5533.649414,
+      "intervalMs": 17.000488000000587,
+      "gpuMs": 2.93,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 332,
+      "startMs": 5533.649414,
+      "endMs": 5549.618652,
+      "intervalMs": 15.969237999999677,
+      "gpuMs": 2.34,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 333,
+      "startMs": 5549.618652,
+      "endMs": 5565.609375,
+      "intervalMs": 15.990722999999889,
+      "gpuMs": 2.07,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 334,
+      "startMs": 5565.609375,
+      "endMs": 5583.632324,
+      "intervalMs": 18.022949000000153,
+      "gpuMs": 4.18,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 335,
+      "startMs": 5583.632324,
+      "endMs": 5600.571777,
+      "intervalMs": 16.939452999999958,
+      "gpuMs": 2.58,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 336,
+      "startMs": 5600.571777,
+      "endMs": 5615.554199,
+      "intervalMs": 14.982422000000042,
+      "gpuMs": 2.1,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 337,
+      "startMs": 5615.554199,
+      "endMs": 5633.535156,
+      "intervalMs": 17.980956999999762,
+      "gpuMs": 2.09,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 338,
+      "startMs": 5633.535156,
+      "endMs": 5649.512207,
+      "intervalMs": 15.977050999999847,
+      "gpuMs": 2.96,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 339,
+      "startMs": 5649.512207,
+      "endMs": 5666.509277,
+      "intervalMs": 16.99707000000035,
+      "gpuMs": 2.52,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.3
+    },
+    {
+      "index": 340,
+      "startMs": 5666.509277,
+      "endMs": 5683.483398,
+      "intervalMs": 16.974121000000196,
+      "gpuMs": 2.07,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 341,
+      "startMs": 5683.483398,
+      "endMs": 5700.47168,
+      "intervalMs": 16.988281999999344,
+      "gpuMs": 1.6,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 342,
+      "startMs": 5700.47168,
+      "endMs": 5716.485352,
+      "intervalMs": 16.013672000000042,
+      "gpuMs": 2.57,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 343,
+      "startMs": 5716.485352,
+      "endMs": 5734.049805,
+      "intervalMs": 17.564452999999958,
+      "gpuMs": 2.61,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5183.2
+    },
+    {
+      "index": 344,
+      "startMs": 5734.049805,
+      "endMs": 5749.399414,
+      "intervalMs": 15.349609000000783,
+      "gpuMs": 2.4,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5200.9
+    },
+    {
+      "index": 345,
+      "startMs": 5749.399414,
+      "endMs": 5765.864746,
+      "intervalMs": 16.465331999999762,
+      "gpuMs": 2.58,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.7
+    },
+    {
+      "index": 346,
+      "startMs": 5765.864746,
+      "endMs": 5782.83252,
+      "intervalMs": 16.967773999999736,
+      "gpuMs": 2.26,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.7
+    },
+    {
+      "index": 347,
+      "startMs": 5782.83252,
+      "endMs": 5799.999512,
+      "intervalMs": 17.16699200000039,
+      "gpuMs": 2.22,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.7
+    },
+    {
+      "index": 348,
+      "startMs": 5799.999512,
+      "endMs": 5815.81543,
+      "intervalMs": 15.815917999999328,
+      "gpuMs": 1.71,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.7
+    },
+    {
+      "index": 349,
+      "startMs": 5815.81543,
+      "endMs": 5832.777832,
+      "intervalMs": 16.96240200000011,
+      "gpuMs": 2.24,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.6
+    },
+    {
+      "index": 350,
+      "startMs": 5832.777832,
+      "endMs": 5850.35791,
+      "intervalMs": 17.580077999999958,
+      "gpuMs": 2.09,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.6
+    },
+    {
+      "index": 351,
+      "startMs": 5850.35791,
+      "endMs": 5866.576172,
+      "intervalMs": 16.218262000000323,
+      "gpuMs": 2.08,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.6
+    },
+    {
+      "index": 352,
+      "startMs": 5866.576172,
+      "endMs": 5883.40332,
+      "intervalMs": 16.827148000000307,
+      "gpuMs": 2.19,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.6
+    },
+    {
+      "index": 353,
+      "startMs": 5883.40332,
+      "endMs": 5898.755859,
+      "intervalMs": 15.352538999999524,
+      "gpuMs": 1.99,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.6
+    },
+    {
+      "index": 354,
+      "startMs": 5898.755859,
+      "endMs": 5916.295898,
+      "intervalMs": 17.540039000000434,
+      "gpuMs": 5.56,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.6
+    },
+    {
+      "index": 355,
+      "startMs": 5916.295898,
+      "endMs": 5933.324707,
+      "intervalMs": 17.028808999999455,
+      "gpuMs": 3.57,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 356,
+      "startMs": 5933.324707,
+      "endMs": 5949.243164,
+      "intervalMs": 15.918457000000672,
+      "gpuMs": 3.23,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 357,
+      "startMs": 5949.243164,
+      "endMs": 5966.242188,
+      "intervalMs": 16.999023999999736,
+      "gpuMs": 2.86,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 358,
+      "startMs": 5966.242188,
+      "endMs": 5982.226074,
+      "intervalMs": 15.983885999999984,
+      "gpuMs": 3.5,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 359,
+      "startMs": 5982.226074,
+      "endMs": 6000.321777,
+      "intervalMs": 18.095702999999958,
+      "gpuMs": 3.62,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 360,
+      "startMs": 6000.321777,
+      "endMs": 6017.187012,
+      "intervalMs": 16.86523500000021,
+      "gpuMs": 3.95,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 361,
+      "startMs": 6017.187012,
+      "endMs": 6033.250488,
+      "intervalMs": 16.063475999999355,
+      "gpuMs": 4.55,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 362,
+      "startMs": 6033.250488,
+      "endMs": 6050.223145,
+      "intervalMs": 16.972657000000254,
+      "gpuMs": 2.05,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 363,
+      "startMs": 6050.223145,
+      "endMs": 6066.963379,
+      "intervalMs": 16.740233999999873,
+      "gpuMs": 4.05,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5203.5
+    },
+    {
+      "index": 364,
+      "startMs": 6066.963379,
+      "endMs": 6083.372559,
+      "intervalMs": 16.40918000000056,
+      "gpuMs": 3.22,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.5
+    },
+    {
+      "index": 365,
+      "startMs": 6083.372559,
+      "endMs": 6100.095703,
+      "intervalMs": 16.723143999999593,
+      "gpuMs": 6.58,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.7
+    },
+    {
+      "index": 366,
+      "startMs": 6100.095703,
+      "endMs": 6116.094727,
+      "intervalMs": 15.999023999999736,
+      "gpuMs": 5.77,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.7
+    },
+    {
+      "index": 367,
+      "startMs": 6116.094727,
+      "endMs": 6133.630859,
+      "intervalMs": 17.53613200000018,
+      "gpuMs": 5.52,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.7
+    },
+    {
+      "index": 368,
+      "startMs": 6133.630859,
+      "endMs": 6150.051758,
+      "intervalMs": 16.420898999999736,
+      "gpuMs": 4.29,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.7
+    },
+    {
+      "index": 369,
+      "startMs": 6150.051758,
+      "endMs": 6167.033203,
+      "intervalMs": 16.98144500000035,
+      "gpuMs": 3.16,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.7
+    },
+    {
+      "index": 370,
+      "startMs": 6167.033203,
+      "endMs": 6183.14209,
+      "intervalMs": 16.108887000000323,
+      "gpuMs": 5.56,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.7
+    },
+    {
+      "index": 371,
+      "startMs": 6183.14209,
+      "endMs": 6200.601074,
+      "intervalMs": 17.458983999999873,
+      "gpuMs": 3.31,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.7
+    },
+    {
+      "index": 372,
+      "startMs": 6200.601074,
+      "endMs": 6216.987305,
+      "intervalMs": 16.386230999999498,
+      "gpuMs": 3.79,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 373,
+      "startMs": 6216.987305,
+      "endMs": 6232.966797,
+      "intervalMs": 15.979492000000391,
+      "gpuMs": 3.6,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 374,
+      "startMs": 6232.966797,
+      "endMs": 6249.949707,
+      "intervalMs": 16.98290999999972,
+      "gpuMs": 3.56,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 375,
+      "startMs": 6249.949707,
+      "endMs": 6266.011719,
+      "intervalMs": 16.062012000000323,
+      "gpuMs": 3.94,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 376,
+      "startMs": 6266.011719,
+      "endMs": 6281.915527,
+      "intervalMs": 15.903808000000026,
+      "gpuMs": 4.05,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 377,
+      "startMs": 6281.915527,
+      "endMs": 6299.942871,
+      "intervalMs": 18.027344000000085,
+      "gpuMs": 3.44,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 378,
+      "startMs": 6299.942871,
+      "endMs": 6317.004883,
+      "intervalMs": 17.062011999999413,
+      "gpuMs": 4.02,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 379,
+      "startMs": 6317.004883,
+      "endMs": 6331.959473,
+      "intervalMs": 14.95459000000028,
+      "gpuMs": 1.95,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 380,
+      "startMs": 6331.959473,
+      "endMs": 6349.861816,
+      "intervalMs": 17.902342999999746,
+      "gpuMs": 2.71,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 381,
+      "startMs": 6349.861816,
+      "endMs": 6366.82666,
+      "intervalMs": 16.964844000000085,
+      "gpuMs": 2.92,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.5
+    },
+    {
+      "index": 382,
+      "startMs": 6366.82666,
+      "endMs": 6382.898438,
+      "intervalMs": 16.07177800000045,
+      "gpuMs": 4.77,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.5
+    },
+    {
+      "index": 383,
+      "startMs": 6382.898438,
+      "endMs": 6399.79248,
+      "intervalMs": 16.8940419999999,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.5
+    },
+    {
+      "index": 384,
+      "startMs": 6399.79248,
+      "endMs": 6415.789062,
+      "intervalMs": 15.996581999999762,
+      "gpuMs": 2.51,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 385,
+      "startMs": 6415.789062,
+      "endMs": 6433.784668,
+      "intervalMs": 17.995606000000407,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 386,
+      "startMs": 6433.784668,
+      "endMs": 6448.816406,
+      "intervalMs": 15.031737999999677,
+      "gpuMs": 2.69,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 387,
+      "startMs": 6448.816406,
+      "endMs": 6466.73291,
+      "intervalMs": 17.916503999999804,
+      "gpuMs": 2.05,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 388,
+      "startMs": 6466.73291,
+      "endMs": 6483.696289,
+      "intervalMs": 16.963379000000714,
+      "gpuMs": 3.27,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 389,
+      "startMs": 6483.696289,
+      "endMs": 6499.291504,
+      "intervalMs": 15.59521499999937,
+      "gpuMs": 2.16,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 390,
+      "startMs": 6499.291504,
+      "endMs": 6516.243652,
+      "intervalMs": 16.952148000000307,
+      "gpuMs": 5,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 391,
+      "startMs": 6516.243652,
+      "endMs": 6533.570312,
+      "intervalMs": 17.32665999999972,
+      "gpuMs": 2.63,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 392,
+      "startMs": 6533.570312,
+      "endMs": 6550.225098,
+      "intervalMs": 16.65478600000006,
+      "gpuMs": 2.11,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 393,
+      "startMs": 6550.225098,
+      "endMs": 6566.208984,
+      "intervalMs": 15.983885999999984,
+      "gpuMs": 2.03,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 394,
+      "startMs": 6566.208984,
+      "endMs": 6583.183594,
+      "intervalMs": 16.97461000000021,
+      "gpuMs": 5.21,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.5
+    },
+    {
+      "index": 395,
+      "startMs": 6583.183594,
+      "endMs": 6599.46582,
+      "intervalMs": 16.282226000000264,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.5
+    },
+    {
+      "index": 396,
+      "startMs": 6599.46582,
+      "endMs": 6617.155762,
+      "intervalMs": 17.689941999999974,
+      "gpuMs": 2.82,
+      "usedMemoryMB": 1030.4,
+      "freeMemoryMB": 5202.5
+    },
+    {
+      "index": 397,
+      "startMs": 6617.155762,
+      "endMs": 6632.12793,
+      "intervalMs": 14.972167999999328,
+      "gpuMs": 2.1,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 398,
+      "startMs": 6632.12793,
+      "endMs": 6650.130371,
+      "intervalMs": 18.002441000000545,
+      "gpuMs": 3.07,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 399,
+      "startMs": 6650.130371,
+      "endMs": 6667.711914,
+      "intervalMs": 17.581543000000238,
+      "gpuMs": 2.24,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.6
+    },
+    {
+      "index": 400,
+      "startMs": 6667.711914,
+      "endMs": 6682.083496,
+      "intervalMs": 14.371581999999762,
+      "gpuMs": 2.38,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 401,
+      "startMs": 6682.083496,
+      "endMs": 6699.06543,
+      "intervalMs": 16.981933999999455,
+      "gpuMs": 4.66,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 402,
+      "startMs": 6699.06543,
+      "endMs": 6716.05957,
+      "intervalMs": 16.994140000000698,
+      "gpuMs": 2.43,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 403,
+      "startMs": 6716.05957,
+      "endMs": 6733.39502,
+      "intervalMs": 17.335449999999582,
+      "gpuMs": 2.17,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 404,
+      "startMs": 6733.39502,
+      "endMs": 6749.018066,
+      "intervalMs": 15.623045999999704,
+      "gpuMs": 3.5,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 405,
+      "startMs": 6749.018066,
+      "endMs": 6767.018555,
+      "intervalMs": 18.000489000000016,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 406,
+      "startMs": 6767.018555,
+      "endMs": 6783.074219,
+      "intervalMs": 16.055664000000434,
+      "gpuMs": 4.7,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 407,
+      "startMs": 6783.074219,
+      "endMs": 6799.54541,
+      "intervalMs": 16.471190999999635,
+      "gpuMs": 2.36,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.4
+    },
+    {
+      "index": 408,
+      "startMs": 6799.54541,
+      "endMs": 6816.481445,
+      "intervalMs": 16.93603500000063,
+      "gpuMs": 2.4,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.3
+    },
+    {
+      "index": 409,
+      "startMs": 6816.481445,
+      "endMs": 6833.468262,
+      "intervalMs": 16.986816999999974,
+      "gpuMs": 2.48,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.3
+    },
+    {
+      "index": 410,
+      "startMs": 6833.468262,
+      "endMs": 6849.460938,
+      "intervalMs": 15.992675999999847,
+      "gpuMs": 1.85,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.3
+    },
+    {
+      "index": 411,
+      "startMs": 6849.460938,
+      "endMs": 6865.615723,
+      "intervalMs": 16.15478499999972,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.2
+    },
+    {
+      "index": 412,
+      "startMs": 6865.615723,
+      "endMs": 6882.436035,
+      "intervalMs": 16.82031199999983,
+      "gpuMs": 2.94,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.2
+    },
+    {
+      "index": 413,
+      "startMs": 6882.436035,
+      "endMs": 6899.407227,
+      "intervalMs": 16.971191999999974,
+      "gpuMs": 2.08,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.2
+    },
+    {
+      "index": 414,
+      "startMs": 6899.407227,
+      "endMs": 6915.391602,
+      "intervalMs": 15.984375,
+      "gpuMs": 2.61,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.2
+    },
+    {
+      "index": 415,
+      "startMs": 6915.391602,
+      "endMs": 6933.635254,
+      "intervalMs": 18.24365200000011,
+      "gpuMs": 2.28,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.2
+    },
+    {
+      "index": 416,
+      "startMs": 6933.635254,
+      "endMs": 6949.348145,
+      "intervalMs": 15.712891000000127,
+      "gpuMs": 2.25,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.1
+    },
+    {
+      "index": 417,
+      "startMs": 6949.348145,
+      "endMs": 6965.365723,
+      "intervalMs": 16.017577999999958,
+      "gpuMs": 2.52,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.1
+    },
+    {
+      "index": 418,
+      "startMs": 6965.365723,
+      "endMs": 6982.364746,
+      "intervalMs": 16.999023000000307,
+      "gpuMs": 1.8,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.1
+    },
+    {
+      "index": 419,
+      "startMs": 6982.364746,
+      "endMs": 6999.362793,
+      "intervalMs": 16.998047000000042,
+      "gpuMs": 1.97,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.1
+    },
+    {
+      "index": 420,
+      "startMs": 6999.362793,
+      "endMs": 7016.293945,
+      "intervalMs": 16.93115200000011,
+      "gpuMs": 2.66,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202.1
+    },
+    {
+      "index": 421,
+      "startMs": 7016.293945,
+      "endMs": 7033.311035,
+      "intervalMs": 17.01708999999937,
+      "gpuMs": 2.3,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202
+    },
+    {
+      "index": 422,
+      "startMs": 7033.311035,
+      "endMs": 7050.277344,
+      "intervalMs": 16.966309000000365,
+      "gpuMs": 2.29,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202
+    },
+    {
+      "index": 423,
+      "startMs": 7050.277344,
+      "endMs": 7067.089844,
+      "intervalMs": 16.8125,
+      "gpuMs": 1.98,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5202
+    },
+    {
+      "index": 424,
+      "startMs": 7067.089844,
+      "endMs": 7083.283203,
+      "intervalMs": 16.193358999999873,
+      "gpuMs": 2.69,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.6
+    },
+    {
+      "index": 425,
+      "startMs": 7083.283203,
+      "endMs": 7099.191406,
+      "intervalMs": 15.908202999999958,
+      "gpuMs": 1.58,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 426,
+      "startMs": 7099.191406,
+      "endMs": 7116.184082,
+      "intervalMs": 16.992675999999847,
+      "gpuMs": 2.05,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 427,
+      "startMs": 7116.184082,
+      "endMs": 7133.218262,
+      "intervalMs": 17.03418000000056,
+      "gpuMs": 2.47,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 428,
+      "startMs": 7133.218262,
+      "endMs": 7150.147949,
+      "intervalMs": 16.92968699999983,
+      "gpuMs": 2.18,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 429,
+      "startMs": 7150.147949,
+      "endMs": 7167.159668,
+      "intervalMs": 17.011719000000085,
+      "gpuMs": 2.13,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 430,
+      "startMs": 7167.159668,
+      "endMs": 7183.125,
+      "intervalMs": 15.965331999999762,
+      "gpuMs": 4.15,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 431,
+      "startMs": 7183.125,
+      "endMs": 7200.174316,
+      "intervalMs": 17.049315999999635,
+      "gpuMs": 2.4,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 432,
+      "startMs": 7200.174316,
+      "endMs": 7217.149414,
+      "intervalMs": 16.9750980000008,
+      "gpuMs": 3.31,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.7
+    },
+    {
+      "index": 433,
+      "startMs": 7217.149414,
+      "endMs": 7232.071289,
+      "intervalMs": 14.921875,
+      "gpuMs": 2.17,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.6
+    },
+    {
+      "index": 434,
+      "startMs": 7232.071289,
+      "endMs": 7249.038086,
+      "intervalMs": 16.966796999999133,
+      "gpuMs": 4.03,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.6
+    },
+    {
+      "index": 435,
+      "startMs": 7249.038086,
+      "endMs": 7268.187988,
+      "intervalMs": 19.14990200000011,
+      "gpuMs": 2.41,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.6
+    },
+    {
+      "index": 436,
+      "startMs": 7268.187988,
+      "endMs": 7282.015625,
+      "intervalMs": 13.827637000000323,
+      "gpuMs": 2.93,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.6
+    },
+    {
+      "index": 437,
+      "startMs": 7282.015625,
+      "endMs": 7299.976562,
+      "intervalMs": 17.96093699999983,
+      "gpuMs": 2.25,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.6
+    },
+    {
+      "index": 438,
+      "startMs": 7299.976562,
+      "endMs": 7315.984375,
+      "intervalMs": 16.00781300000017,
+      "gpuMs": 1.62,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.4
+    },
+    {
+      "index": 439,
+      "startMs": 7315.984375,
+      "endMs": 7332.961914,
+      "intervalMs": 16.977539000000434,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.4
+    },
+    {
+      "index": 440,
+      "startMs": 7332.961914,
+      "endMs": 7348.952148,
+      "intervalMs": 15.990233999999873,
+      "gpuMs": 2.9,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.3
+    },
+    {
+      "index": 441,
+      "startMs": 7348.952148,
+      "endMs": 7366.972168,
+      "intervalMs": 18.02001999999993,
+      "gpuMs": 2.06,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.3
+    },
+    {
+      "index": 442,
+      "startMs": 7366.972168,
+      "endMs": 7383.016113,
+      "intervalMs": 16.04394499999944,
+      "gpuMs": 7.06,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.3
+    },
+    {
+      "index": 443,
+      "startMs": 7383.016113,
+      "endMs": 7400.294922,
+      "intervalMs": 17.278809000000365,
+      "gpuMs": 2.05,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.3
+    },
+    {
+      "index": 444,
+      "startMs": 7400.294922,
+      "endMs": 7416.867676,
+      "intervalMs": 16.572753999999804,
+      "gpuMs": 3.83,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.3
+    },
+    {
+      "index": 445,
+      "startMs": 7416.867676,
+      "endMs": 7432.852539,
+      "intervalMs": 15.984863000000587,
+      "gpuMs": 1.58,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.2
+    },
+    {
+      "index": 446,
+      "startMs": 7432.852539,
+      "endMs": 7449.831055,
+      "intervalMs": 16.978515999999217,
+      "gpuMs": 3.95,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.2
+    },
+    {
+      "index": 447,
+      "startMs": 7449.831055,
+      "endMs": 7466.824707,
+      "intervalMs": 16.99365200000011,
+      "gpuMs": 2.11,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.2
+    },
+    {
+      "index": 448,
+      "startMs": 7466.824707,
+      "endMs": 7481.832031,
+      "intervalMs": 15.007324000000153,
+      "gpuMs": 2.55,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.2
+    },
+    {
+      "index": 449,
+      "startMs": 7481.832031,
+      "endMs": 7499.820312,
+      "intervalMs": 17.988280999999915,
+      "gpuMs": 2.21,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.1
+    },
+    {
+      "index": 450,
+      "startMs": 7499.820312,
+      "endMs": 7516.764648,
+      "intervalMs": 16.944336000000476,
+      "gpuMs": 5.03,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.1
+    },
+    {
+      "index": 451,
+      "startMs": 7516.764648,
+      "endMs": 7533.026855,
+      "intervalMs": 16.262206999999762,
+      "gpuMs": 1.92,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201.1
+    },
+    {
+      "index": 452,
+      "startMs": 7533.026855,
+      "endMs": 7549.734863,
+      "intervalMs": 16.70800799999961,
+      "gpuMs": 3,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201
+    },
+    {
+      "index": 453,
+      "startMs": 7549.734863,
+      "endMs": 7566.72998,
+      "intervalMs": 16.99511700000039,
+      "gpuMs": 6.7,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201
+    },
+    {
+      "index": 454,
+      "startMs": 7566.72998,
+      "endMs": 7582.706055,
+      "intervalMs": 15.976074999999582,
+      "gpuMs": 4.42,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5201
+    },
+    {
+      "index": 455,
+      "startMs": 7582.706055,
+      "endMs": 7599.720215,
+      "intervalMs": 17.01416000000063,
+      "gpuMs": 2.91,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.9
+    },
+    {
+      "index": 456,
+      "startMs": 7599.720215,
+      "endMs": 7615.654297,
+      "intervalMs": 15.934081999999762,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.8
+    },
+    {
+      "index": 457,
+      "startMs": 7615.654297,
+      "endMs": 7633.644043,
+      "intervalMs": 17.989746000000196,
+      "gpuMs": 2.08,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.8
+    },
+    {
+      "index": 458,
+      "startMs": 7633.644043,
+      "endMs": 7649.648926,
+      "intervalMs": 16.00488299999961,
+      "gpuMs": 2.24,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.8
+    },
+    {
+      "index": 459,
+      "startMs": 7649.648926,
+      "endMs": 7666.613281,
+      "intervalMs": 16.96435500000007,
+      "gpuMs": 1.66,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.8
+    },
+    {
+      "index": 460,
+      "startMs": 7666.613281,
+      "endMs": 7682.597656,
+      "intervalMs": 15.984375,
+      "gpuMs": 3.03,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.7
+    },
+    {
+      "index": 461,
+      "startMs": 7682.597656,
+      "endMs": 7699.575684,
+      "intervalMs": 16.97802800000045,
+      "gpuMs": 2.06,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.7
+    },
+    {
+      "index": 462,
+      "startMs": 7699.575684,
+      "endMs": 7716.537598,
+      "intervalMs": 16.961913999999524,
+      "gpuMs": 2.92,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.6
+    },
+    {
+      "index": 463,
+      "startMs": 7716.537598,
+      "endMs": 7734.379395,
+      "intervalMs": 17.841797000000042,
+      "gpuMs": 2.27,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.5
+    },
+    {
+      "index": 464,
+      "startMs": 7734.379395,
+      "endMs": 7749.545898,
+      "intervalMs": 15.166503000000375,
+      "gpuMs": 2.99,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.4
+    },
+    {
+      "index": 465,
+      "startMs": 7749.545898,
+      "endMs": 7766.561035,
+      "intervalMs": 17.015136999999413,
+      "gpuMs": 2.19,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.4
+    },
+    {
+      "index": 466,
+      "startMs": 7766.561035,
+      "endMs": 7783.491699,
+      "intervalMs": 16.930664000000434,
+      "gpuMs": 2.74,
+      "usedMemoryMB": 1030.5,
+      "freeMemoryMB": 5200.4
+    },
+    {
+      "index": 467,
+      "startMs": 7783.491699,
+      "endMs": 7799.95459,
+      "intervalMs": 16.462891000000127,
+      "gpuMs": 2.3,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5200.4
+    },
+    {
+      "index": 468,
+      "startMs": 7799.95459,
+      "endMs": 7816.015137,
+      "intervalMs": 16.060547000000042,
+      "gpuMs": 2.74,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5200.4
+    },
+    {
+      "index": 469,
+      "startMs": 7816.015137,
+      "endMs": 7833.01123,
+      "intervalMs": 16.996092999999746,
+      "gpuMs": 2.14,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5200.3
+    },
+    {
+      "index": 470,
+      "startMs": 7833.01123,
+      "endMs": 7849.993164,
+      "intervalMs": 16.981934000000365,
+      "gpuMs": 2.47,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5200.2
+    },
+    {
+      "index": 471,
+      "startMs": 7849.993164,
+      "endMs": 7866.090332,
+      "intervalMs": 16.09716799999933,
+      "gpuMs": 2.21,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5200.2
+    },
+    {
+      "index": 472,
+      "startMs": 7866.090332,
+      "endMs": 7882.958984,
+      "intervalMs": 16.86865200000011,
+      "gpuMs": 3.2,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5200.1
+    },
+    {
+      "index": 473,
+      "startMs": 7882.958984,
+      "endMs": 7899.928223,
+      "intervalMs": 16.969239000000016,
+      "gpuMs": 2.25,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5200.1
+    },
+    {
+      "index": 474,
+      "startMs": 7899.928223,
+      "endMs": 7915.943359,
+      "intervalMs": 16.015135999999984,
+      "gpuMs": 3,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.9
+    },
+    {
+      "index": 475,
+      "startMs": 7915.943359,
+      "endMs": 7932.918457,
+      "intervalMs": 16.97509799999989,
+      "gpuMs": 3.02,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.8
+    },
+    {
+      "index": 476,
+      "startMs": 7932.918457,
+      "endMs": 7948.898926,
+      "intervalMs": 15.980469000000085,
+      "gpuMs": 3.36,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.7
+    },
+    {
+      "index": 477,
+      "startMs": 7948.898926,
+      "endMs": 7965.10791,
+      "intervalMs": 16.208983999999873,
+      "gpuMs": 2.12,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.7
+    },
+    {
+      "index": 478,
+      "startMs": 7965.10791,
+      "endMs": 7982.930176,
+      "intervalMs": 17.822266000000127,
+      "gpuMs": 2.28,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.7
+    },
+    {
+      "index": 479,
+      "startMs": 7982.930176,
+      "endMs": 7999.853516,
+      "intervalMs": 16.92334000000028,
+      "gpuMs": 1.8,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.7
+    },
+    {
+      "index": 480,
+      "startMs": 7999.853516,
+      "endMs": 8015.827637,
+      "intervalMs": 15.974121000000196,
+      "gpuMs": 2.15,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.6
+    },
+    {
+      "index": 481,
+      "startMs": 8015.827637,
+      "endMs": 8032.813965,
+      "intervalMs": 16.986327999999958,
+      "gpuMs": 2.26,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.5
+    },
+    {
+      "index": 482,
+      "startMs": 8032.813965,
+      "endMs": 8048.893066,
+      "intervalMs": 16.079100999999355,
+      "gpuMs": 1.76,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.5
+    },
+    {
+      "index": 483,
+      "startMs": 8048.893066,
+      "endMs": 8067.294434,
+      "intervalMs": 18.40136800000073,
+      "gpuMs": 2.11,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.5
+    },
+    {
+      "index": 484,
+      "startMs": 8067.294434,
+      "endMs": 8082.006348,
+      "intervalMs": 14.711913999999524,
+      "gpuMs": 2.67,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.2
+    },
+    {
+      "index": 485,
+      "startMs": 8082.006348,
+      "endMs": 8099.76123,
+      "intervalMs": 17.75488200000018,
+      "gpuMs": 2.23,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.3
+    },
+    {
+      "index": 486,
+      "startMs": 8099.76123,
+      "endMs": 8116.708008,
+      "intervalMs": 16.94677799999954,
+      "gpuMs": 2.19,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.3
+    },
+    {
+      "index": 487,
+      "startMs": 8116.708008,
+      "endMs": 8134.604004,
+      "intervalMs": 17.895996000000196,
+      "gpuMs": 3.65,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199.2
+    },
+    {
+      "index": 488,
+      "startMs": 8134.604004,
+      "endMs": 8149.685059,
+      "intervalMs": 15.08105500000056,
+      "gpuMs": 4.96,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199
+    },
+    {
+      "index": 489,
+      "startMs": 8149.685059,
+      "endMs": 8166.648926,
+      "intervalMs": 16.963866999999482,
+      "gpuMs": 3.56,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5199
+    },
+    {
+      "index": 490,
+      "startMs": 8166.648926,
+      "endMs": 8182.646973,
+      "intervalMs": 15.998047000000042,
+      "gpuMs": 4.4,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.8
+    },
+    {
+      "index": 491,
+      "startMs": 8182.646973,
+      "endMs": 8198.645508,
+      "intervalMs": 15.99853499999972,
+      "gpuMs": 3.64,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.7
+    },
+    {
+      "index": 492,
+      "startMs": 8198.645508,
+      "endMs": 8215.617188,
+      "intervalMs": 16.97168000000056,
+      "gpuMs": 5.86,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 493,
+      "startMs": 8215.617188,
+      "endMs": 8233.595703,
+      "intervalMs": 17.978515000000698,
+      "gpuMs": 3.36,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 494,
+      "startMs": 8233.595703,
+      "endMs": 8248.599609,
+      "intervalMs": 15.003905999999915,
+      "gpuMs": 9.72,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 495,
+      "startMs": 8248.599609,
+      "endMs": 8265.567383,
+      "intervalMs": 16.967773999998826,
+      "gpuMs": 3.64,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 496,
+      "startMs": 8265.567383,
+      "endMs": 8283.52832,
+      "intervalMs": 17.96093699999983,
+      "gpuMs": 3.6,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 497,
+      "startMs": 8283.52832,
+      "endMs": 8299.517578,
+      "intervalMs": 15.989258000001428,
+      "gpuMs": 2.66,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 498,
+      "startMs": 8299.517578,
+      "endMs": 8316.509766,
+      "intervalMs": 16.99218799999835,
+      "gpuMs": 2.74,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 499,
+      "startMs": 8316.509766,
+      "endMs": 8332.967773,
+      "intervalMs": 16.45800700000109,
+      "gpuMs": 2.79,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 500,
+      "startMs": 8332.967773,
+      "endMs": 8349.476562,
+      "intervalMs": 16.508788999999524,
+      "gpuMs": 2.9,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 501,
+      "startMs": 8349.476562,
+      "endMs": 8365.481445,
+      "intervalMs": 16.00488299999961,
+      "gpuMs": 3.52,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 502,
+      "startMs": 8365.481445,
+      "endMs": 8382.53125,
+      "intervalMs": 17.04980500000056,
+      "gpuMs": 3.03,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5198.6
+    },
+    {
+      "index": 503,
+      "startMs": 8382.53125,
+      "endMs": 8399.573242,
+      "intervalMs": 17.04199200000039,
+      "gpuMs": 4.09,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5188.1
+    },
+    {
+      "index": 504,
+      "startMs": 8399.573242,
+      "endMs": 8415.414062,
+      "intervalMs": 15.84081999999944,
+      "gpuMs": 3.55,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5187.7
+    },
+    {
+      "index": 505,
+      "startMs": 8415.414062,
+      "endMs": 8433.570312,
+      "intervalMs": 18.15625,
+      "gpuMs": 3.18,
+      "usedMemoryMB": 1030.6,
+      "freeMemoryMB": 5184.1
+    }
+  ],
+  "topElapsedScopes": [
+    {
+      "id": 22,
+      "name": "Sleep",
+      "count": 11590,
+      "totalMs": 31370.54750610778,
+      "maxMs": 24.877563595567835
+    },
+    {
+      "id": 26,
+      "name": "$Event",
+      "count": 1059,
+      "totalMs": 3809.119409067587,
+      "maxMs": 26.828944542670797
+    },
+    {
+      "id": 1510,
+      "name": "Perform",
+      "count": 506,
+      "totalMs": 2924.2723162433713,
+      "maxMs": 25.308473659177707
+    },
+    {
+      "id": 1541,
+      "name": "Present",
+      "count": 506,
+      "totalMs": 1891.778229240434,
+      "maxMs": 22.92399200673117
+    },
+    {
+      "id": 13,
+      "name": "Thread (FG)",
+      "count": 17808,
+      "totalMs": 1843.7408010134245,
+      "maxMs": 8.826628412006357
+    },
+    {
+      "id": 43,
+      "name": "TS::ArbiterStep",
+      "count": 5094,
+      "totalMs": 759.8459849248845,
+      "maxMs": 7.955497700077331
+    },
+    {
+      "id": 44,
+      "name": "TS::JobStep",
+      "count": 39150,
+      "totalMs": 749.399060918654,
+      "maxMs": 7.015948812917259
+    },
+    {
+      "id": 1911,
+      "name": "VisibleQuery",
+      "count": 3594,
+      "totalMs": 707.0582926057255,
+      "maxMs": 8.824949196354282
+    },
+    {
+      "id": 1531,
+      "name": "Scene",
+      "count": 2530,
+      "totalMs": 704.8822398083494,
+      "maxMs": 4.781031702575092
+    },
+    {
+      "id": 1909,
+      "name": "CullJob",
+      "count": 1583,
+      "totalMs": 697.7375256860421,
+      "maxMs": 8.826047804755945
+    },
+    {
+      "id": 2011,
+      "name": "queryOcclusion",
+      "count": 1583,
+      "totalMs": 670.2015750368186,
+      "maxMs": 8.822444952377737
+    },
+    {
+      "id": 1898,
+      "name": "PrepareStandalone",
+      "count": 506,
+      "totalMs": 469.94551746239625,
+      "maxMs": 2.0041353049613235
+    },
+    {
+      "id": 1509,
+      "name": "Prepare2dWindow",
+      "count": 2024,
+      "totalMs": 423.6232885296465,
+      "maxMs": 1.4201313161281632
+    },
+    {
+      "id": 12,
+      "name": "Thread (BG)",
+      "count": 5763,
+      "totalMs": 354.176257811636,
+      "maxMs": 9.552418635370032
+    },
+    {
+      "id": 1462,
+      "name": "PrepareBound",
+      "count": 506,
+      "totalMs": 299.3147027157496,
+      "maxMs": 1.5429744886921526
+    },
+    {
+      "id": 1918,
+      "name": "SceneUpdater::computeLightingPerform",
+      "count": 506,
+      "totalMs": 278.4054833334224,
+      "maxMs": 1.4893648000133908
+    },
+    {
+      "id": 91,
+      "name": "Simulation(Simulation;Game)",
+      "count": 3556,
+      "totalMs": 265.5066766341287,
+      "maxMs": 0.8830155794016719
+    },
+    {
+      "id": 92,
+      "name": "Simulation",
+      "count": 3556,
+      "totalMs": 264.0033040766981,
+      "maxMs": 0.8830155794016719
+    },
+    {
+      "id": 93,
+      "name": "Heartbeat(Heartbeat;Game)",
+      "count": 1019,
+      "totalMs": 252.98545875523936,
+      "maxMs": 1.341875978859207
+    },
+    {
+      "id": 94,
+      "name": "Heartbeat",
+      "count": 1019,
+      "totalMs": 250.58876433946295,
+      "maxMs": 1.3384995375799917
+    }
+  ],
+  "labels": [
+    {
+      "id": 1658,
+      "name": "Replicator GC Job(Network_MegaOutgoing;Game)",
+      "count": 506,
+      "totalMs": 30.502755645488968,
+      "maxMs": 7.018453914510928
+    },
+    {
+      "id": 1659,
+      "name": "Replicator GC Job",
+      "count": 506,
+      "totalMs": 29.495401779823833,
+      "maxMs": 7.014243868730773
+    },
+    {
+      "id": 285,
+      "name": "PERF02 client sample",
+      "count": 506,
+      "totalMs": 12.970168504675481,
+      "maxMs": 0.6250490049960717
+    },
+    {
+      "id": 1452,
+      "name": "GC",
+      "count": 195,
+      "totalMs": 1.7304077164997702,
+      "maxMs": 0.05452991257698159
+    },
+    {
+      "id": 42,
+      "name": "TS::GC",
+      "count": 506,
+      "totalMs": 0.14749482448325324,
+      "maxMs": 0.060294247684396396
+    },
+    {
+      "id": 1747,
+      "name": "Process Deferred GC",
+      "count": 506,
+      "totalMs": 0.14570697723618897,
+      "maxMs": 0.0007484144671252579
+    }
+  ],
+  "worstOverlap": [
+    {
+      "id": 22,
+      "start": 7252.675496531403,
+      "frame": 435,
+      "end": 7269.017987748125,
+      "ms": 16.34249121672201,
+      "thread": " RBX Worker B",
+      "threadIndex": 4,
+      "name": "Sleep",
+      "overlapMs": 15.512491468596636
+    },
+    {
+      "id": 22,
+      "start": 7252.690225545372,
+      "frame": 435,
+      "end": 7269.124872082793,
+      "ms": 16.43464653742103,
+      "thread": " RBX Worker C",
+      "threadIndex": 5,
+      "name": "Sleep",
+      "overlapMs": 15.497762454627264
+    },
+    {
+      "id": 22,
+      "start": 7252.696631664466,
+      "frame": 435,
+      "end": 7269.134115487442,
+      "ms": 16.43748382297599,
+      "thread": " RBX Worker D",
+      "threadIndex": 6,
+      "name": "Sleep",
+      "overlapMs": 15.491356335533965
+    },
+    {
+      "id": 22,
+      "start": 7252.682575308724,
+      "frame": 435,
+      "end": 7258.868409552742,
+      "ms": 6.185834244018224,
+      "thread": " RBX Worker A",
+      "threadIndex": 3,
+      "name": "Sleep",
+      "overlapMs": 6.185834244018224
+    },
+    {
+      "id": 22,
+      "start": 7261.997924942621,
+      "frame": 435,
+      "end": 7268.134388131001,
+      "ms": 6.136463188380731,
+      "thread": " RBX Worker A",
+      "threadIndex": 3,
+      "name": "Sleep",
+      "overlapMs": 6.136463188380731
+    },
+    {
+      "id": 26,
+      "start": 7250.08929917018,
+      "frame": 435,
+      "end": 7256.002328908362,
+      "ms": 5.913029738181649,
+      "thread": " RBX Main",
+      "threadIndex": 2,
+      "name": "$Event",
+      "overlapMs": 5.913029738181649
+    },
+    {
+      "id": 1510,
+      "start": 7251.468518400905,
+      "frame": 435,
+      "end": 7255.955862032468,
+      "ms": 4.487343631562908,
+      "thread": " RBX Main",
+      "threadIndex": 2,
+      "name": "Perform",
+      "overlapMs": 4.487343631562908
+    },
+    {
+      "id": 22,
+      "start": 7249.503290928548,
+      "frame": 435,
+      "end": 7252.6953135059075,
+      "ms": 3.192022577359239,
+      "thread": " RBX Worker D",
+      "threadIndex": 6,
+      "name": "Sleep",
+      "overlapMs": 3.192022577359239
+    },
+    {
+      "id": 22,
+      "start": 7258.901495875721,
+      "frame": 435,
+      "end": 7261.982177936323,
+      "ms": 3.0806820606021574,
+      "thread": " RBX Worker A",
+      "threadIndex": 3,
+      "name": "Sleep",
+      "overlapMs": 3.0806820606021574
+    },
+    {
+      "id": 1541,
+      "start": 7253.077847922273,
+      "frame": 435,
+      "end": 7255.945957118623,
+      "ms": 2.8681091963499057,
+      "thread": " RBX Main",
+      "threadIndex": 2,
+      "name": "Present",
+      "overlapMs": 2.8681091963499057
+    },
+    {
+      "id": 22,
+      "start": 7250.650782973203,
+      "frame": 435,
+      "end": 7252.688799326971,
+      "ms": 2.0380163537683984,
+      "thread": " RBX Worker C",
+      "threadIndex": 5,
+      "name": "Sleep",
+      "overlapMs": 2.0380163537683984
+    },
+    {
+      "id": 22,
+      "start": 7250.652509357835,
+      "frame": 435,
+      "end": 7251.673828100008,
+      "ms": 1.0213187421732073,
+      "thread": " RBX Worker B",
+      "threadIndex": 4,
+      "name": "Sleep",
+      "overlapMs": 1.0213187421732073
+    },
+    {
+      "id": 22,
+      "start": 7249.639524659568,
+      "frame": 435,
+      "end": 7250.648335617874,
+      "ms": 1.0088109583057303,
+      "thread": " RBX Worker C",
+      "threadIndex": 5,
+      "name": "Sleep",
+      "overlapMs": 1.0088109583057303
+    },
+    {
+      "id": 22,
+      "start": 7250.649589169226,
+      "frame": 435,
+      "end": 7251.591791811731,
+      "ms": 0.9422026425054355,
+      "thread": " RBX Worker A",
+      "threadIndex": 3,
+      "name": "Sleep",
+      "overlapMs": 0.9422026425054355
+    },
+    {
+      "id": 1898,
+      "start": 7250.627908019496,
+      "frame": 435,
+      "end": 7251.468001543244,
+      "ms": 0.8400935237477825,
+      "thread": " RBX Main",
+      "threadIndex": 2,
+      "name": "PrepareStandalone",
+      "overlapMs": 0.8400935237477825
+    },
+    {
+      "id": 1531,
+      "start": 7252.016828336902,
+      "frame": 435,
+      "end": 7252.8344777169505,
+      "ms": 0.8176493800483513,
+      "thread": " RBX Main",
+      "threadIndex": 2,
+      "name": "Scene",
+      "overlapMs": 0.8176493800483513
+    },
+    {
+      "id": 22,
+      "start": 7251.915360716258,
+      "frame": 435,
+      "end": 7252.6814564033675,
+      "ms": 0.766095687109555,
+      "thread": " RBX Worker A",
+      "threadIndex": 3,
+      "name": "Sleep",
+      "overlapMs": 0.766095687109555
+    },
+    {
+      "id": 13,
+      "start": 7251.829414834303,
+      "frame": 435,
+      "end": 7252.592004293974,
+      "ms": 0.7625894596712897,
+      "thread": " RBX Worker B",
+      "threadIndex": 4,
+      "name": "Thread (FG)",
+      "overlapMs": 0.7625894596712897
+    },
+    {
+      "id": 1909,
+      "start": 7251.829414834303,
+      "frame": 435,
+      "end": 7252.591425401959,
+      "ms": 0.7620105676560343,
+      "thread": " RBX Worker B",
+      "threadIndex": 4,
+      "name": "CullJob",
+      "overlapMs": 0.7620105676560343
+    },
+    {
+      "id": 1911,
+      "start": 7251.829414834303,
+      "frame": 435,
+      "end": 7252.590819066175,
+      "ms": 0.761404231871893,
+      "thread": " RBX Worker B",
+      "threadIndex": 4,
+      "name": "VisibleQuery",
+      "overlapMs": 0.761404231871893
+    }
+  ],
+  "fixtureEvents": []
+}

@@ -1,5 +1,11 @@
 # PERF-01 performance review
 
+Follow-up: [PERF-02 six-client diagnosis](PERF_02_REVIEW.md) preserves this
+historical evidence. Two clean repeats with deferred probe output show variability;
+one still misses the >50 ms rate. Three native captures contain no representative
+hitch, so neither the original 314 ms interval nor the new 192 ms interval is
+claimed fixed. Production gameplay is unchanged from #25.
+
 Immediate implementation predecessor: MODE-01 #23,
 `c26c92652c745c22cff35276d84180a04320e4e1`; brief pulled from main `671d469`.
 All earlier gameplay changes are inherited. Keep the gameplay stack draft.

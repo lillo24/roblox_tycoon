@@ -1,0 +1,39 @@
+2026-10-10 UTC; native Studio observations, transcribed with owner aliases.
+
+clean-1: six actual owners Ready; 10 owned / 9 placed / 1 stored, revision 20
+for each; 372 world / 90 animated parts. Readiness verified 08:05:31.
+Observer owner1, camera ViewportSize 801,413; SavedQualitySetting Automatic.
+Native viewport focus setup completed 08:08:05.730, before Churn.
+
+clean-2: six actual owners Ready; same initial profiles and 372/90 scene.
+Readiness verified 08:24:24.897. Observer owner2 native read at 08:24:59.087,
+801,413, revision 20, Automatic. Viewport focus completed 08:25:37.712.
+No native UI/log inspection inside either clean sampling window.
+
+Diagnostic server: six actual owners Ready and 372/90 at 08:41:11.085.
+Observer owner3 801,413, revision 20, Automatic at 08:44:07.923.
+Diag-1 native profiler pause observed 08:44:56.930; 512-frame Legacy HTML
+export is microprofile-20261010-104634.html. Viewport changed after pause;
+the exported metadata describes the later desktop viewport, not captured phone.
+
+08:49:49.226: the command-bar attempt to call MicroProfilerService:
+DumpToFileAsync(0,512) failed: current thread cannot call DumpToFileAsync
+(lacking capability RobloxScript). No API bypass attempted.
+
+08:54:38.350: PERF02 DIAG2 owner3 15 9 6 255 801,413
+server time 1791622478.183923. These are owned/placed/stored/revision/viewport.
+Profiles carried over from diag-1; no fresh-profile equivalence claim.
+Profiler resumed 08:56:04.100; startup was not captured.
+Native churn pause observed 08:56:40.739; microprofile-20261010-105656.html.
+Resumed 08:57:47.866; quiet pause observed 08:58:48.836;
+microprofile-20261010-105856.html. The two later exports report 604x279
+draw/display size and QualityLevel 21 (auto).
+All three decoded captures: 506 complete frames, no interval over 50 ms.
+
+09:18:41.189: PERF02 gameplay-only preview Ready; no performance probes 801,413.
+Executed assertions: actual local player's TycoonAssignment == Ready;
+ReplicatedStorage has no PERF01 folder; PlayerGui has no PERF01Controls.
+No assertions injected into the generated gameplay-only file.
+Six-client sessions ended normally; task fixture editors closed without saving
+disposable test changes. Final native window inventory contains only the playable
+mode-infinite-perf-02-review.rbxlx Studio window, in local Test/Play.

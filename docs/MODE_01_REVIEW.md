@@ -1,5 +1,24 @@
 # Combined Infinite and mode-entry review
 
+Latest performance follow-up: [PERF-02](PERF_02_REVIEW.md) retains two clean
+six-owner repeats and three separate native captures. Both repeats pass frame
+p95/p99 and server/edit-latency references, but one misses the >50 ms rate
+(13/10,750 = 0.1209%, max 192.175 ms). The captures contain no representative
+hitch; its cause and PERF-01's 314 ms hitch remain unresolved. Changes are confined
+to fixtures, evidence and offline tooling; #25's production game is preserved.
+Keep the entire gameplay stack draft for combined founder review. Physical devices,
+real services, subjective pacing and performance sign-off remain distinct.
+
+The latest probe-free playable copy is `build/mode-infinite-perf-02-review.rbxlx`:
+
+```powershell
+./scripts/New-ModeReviewPlace.ps1 -Role Infinite -Showcase -OutputName mode-infinite-perf-02-review.rbxlx
+```
+
+Open and Play. It uses local reset-on-Stop memory and two labelled examples, with
+no performance controls or QA runners. PERF-02 records its native Ready/isolation
+check and screenshot. Review Entry/Session using the commands below.
+
 MODE-01 is stacked on INF-03 #22 at tested head `bc18ef0b66bac9cab403835bdac2355ba4ce8100`, inheriting INF-02 #21 and INF-01 #18. [MODE-01-only comparison](https://github.com/lillo24/roblox_tycoon/compare/bc18ef0b66bac9cab403835bdac2355ba4ce8100...codex/mode-01-entry-routing). Keep the complete gameplay stack draft for one founder review. Experiments #14–#16 are separate.
 
 ## Local playable review

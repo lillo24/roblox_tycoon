@@ -26,7 +26,7 @@ while ($timer.Elapsed.TotalSeconds -lt $Seconds) {
     $gpu = @(Get-CimInstance Win32_PerfRawData_GPUPerformanceCounters_GPUEngine | Where-Object Name -Like '*engtype_3D*' | ForEach-Object {
         @{ engine = $_.Name; busy100ns = $_.UtilizationPercentage; time100ns = $_.Timestamp_Sys100NS }
     })
-    $processes = @(Get-Process -Name RobloxStudioBeta -ErrorAction SilentlyContinue | ForEach-Object {
+    $processes = @(Get-Process -Name RobloxStudioBeta -ErrorAction Stop | ForEach-Object {
         @{ pid = $_.Id; cpuSeconds = $_.CPU; workingSetBytes = $_.WorkingSet64; privateBytes = $_.PrivateMemorySize64 }
     })
     $rows.Add((@{

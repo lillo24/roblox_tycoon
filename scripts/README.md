@@ -1,7 +1,7 @@
 # Repository validation
 
-This folder owns the PowerShell validation used locally and by CI.
-It does not contain gameplay code or require additional packages.
+This folder owns the PowerShell validation used locally and by CI, preview
+generators and optional offline performance readers. It contains no gameplay code.
 
 - `New-PerformanceReviewPlace.ps1 -Workload Fresh|Developed|Dense|SixOwners`
   injects bounded, unmapped probes into a local-memory Infinite copy. See
@@ -22,6 +22,16 @@ It does not contain gameplay code or require additional packages.
   averages cannot prove or exclude a short saturated core or OS scheduling delay.
   GPU engines are per process/adapter/engine, not additive across unrelated engines.
   No app setting, process priority or affinity is changed.
+  Studio must be running; a missing process is an explicit collector failure.
+  `Summarize-PerformanceHost.mjs <probe.jsonl> <host.jsonl> <summary.json>` derives
+  raw rates for one completed window, excluding mixed phase intervals. Studio CPU
+  is used cores; GPU engines remain separate. `Read-PerformanceDump.mjs
+  <legacy.html> <summary.json>` reads complete frame/event spans from trusted local
+  Studio 742 Legacy HTML (R0FL), using its embedded vendor decoder offline. It
+  rejects unsupported/truncated captures; do not use it on arbitrary HTML. Its
+  inclusive elapsed scopes are not exclusive CPU accounting. These two optional
+  readers were exercised with Node 24.19.0, use only built-ins, and add no runtime
+  or CI dependency. Reproduction/capture limits: `docs/PERF_02_REVIEW.md`.
 
 - `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
   `build/`, combining the unchanged canonical scene with current mapped source.
