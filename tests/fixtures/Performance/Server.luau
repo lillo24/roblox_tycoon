@@ -48,7 +48,9 @@ function Fixture.start(workload)
 		local original = target[method]
 		target[method] = function(...)
 			local started = os.clock()
+			debug.profilebegin("PERF02 " .. method)
 			local result = table.pack(original(...))
+			debug.profileend()
 			if control:GetAttribute("Phase") ~= "Idle" then
 				sampler.add(metric .. ":" .. control:GetAttribute("Phase"), (os.clock() - started) * 1000)
 				if method == "accrue" and lastIncome then
@@ -97,6 +99,7 @@ function Fixture.start(workload)
 			assert(owner:GetAttribute("TycoonAssignment") == "Ready", "Every actual owner must be ready")
 		end
 		generation += 1
+		sampler.begin()
 		local current = generation
 		task.spawn(function()
 			local function phase(name, seconds)
@@ -126,6 +129,7 @@ function Fixture.start(workload)
 				addedParts = churnAdded,
 				removedParts = churnRemoved,
 			})
+			sampler.finish()
 		end)
 	end)
 	require(Server.AppRuntime).start(

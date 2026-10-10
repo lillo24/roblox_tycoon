@@ -5,6 +5,20 @@ injects them into a disposable local-memory Studio scene. Workloads builds valid
 production transactions, Server wraps synchronous hot paths and controls timed
 runs, Client samples actual frames and drives owner RPC/editor churn, and Sampler
 prints bounded JSON series/stats. InfiniteShowcase and ProfileMemoryStore are reused.
+PERF-02 defers all probe output until three seconds after Idle. `begin` resets
+each side's bounded in-memory run (40,000 samples per metric / 6,000 records);
+overflow invalidates the run with an error rather than silently dropping values.
+Chunks retain their original values/timestamps and are JSON encoded only at export.
+Idle observations are excluded. This changes measurement overhead/memory relative
+to PERF-01, not gameplay. `SamplerCheck.luau` is a separate Edit-only regression
+for output timing, chunk retention, timestamps and resets; it is never injected
+into the timed or gameplay-only copies.
+Client records requested/accepted/rejected edits, editor counts and timestamped
+edit/editor events. Slow intervals above 33.3 ms get a bounded record; the
+MicroProfiler `PERF02 slow interval end` tag marks the end of that observed
+interval, not measured CPU work or proof of its cause. Fixed probe/server labels
+help identify fixture overhead in diagnostic captures. No production module is
+instrumented. PERF-02's clean windows and separate traces are in `docs/PERF_02_REVIEW.md`.
 Series use 64-value chunks because Studio truncates long Creator log lines.
 Export-PerformanceEvidence reads only probe JSON, removes account identifiers and
 rejects incomplete records; nearest-rank percentiles keep foreground samples separate.

@@ -13,6 +13,15 @@ It does not contain gameplay code or require additional packages.
   fixture sources/startup, unchanged authored geometry and exclusion from production.
   Full CLI/CI adds two small Rojo builds for this boundary check; it does not run
   clients or claim runtime performance from generated geometry.
+  PERF-02 buffers probe records until Idle; see the fixture README for capacity,
+  timestamps and the separate sampler check. `Observe-PerformanceHost.ps1
+  -Name <run> -Seconds 360 -Interval 5` records bounded read-only WMI CPU/core,
+  3D-engine, paging/memory and Studio-process counters in `build/perf-host-<run>.jsonl`.
+  It writes only after observation and retains collection/collector CPU overhead.
+  The raw counters need differences over their own timestamp intervals; five-second
+  averages cannot prove or exclude a short saturated core or OS scheduling delay.
+  GPU engines are per process/adapter/engine, not additive across unrelated engines.
+  No app setting, process priority or affinity is changed.
 
 - `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
   `build/`, combining the unchanged canonical scene with current mapped source.
