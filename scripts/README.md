@@ -1,7 +1,37 @@
 # Repository validation
 
-This folder owns the PowerShell validation used locally and by CI.
-It does not contain gameplay code or require additional packages.
+This folder owns the PowerShell validation used locally and by CI, preview
+generators and optional offline performance readers. It contains no gameplay code.
+
+- `New-PerformanceReviewPlace.ps1 -Workload Fresh|Developed|Dense|SixOwners`
+  injects bounded, unmapped probes into a local-memory Infinite copy. See
+  `tests/fixtures/Performance/README.md` and `docs/PERF_01_REVIEW.md` for the route,
+  timings and distinctions between six rendered properties and six actual owners.
+  `Export-PerformanceEvidence.ps1 -LogPaths <Studio log paths> -Name <run-name>`
+  extracts account-safe JSON and nearest-rank summaries under `docs/perf-01`.
+  It rejects truncated records. `Test-PerformanceReviewPlace.ps1` verifies exact
+  fixture sources/startup, unchanged authored geometry and exclusion from production.
+  Full CLI/CI adds two small Rojo builds for this boundary check; it does not run
+  clients or claim runtime performance from generated geometry.
+  PERF-02 buffers probe records until Idle; see the fixture README for capacity,
+  timestamps and the separate sampler check. `Observe-PerformanceHost.ps1
+  -Name <run> -Seconds 360 -Interval 5` records bounded read-only WMI CPU/core,
+  3D-engine, paging/memory and Studio-process counters in `build/perf-host-<run>.jsonl`.
+  It writes only after observation and retains collection/collector CPU overhead.
+  The raw counters need differences over their own timestamp intervals; five-second
+  averages cannot prove or exclude a short saturated core or OS scheduling delay.
+  GPU engines are per process/adapter/engine, not additive across unrelated engines.
+  No app setting, process priority or affinity is changed.
+  Studio must be running; a missing process is an explicit collector failure.
+  `Summarize-PerformanceHost.mjs <probe.jsonl> <host.jsonl> <summary.json>` derives
+  raw rates for one completed window, excluding mixed phase intervals. Studio CPU
+  is used cores; GPU engines remain separate. `Read-PerformanceDump.mjs
+  <legacy.html> <summary.json>` reads complete frame/event spans from trusted local
+  Studio 742 Legacy HTML (R0FL), using its embedded vendor decoder offline. It
+  rejects unsupported/truncated captures; do not use it on arbitrary HTML. Its
+  inclusive elapsed scopes are not exclusive CPU accounting. These two optional
+  readers were exercised with Node 24.19.0, use only built-ins, and add no runtime
+  or CI dependency. Reproduction/capture limits: `docs/PERF_02_REVIEW.md`.
 
 - `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
   `build/`, combining the unchanged canonical scene with current mapped source.
@@ -147,3 +177,24 @@ assertions and use Studio analysis when full-place context or a discrepancy matt
 On macOS/Linux, these checks need PowerShell (`pwsh -File
 ./scripts/Validate-Project.ps1`). Alternatively, use the manual full GitHub
 Actions run described in the root README; it supplies PowerShell on the runner.
+
+## INF-01 previews
+
+`New-InfiniteReviewPlace.ps1` builds fresh sources on the unchanged canonical map.
+Default `-Backend LocalPreview` explicitly injects temporary memory storage, labeled
+in the HUD; it is never a production fallback. `-Backend DataStore` retains the normal
+bootstrap and requires the isolated universe setup in `src/server/Persistence/README.md`.
+`-IncludeQA` adds domain/lifecycle runners plus an opt-in actual-client observer outside
+production mappings. Output is restricted to `build/inf-*.rbxlx` and linked output is refused.
+
+`Test-InfiniteReviewPlace.ps1` checks the three local/QA/real-backend boundaries,
+every nested source/class, and the unchanged authored map. The standard validation
+runs these small Rojo builds because startup injection is a persistence safety boundary.
+It does not execute the Luau suites or claim a real DataStore write.
+
+INF-03: `New-InfiniteReviewPlace.ps1 -Showcase` is restricted to LocalPreview. It injects two clearly labelled, rich development profiles through the same profile load path, reserving two of six lots. Human clients still start fresh with 0 cash and ordinary earnings. The optional fixtures live outside mapped roots and never enter a real-backend build. IncludeQA also injects Growth and its own separately named presets module, without enabling showcase residents. Test-InfiniteReviewPlace checks all four variants and the fixture boundary.
+
+MODE-01: `New-ModeReviewPlace.ps1 -Role Entry|Prototype|Infinite` creates `mode-entry`, `mode-session` or `mode-infinite` in build. `-Scenario LateFailure|ImmediateFailure|MissingDestination` selects an explicit unmapped Studio adapter; fake IDs never enter a real teleport. `-IncludeQA` adds routing/handoff/domain assertions and actual-client role observations; `-Showcase` only applies to Infinite. Production source remains exact, with copied bootstrap disabled in favour of AppRuntime plus explicit fixture injection. `Test-ModeReviewPlace` adds three small builds to the existing complete validator to check this startup isolation boundary; CI trigger policy is unchanged. Real-service setup and combined review: docs/MODE_01_REVIEW.md.
+
+PERF-03: `New-PerformanceReviewPlace.ps1 -Workload SixOwners -CaptureDiagnostics -OutputName mode-perf-sixowners-capture.rbxlx` adds an opt-in, one-shot hitch signal and labelled calibration stall to a disposable Studio-only performance place. Ordinary timing and gameplay-only builds exclude this script; the boundary is checked by `Test-PerformanceReviewPlace.ps1`. The native pause/export procedure and its unverified Studio gate are in `tests/fixtures/Performance/README.md` and `docs/PERF_03_REVIEW.md`.
+For diagnostic runs, `Observe-PerformanceHost.ps1 -Name hitch -Seconds 350 -IncludeProcesses` adds process identity and CPU counters to its otherwise unchanged read-only collector; the offline summary shows leading consumers per contained interval. Its presence and overhead must be recorded. Inspect process names before sharing raw data.

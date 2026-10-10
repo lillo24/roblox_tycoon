@@ -1,0 +1,17 @@
+Native six-owner follow-up; Studio 0.742.0.7421053; same repaired build 3273428.
+Player1-7 / negative IDs are disposable Studio identities, not account identifiers.
+Owner4 was the verified foreground measurement client. Departure/replacement ran after timed export.
+Assertions checked five remaining players, nil owner/revision, empty upgrades and detached old references; then six players, new Ready owner, revision 20, 12 fresh upgrade instances and 53 parts.
+The 0.6-second frame checks are server observations; they do not count client callbacks.
+
+2026-10-09T17:53:50.589Z PERF01_NATIVE focused-churn visitor Player1 -1 2 -2
+2026-10-09T17:53:50.596Z PERF01_NATIVE focused-churn visitor Player2 -2 3 -3
+2026-10-09T17:53:50.596Z PERF01_NATIVE focused-churn visitor Player3 -3 4 -4
+2026-10-09T17:53:50.598Z PERF01_NATIVE focused-churn visitor Player4 -4 5 -5
+2026-10-09T17:53:50.598Z PERF01_NATIVE focused-churn visitor Player5 -5 6 -6
+2026-10-09T17:53:50.599Z PERF01_NATIVE focused-churn visitor Player6 -6 1 -1
+2026-10-09T18:02:49.750Z PERF01_NATIVE departure-before 6 12 53 260
+2026-10-09T18:03:44.707Z PERF01_NATIVE departure-clear 12 53 all detached; revision cleared; frames stable
+2026-10-09T18:06:24.551Z PERF01_NATIVE lot-reuse -7 Ready 20 12 53 fresh geometry; old detached; server frames stable
+2026-10-09T17:55:27.081Z PERF01_NATIVE focused-observer Player4 -4 801, 413
+2026-10-09T18:07:27.261Z PERF01_NATIVE arrival-profile -7 4 20 10 9 1 808 new seeded owner; no inherited inventory

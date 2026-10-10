@@ -1,0 +1,25 @@
+MODE-01 local preview evidence, 2026-10-09. SHA256.
+Immediate predecessor: bc18ef0b66bac9cab403835bdac2355ba4ce8100 (INF-03 #22).
+
+Observed Infinite two-client / 1,075 distinct server assertion build:
+CD034BE550E4DFF30F1C99FCDA4C0064D55BAAB8C59F57B48E1845358AF33DD2
+Observed Session native purchase and immediate return failure build:
+66EE7E68E0604BB93C6C48329B7DF542AB2494C4194E298BC671007558C432A6
+
+Delivered previews (build/; regenerated from final source):
+mode-entry.rbxlx: 0232A063F80BB8BF070595CF40AE2C70865218C0EC660B3514E4D4050046B6AF
+mode-session.rbxlx: 5DA6D7FE5FDCC7710D31E2EEC9136995AF497B33CD3B00AF65F52A55303126DD
+mode-infinite-review.rbxlx: B7FD4152EA7E2B80BBD9E567F895B4313BA495639D7BB90E2A0B8DE3FE7E01DC
+
+The only runtime change after the two-client and Session observations was the
+ModeChooser message for a client whose initial role wait expired before a ready
+routing service arrived. The delivered Entry build directly executed this branch
+(one assertion), five isolation assertions, and a mobile scroll/choice/late-failure
+check. Rebuilding also changes generated XML referents. The earlier two-client
+and Session evidence is not relabelled as execution of the rebuilt artifacts.
+
+Canonical scene unchanged:
+9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+
+All local previews use explicit memory and routing fixtures. They are not
+published builds, real teleports, or cross-session DataStore durability evidence.
