@@ -1,7 +1,8 @@
 param(
     [ValidateRange(5,900)][int]$Seconds = 360,
     [ValidateRange(5,30)][int]$Interval = 5,
-    [Parameter(Mandatory=$true)][ValidatePattern('^[a-z0-9-]+$')][string]$Name
+    [Parameter(Mandatory=$true)][ValidatePattern('^[a-z0-9-]+$')][string]$Name,
+    [switch]$IncludeProcesses
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
@@ -29,9 +30,20 @@ while ($timer.Elapsed.TotalSeconds -lt $Seconds) {
     $processes = @(Get-Process -Name RobloxStudioBeta -ErrorAction Stop | ForEach-Object {
         @{ pid = $_.Id; cpuSeconds = $_.CPU; workingSetBytes = $_.WorkingSet64; privateBytes = $_.PrivateMemorySize64 }
     })
+    $allProcesses = $null
+    if ($IncludeProcesses) {
+        $allProcesses = @(Get-Process | Where-Object { $null -ne $_.CPU } | ForEach-Object {
+            $startUtc = $null
+            $identity = 'known'
+            try { $startUtc = $_.StartTime.ToUniversalTime().ToString('o') }
+            catch [System.ComponentModel.Win32Exception] { $identity = 'start-inaccessible' }
+            catch [System.InvalidOperationException] { $identity = 'process-exited' }
+            @{ pid = $_.Id; name = $_.ProcessName; cpuSeconds = $_.CPU; startUtc = $startUtc; identity = $identity }
+        })
+    }
     $rows.Add((@{
         utc = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() / 1000.0
-        cpuRaw = $cpu; gpu3dRaw = $gpu; processes = $processes
+        cpuRaw = $cpu; gpu3dRaw = $gpu; processes = $processes; allProcesses = $allProcesses
         memoryRaw = @{ availableMB = $memory.AvailableMBytes; pageReads = $memory.PageReadsPersec; pagesInput = $memory.PagesInputPersec
             time = $memory.Timestamp_PerfTime; frequency = $memory.Frequency_PerfTime }
         collectionMs = ($timer.Elapsed.TotalSeconds - $sampleStart) * 1000

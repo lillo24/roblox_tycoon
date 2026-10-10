@@ -104,3 +104,9 @@ The refreshed gameplay-only Infinite preview is reproduced with:
 Open `build/mode-infinite-perf-review.rbxlx` and Play. It uses local reset-on-Stop
 memory and a failed-return adapter, with two labelled examples and four player
 lots. It includes no PERF probes or QA runners. Do not publish this local fixture.
+
+PERF-02's two clean six-owner repeats and the unobserved native hitch cause are
+recorded in [its review](PERF_02_REVIEW.md). [PERF-03](PERF_03_REVIEW.md) prepares
+an opt-in triggered capture fixture, but the calibration and natural native
+timeline still require Studio. The frame-budget miss remains open; the combined
+founder style/pacing review can proceed independently.

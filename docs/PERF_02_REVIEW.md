@@ -355,3 +355,7 @@ References: [Roblox MicroProfiler](https://create.roblox.com/docs/performance-op
 [using native captures](https://create.roblox.com/docs/performance-optimization/microprofiler/use-microprofiler),
 [identifying performance problems](https://create.roblox.com/docs/performance-optimization/identify),
 [Windows raw timer counter formulas](https://learn.microsoft.com/en-us/windows/win32/wmisdk/timer-algorithm-counter-types).
+
+The [PERF-03 preparatory review](PERF_03_REVIEW.md) describes a separate opt-in
+signal and calibration fixture for capturing an actual slow native interval.
+No new Studio capture or performance sign-off is inferred from that code.

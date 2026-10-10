@@ -46,3 +46,38 @@ not pool clients based on this flag alone. Preserve ambiguous raw flags and labe
 those clients' foreground/background state unverified in the review.
 Final probes additionally record Session.accrue work and actual invocation spacing;
 the latter is income cadence, not CPU time, and does not include attribute/world publish.
+
+## PERF-03 opt-in capture signal
+
+`New-PerformanceReviewPlace.ps1 -Workload SixOwners -CaptureDiagnostics` adds
+`Capture.client.luau` to the disposable performance place. The default build,
+gameplay-only preview and production project do not contain it. The selected
+observer clicks **PERF03 arm foreground** in its actual native viewport. The
+first Churn/Quiet PreRender interval over 50 ms turns its label red and emits one
+`PERF03_SIGNAL` log line with phase, local frame, interval, clocks and calibration
+flag. It is disarmed on focus loss and at the end of a run; re-arm deliberately.
+The profiler label and Output line occur **after** the interval and do not assign
+its CPU cause. Signals and Output writes perturb diagnostic frames, so runs with
+this option are not clean frame-budget comparisons.
+
+To test the path, start the native profiler before clicking arm and then click
+**PERF03 test 100 ms stall** while Idle. The next frame should trigger a red
+signal. Press Ctrl+P promptly in that same native client, export 512 frames and
+check that the native timeline contains `PERF03 deliberate calibration stall`,
+preceding/following frames and `PERF03 slow interval observed`. Match the log
+event to that native marker. The Idle calibration has no buffered PERF01 series;
+for natural Churn/Quiet events, compare its clock and phase with those samples
+after export without inventing an exact native frame-to-probe ordinal mapping.
+This deliberate busy frame only tests capture timing, never natural performance.
+Run a fresh diagnostic session after calibrating, with the profiler recording
+before Churn. Arm only the confirmed foreground observer after focus setup; on
+its red signal pause/export immediately, inspect the dump, then re-arm only if a
+specific question needs another event. If the calibration stall is absent from
+the dump, resolve that capture gap before repeating six-client churn. Native
+Studio controls and capture timing have not been verified on this Linux checkout.
+For host attribution, `Observe-PerformanceHost.ps1 -IncludeProcesses` additionally
+buffers names, PIDs, available start times and cumulative CPU seconds for all
+visible processes. The offline summary pairs samples using name/PID/start time
+and labels missing start times uncertain. This option is diagnostic overhead;
+review and sanitize raw process names before sharing evidence. Five-second CPU
+deltas cannot attribute a particular millisecond stall or replace a native trace.

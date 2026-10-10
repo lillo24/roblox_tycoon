@@ -16,9 +16,14 @@ foreach ($workload in @('Fresh','SixOwners')) {
     }
     $client = $scene.SelectSingleNode('//Item[@class="LocalScript"][Properties/string[@name="Name"]="PERF01Client"]/Properties/ProtectedString[@name="Source"]')
     if (-not $client -or $client.InnerText.Replace("`r`n","`n") -cne [IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/Performance/Client.client.luau')).Replace("`r`n","`n")) { throw 'Missing exact performance client source.' }
+    if ($scene.SelectSingleNode('//Item[Properties/string[@name="Name"]="PERF03Capture"]')) { throw 'Diagnostic capture script entered an ordinary timed preview.' }
     if ($scene.SelectSingleNode('//Item[Properties/string[@name="Name"]="INF02QA"]')) { throw 'Assertion runners must not contaminate timed previews.' }
 }
+& (Join-Path $PSScriptRoot 'New-PerformanceReviewPlace.ps1') -Workload SixOwners -CaptureDiagnostics -OutputName 'mode-perf-capture-check.rbxlx'
+[xml]$capture = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'build/mode-perf-capture-check.rbxlx'))
+$diagnostic = $capture.SelectSingleNode('//Item[@class="LocalScript"][Properties/string[@name="Name"]="PERF03Capture"]/Properties/ProtectedString[@name="Source"]')
+if (-not $diagnostic -or $diagnostic.InnerText.Replace("`r`n","`n") -cne [IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/Performance/Capture.client.luau')).Replace("`r`n","`n")) { throw 'Missing exact opt-in capture script.' }
 [xml]$production = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'build/validation.rbxlx'))
-if ($production.SelectSingleNode('//Item[Properties/string[@name="Name"]="PERF01" or Properties/string[@name="Name"]="PERF01Client"]')) { throw 'Performance fixtures leaked into production.' }
+if ($production.SelectSingleNode('//Item[Properties/string[@name="Name"]="PERF01" or Properties/string[@name="Name"]="PERF01Client" or Properties/string[@name="Name"]="PERF03Capture"]')) { throw 'Performance fixtures leaked into production.' }
 if ((Get-FileHash -LiteralPath $canonical).Hash -ne $hash) { throw 'Canonical scene changed.' }
 Write-Output 'Performance workload startup, exact probe source, production exclusion and unchanged map checks passed.'

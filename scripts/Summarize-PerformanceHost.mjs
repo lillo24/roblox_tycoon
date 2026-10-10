@@ -36,13 +36,29 @@ for (let i = 1; i < host.length; i++) {
     const p = a.processes.find(y => y.pid === x.pid);
     return n + (p ? (x.cpuSeconds - p.cpuSeconds) / dt : 0);
   }, 0);
+  let processConsumers = null;
+  if (Array.isArray(a.allProcesses) !== Array.isArray(b.allProcesses)) {
+    throw new Error(`Inconsistent all-process capture at host row ${i + 1}`);
+  }
+  if (Array.isArray(b.allProcesses)) {
+    // PID alone can be reused. Pair known start times; unknown identities are
+    // reported as uncertain so they cannot prove which process used the CPU.
+    processConsumers = b.allProcesses.flatMap(x => {
+      const p = a.allProcesses.find(y => y.pid === x.pid && y.name === x.name &&
+        (x.startUtc && y.startUtc ? x.startUtc === y.startUtc : true));
+      if (!p || !Number.isFinite(x.cpuSeconds - p.cpuSeconds) || x.cpuSeconds < p.cpuSeconds) return [];
+      return [{ pid: x.pid, name: x.name, usedCores: (x.cpuSeconds - p.cpuSeconds) / dt,
+        identity: x.startUtc && p.startUtc ? 'known' : 'uncertain' }];
+    }).sort((x, y) => y.usedCores - x.usedCores).slice(0, 8);
+  }
   intervals.push({ phase, from: a.utc, to: b.utc, cpu, gpu, studioCores,
     newPids: b.processes.filter(x => !a.processes.some(y => y.pid === x.pid)).map(x => x.pid),
     endedPids: a.processes.filter(x => !b.processes.some(y => y.pid === x.pid)).map(x => x.pid),
     availableMB: b.memoryRaw.availableMB,
     pagesInputPerSecond: (b.memoryRaw.pagesInput - a.memoryRaw.pagesInput) / memorySeconds,
     pageReadsPerSecond: (b.memoryRaw.pageReads - a.memoryRaw.pageReads) / memorySeconds,
-    collectionMs: b.collectionMs, collectorCores: (b.collectorCpuSeconds - a.collectorCpuSeconds) / dt });
+    collectionMs: b.collectionMs, collectorCores: (b.collectorCpuSeconds - a.collectorCpuSeconds) / dt,
+    processConsumers });
 }
 function stats(values) {
   if (!values.length || values.some(x => !Number.isFinite(x))) throw new Error('Missing/invalid phase observations');

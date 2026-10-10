@@ -1,6 +1,7 @@
 param(
     [ValidateSet('Fresh','Developed','Dense','SixOwners')][string]$Workload = 'Fresh',
-    [string]$OutputName = ''
+    [string]$OutputName = '',
+    [switch]$CaptureDiagnostics
 )
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = Split-Path $PSScriptRoot -Parent
@@ -38,6 +39,9 @@ $control = Add-Item $replicated 'Folder' 'PERF01'
 [void](Add-Item $control 'ModuleScript' 'Sampler' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/Performance/Sampler.luau'))))
 $starter = $scene.SelectSingleNode('/roblox/Item[@class="StarterPlayer"]/Item[@class="StarterPlayerScripts"]')
 [void](Add-Item $starter 'LocalScript' 'PERF01Client' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/Performance/Client.client.luau'))))
+if ($CaptureDiagnostics) {
+    [void](Add-Item $starter 'LocalScript' 'PERF03Capture' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/Performance/Capture.client.luau'))))
+}
 $settings = [Xml.XmlWriterSettings]::new(); $settings.OmitXmlDeclaration = $true; $settings.Indent = $true; $settings.Encoding = [Text.UTF8Encoding]::new($false)
 $writer = [Xml.XmlWriter]::Create($output,$settings)
 try { $scene.Save($writer) } finally { $writer.Dispose() }
