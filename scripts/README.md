@@ -3,6 +3,17 @@
 This folder owns the PowerShell validation used locally and by CI.
 It does not contain gameplay code or require additional packages.
 
+- `New-PerformanceReviewPlace.ps1 -Workload Fresh|Developed|Dense|SixOwners`
+  injects bounded, unmapped probes into a local-memory Infinite copy. See
+  `tests/fixtures/Performance/README.md` and `docs/PERF_01_REVIEW.md` for the route,
+  timings and distinctions between six rendered properties and six actual owners.
+  `Export-PerformanceEvidence.ps1 -LogPaths <Studio log paths> -Name <run-name>`
+  extracts account-safe JSON and nearest-rank summaries under `docs/perf-01`.
+  It rejects truncated records. `Test-PerformanceReviewPlace.ps1` verifies exact
+  fixture sources/startup, unchanged authored geometry and exclusion from production.
+  Full CLI/CI adds two small Rojo builds for this boundary check; it does not run
+  clients or claim runtime performance from generated geometry.
+
 - `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
   `build/`, combining the unchanged canonical scene with current mapped source.
   Play runs exact SupplyFeedback, UiState and WorldLabels tests via temporary
@@ -147,3 +158,21 @@ assertions and use Studio analysis when full-place context or a discrepancy matt
 On macOS/Linux, these checks need PowerShell (`pwsh -File
 ./scripts/Validate-Project.ps1`). Alternatively, use the manual full GitHub
 Actions run described in the root README; it supplies PowerShell on the runner.
+
+## INF-01 previews
+
+`New-InfiniteReviewPlace.ps1` builds fresh sources on the unchanged canonical map.
+Default `-Backend LocalPreview` explicitly injects temporary memory storage, labeled
+in the HUD; it is never a production fallback. `-Backend DataStore` retains the normal
+bootstrap and requires the isolated universe setup in `src/server/Persistence/README.md`.
+`-IncludeQA` adds domain/lifecycle runners plus an opt-in actual-client observer outside
+production mappings. Output is restricted to `build/inf-*.rbxlx` and linked output is refused.
+
+`Test-InfiniteReviewPlace.ps1` checks the three local/QA/real-backend boundaries,
+every nested source/class, and the unchanged authored map. The standard validation
+runs these small Rojo builds because startup injection is a persistence safety boundary.
+It does not execute the Luau suites or claim a real DataStore write.
+
+INF-03: `New-InfiniteReviewPlace.ps1 -Showcase` is restricted to LocalPreview. It injects two clearly labelled, rich development profiles through the same profile load path, reserving two of six lots. Human clients still start fresh with 0 cash and ordinary earnings. The optional fixtures live outside mapped roots and never enter a real-backend build. IncludeQA also injects Growth and its own separately named presets module, without enabling showcase residents. Test-InfiniteReviewPlace checks all four variants and the fixture boundary.
+
+MODE-01: `New-ModeReviewPlace.ps1 -Role Entry|Prototype|Infinite` creates `mode-entry`, `mode-session` or `mode-infinite` in build. `-Scenario LateFailure|ImmediateFailure|MissingDestination` selects an explicit unmapped Studio adapter; fake IDs never enter a real teleport. `-IncludeQA` adds routing/handoff/domain assertions and actual-client role observations; `-Showcase` only applies to Infinite. Production source remains exact, with copied bootstrap disabled in favour of AppRuntime plus explicit fixture injection. `Test-ModeReviewPlace` adds three small builds to the existing complete validator to check this startup isolation boundary; CI trigger policy is unchanged. Real-service setup and combined review: docs/MODE_01_REVIEW.md.

@@ -7,6 +7,7 @@ local TweenService = game:GetService("TweenService")
 local TextChatService = game:GetService("TextChatService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local Mode = require(ReplicatedStorage.TycoonShared.GameMode)
 local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
 local State = require(script.Parent.UiState)
 local Preferences = require(script.Parent.UiPreferences)
@@ -22,7 +23,14 @@ export type Handle = {
 	refresh: () -> (),
 	destroy: () -> (),
 }
-export type Actions = { find: () -> (), stop: () -> (), dismiss: () -> (), restart: () -> (), panel: (boolean) -> () }
+export type Actions = {
+	find: () -> (),
+	stop: () -> (),
+	dismiss: () -> (),
+	restart: () -> (),
+	panel: (boolean) -> (),
+	edit: (() -> ())?,
+}
 
 local function list(parent: Instance, gap: number)
 	local layout = Instance.new("UIListLayout")
@@ -72,6 +80,7 @@ local function button(parent: Instance, name: string, value: string): TextButton
 end
 
 function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
+	local infinite = Mode.read() == "Infinite"
 	local connections: { RBXScriptConnection } = {}
 	local function track(connection: RBXScriptConnection)
 		table.insert(connections, connection)
@@ -84,10 +93,14 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 	summary.Font, summary.TextSize = Theme.StrongFont, 18
 	local navigation = frame(root, "Navigation")
 	navigation.BackgroundTransparency = 1
-	local factory = button(navigation, "Factory", "Factory")
+	local factory = button(navigation, "Factory", if infinite then "My place" else "Factory")
 	local settings = button(navigation, "Settings", "Settings")
 	local help = button(navigation, "Help", "? Help")
-	local event = text(root, "Event", "Supply Cache\nWaiting for server state")
+	local event = text(
+		root,
+		if infinite then "Persistence" else "Event",
+		if infinite then "Infinite • Loading your place" else "Supply Cache\nWaiting for server state"
+	)
 	event.TextXAlignment = Enum.TextXAlignment.Center
 	local feedback = frame(root, "Feedback")
 	feedback.BackgroundTransparency = 1
@@ -156,7 +169,9 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 	local helpText = text(
 		pages.Help,
 		"Loop",
-		"You receive an available factory when joining. If factories are full, no factory income is assigned.\n\nEarn cash automatically. Approach your factory's pads to buy an available upgrade. Read its price and prerequisite; owned upgrades increase income.\n\nWatch Supply Cache status. Approach its shared marker when OPEN and use its prompt. The first valid claim processed by the server wins.\n\nProgress resets when you leave. These panels do not pause the game."
+		if infinite
+			then "Your place follows your account. Its lot number can change between visits. Loading must finish before you earn or buy.\n\nWalk into any occupied place to admire it; only its owner can buy upgrades. Online income continues while visiting. There are no offline earnings or shared events.\n\nCash and owned upgrades are saved periodically and when leaving. Check the saving status: a failed save may lose recent changes. There is no required reset or final winner. The current four-upgrade catalogue is a starting slice.\n\nSettings apply to this session. These panels do not pause the game."
+			else "You receive an available factory when joining. If factories are full, no factory income is assigned.\n\nEarn cash automatically. Approach your factory's pads to buy an available upgrade. Read its price and prerequisite; owned upgrades increase income.\n\nWatch Supply Cache status. Approach its shared marker when OPEN and use its prompt. The first valid claim processed by the server wins.\n\nProgress resets when you leave. These panels do not pause the game."
 	)
 	helpText.LayoutOrder = 1
 	local controls = text(pages.Help, "Controls", "")
@@ -404,6 +419,11 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?): Handle
 	end
 	for _, object in { factory, settings, help } do
 		track(object.Activated:Connect(function()
+			if object == factory and infinite and actions and actions.edit then
+				setPanel(nil, nil)
+				actions.edit()
+				return
+			end
 			setPanel(State.toggle(current, object.Name :: State.Panel), object)
 		end))
 	end
