@@ -72,9 +72,12 @@ local render = Run.PreRender:Connect(function(delta)
 		calibrateNext, awaitingCalibration = false, true
 		debug.profilebegin("PERF03 deliberate calibration stall")
 		local started = os.clock()
+		local spins = 0
 		while os.clock() - started < 0.1 do
+			spins += 1
 		end
 		debug.profileend()
+		assert(spins > 0, "PERF03 calibration did not execute")
 		-- The stall extends the NEXT PreRender interval; this callback's delta
 		-- describes time before the deliberate work and cannot validate it.
 		return
