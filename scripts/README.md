@@ -1,7 +1,22 @@
 # Repository validation
 
-This folder owns the PowerShell validation used locally and by CI.
+This folder owns the PowerShell validation used locally and by CI, plus the
+explicit manual development deployment entry points.
 It does not contain gameplay code or require additional packages.
+
+- `New-DevelopmentPlace.ps1` builds and verifies `build/ui-review-development.rbxlx`
+  for the owner's first Studio publish. It reuses the gameplay-only builder below.
+- `Invoke-DevelopmentDeployment.ps1` runs full validation, fresh assembly and one
+  published-version request, only for a configured manual Actions run on `main`.
+  `-DryRun` needs no credentials, permits a local branch/dirty rehearsal checkout,
+  runs the same validation/build gates and never sends HTTP. Both commands require
+  PowerShell 7. Live credentials/target IDs are read from process environment only;
+  [operator setup and exact entries](../docs/MOBILE_DEPLOYMENT.md) are documented.
+- `Test-DevelopmentDeployment.ps1` uses real scene mutation checks and mocked HTTP
+  to cover configuration/ref gates, validation/build ordering, QA/source/fidelity
+  rejection, API limitations, XML contract, redaction and ambiguous failures.
+  Full validation runs it with no Roblox credentials. The
+  [`deployment/` modules](deployment/README.md) own these policies and transport.
 
 - `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
   `build/`, combining the unchanged canonical scene with current mapped source.

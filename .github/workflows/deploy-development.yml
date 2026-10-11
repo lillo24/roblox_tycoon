@@ -1,0 +1,75 @@
+name: Deploy Development
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    environment: roblox-development
+    # Serialize the single development start-place target; never cancel an upload.
+    concurrency:
+      group: roblox-development-start-place
+      cancel-in-progress: false
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      DEPLOY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      ROBLOX_DEV_UNIVERSE_ID: ${{ vars.ROBLOX_DEV_UNIVERSE_ID }}
+      ROBLOX_DEV_PLACE_ID: ${{ vars.ROBLOX_DEV_PLACE_ID }}
+    steps:
+      - name: Refuse any dispatch outside the default main branch
+        run: |
+          if ($env:GITHUB_EVENT_NAME -cne 'workflow_dispatch' -or $env:GITHUB_REF -cne 'refs/heads/main' -or $env:DEPLOY_DEFAULT_BRANCH -cne 'main') {
+            throw 'Deploy Development accepts only a manual Run workflow on default branch main. Select main and run again.'
+          }
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Resolve latest main when this serialized job starts, including queued runs.
+          ref: main
+          persist-credentials: false
+
+      - name: Check private development configuration
+        env:
+          ROBLOX_OPEN_CLOUD_API_KEY: ${{ secrets.ROBLOX_OPEN_CLOUD_API_KEY }}
+        run: |
+          Import-Module ./scripts/deployment/DevelopmentDeployment.psm1
+          Assert-DevelopmentConfiguration -EventName $env:GITHUB_EVENT_NAME -Ref $env:GITHUB_REF -DefaultBranch $env:DEPLOY_DEFAULT_BRANCH -UniverseId $env:ROBLOX_DEV_UNIVERSE_ID -PlaceId $env:ROBLOX_DEV_PLACE_ID -ApiKey $env:ROBLOX_OPEN_CLOUD_API_KEY
+
+      - name: Install Rokit 1.2.0
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'rokit.zip'
+          $destination = Join-Path $env:RUNNER_TEMP 'rokit'
+          Invoke-WebRequest 'https://github.com/rojo-rbx/rokit/releases/download/v1.2.0/rokit-1.2.0-windows-x86_64.zip' -OutFile $archive
+          $expected = 'f9ba1704014ff67d51e8005f605955c7c26d2429a5312a9419dc477fc310e96d'
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
+            throw 'Rokit archive checksum mismatch.'
+          }
+          Expand-Archive $archive -DestinationPath $destination
+          & (Join-Path $destination 'rokit.exe') self-install
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          (Join-Path $env:USERPROFILE '.rokit\bin') >> $env:GITHUB_PATH
+
+      - name: Install pinned tools
+        run: |
+          rokit install --no-trust-check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Validate, build fresh gameplay scene and publish one version
+        env:
+          ROBLOX_OPEN_CLOUD_API_KEY: ${{ secrets.ROBLOX_OPEN_CLOUD_API_KEY }}
+        run: ./scripts/Invoke-DevelopmentDeployment.ps1
+
+      - name: Retain the verified gameplay-only build for three days
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: development-place-${{ github.run_id }}
+          path: build/ui-review-development.rbxlx
+          if-no-files-found: error
+          retention-days: 3
