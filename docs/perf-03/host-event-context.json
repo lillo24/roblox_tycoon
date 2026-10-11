@@ -1,0 +1,555 @@
+{
+  "caveat": "Five-second sequential samples, not scheduler traces. Event probe server time lags log UTC about 0.95 seconds; inspect nearby intervals. CPU excludes inaccessible processes.",
+  "intervals": [
+    {
+      "from": 1791715776.159,
+      "to": 1791715781.232,
+      "utcFrom": "2026-10-11T10:49:36.159000+00:00",
+      "cpuTotalPercent": null,
+      "groups": {
+        "RobloxStudioBeta": 1.8664990420724417,
+        "pwsh": 0.036960377070741415,
+        "codex-computer-use": 0.02772028280305606,
+        "audiodg": 0.018480188535370708,
+        "ChatGPT": 0.012320125690247138,
+        "explorer": 0.0030800314225617846,
+        "ApplicationFrameHost": 0.0,
+        "chrome": 0.0,
+        "cmd": 0.0,
+        "codex": 0.0,
+        "codex-code-mode-host": 0.0,
+        "codex-computer-use-swift": 0.0
+      },
+      "consumers": [
+        {
+          "pid": 17800,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:17.9067921Z",
+          "identity": "known",
+          "usedCores": 0.5667257817513683
+        },
+        {
+          "pid": 19988,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:14.8626104Z",
+          "identity": "known",
+          "usedCores": 0.22792232526957207
+        },
+        {
+          "pid": 28008,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:12.8271226Z",
+          "identity": "known",
+          "usedCores": 0.2032820738890778
+        },
+        {
+          "pid": 22756,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:04.8573539Z",
+          "identity": "known",
+          "usedCores": 0.19712201104395422
+        },
+        {
+          "pid": 30424,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:16.8916799Z",
+          "identity": "known",
+          "usedCores": 0.19404197962139244
+        },
+        {
+          "pid": 18116,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:13.8513562Z",
+          "identity": "known",
+          "usedCores": 0.19096194819883067
+        },
+        {
+          "pid": 26812,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:15.8774374Z",
+          "identity": "known",
+          "usedCores": 0.1632416653957746
+        },
+        {
+          "pid": 29808,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:15:01.1776252Z",
+          "identity": "known",
+          "usedCores": 0.11704119405734782
+        },
+        {
+          "pid": 29956,
+          "name": "pwsh",
+          "startUtc": "2026-10-11T10:48:57.4237496Z",
+          "identity": "known",
+          "usedCores": 0.036960377070741415
+        },
+        {
+          "pid": 28920,
+          "name": "codex-computer-use",
+          "startUtc": "2026-10-11T10:10:33.8379329Z",
+          "identity": "known",
+          "usedCores": 0.024640251380494277
+        },
+        {
+          "pid": 22320,
+          "name": "audiodg",
+          "startUtc": "2026-10-09T08:03:34.4323571Z",
+          "identity": "known",
+          "usedCores": 0.018480188535370708
+        },
+        {
+          "pid": 11576,
+          "name": "ChatGPT",
+          "startUtc": "2026-10-06T16:13:00.6837202Z",
+          "identity": "known",
+          "usedCores": 0.006160062845123569
+        }
+      ],
+      "availableMB": 526,
+      "collectionMs": 176.53640000000337,
+      "pagesInputPerSecond": null,
+      "collectorCores": null
+    },
+    {
+      "from": 1791715781.232,
+      "to": 1791715786.27,
+      "utcFrom": "2026-10-11T10:49:41.232000+00:00",
+      "cpuTotalPercent": 67.41851198089986,
+      "groups": {
+        "RobloxStudioBeta": 1.9476975498870066,
+        "audiodg": 0.01240571687826119,
+        "ChatGPT": 0.009304287658695893,
+        "codex": 0.006202858439130595,
+        "pwsh": 0.006202858439130595,
+        "chrome": 0.0031014292195652975,
+        "ApplicationFrameHost": 0.0,
+        "cmd": 0.0,
+        "codex-code-mode-host": 0.0,
+        "codex-computer-use": 0.0,
+        "codex-computer-use-swift": 0.0,
+        "conhost": 0.0
+      },
+      "consumers": [
+        {
+          "pid": 17800,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:17.9067921Z",
+          "identity": "known",
+          "usedCores": 0.5706629764000147
+        },
+        {
+          "pid": 26812,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:15.8774374Z",
+          "identity": "known",
+          "usedCores": 0.26052005444348497
+        },
+        {
+          "pid": 22756,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:04.8573539Z",
+          "identity": "known",
+          "usedCores": 0.229505762247832
+        },
+        {
+          "pid": 30424,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:16.8916799Z",
+          "identity": "known",
+          "usedCores": 0.2171000453695708
+        },
+        {
+          "pid": 28008,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:12.8271226Z",
+          "identity": "known",
+          "usedCores": 0.2077957577108749
+        },
+        {
+          "pid": 18116,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:13.8513562Z",
+          "identity": "known",
+          "usedCores": 0.18608575317391784
+        },
+        {
+          "pid": 19988,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:14.8626104Z",
+          "identity": "known",
+          "usedCores": 0.16127431941739545
+        },
+        {
+          "pid": 29808,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:15:01.1776252Z",
+          "identity": "known",
+          "usedCores": 0.114752881123916
+        },
+        {
+          "pid": 22320,
+          "name": "audiodg",
+          "startUtc": "2026-10-09T08:03:34.4323571Z",
+          "identity": "known",
+          "usedCores": 0.01240571687826119
+        },
+        {
+          "pid": 12456,
+          "name": "ChatGPT",
+          "startUtc": "2026-10-06T16:13:16.1918248Z",
+          "identity": "known",
+          "usedCores": 0.006202858439130595
+        },
+        {
+          "pid": 10044,
+          "name": "codex",
+          "startUtc": "2026-10-06T16:12:52.4365417Z",
+          "identity": "known",
+          "usedCores": 0.006202858439130595
+        },
+        {
+          "pid": 29956,
+          "name": "pwsh",
+          "startUtc": "2026-10-11T10:48:57.4237496Z",
+          "identity": "known",
+          "usedCores": 0.006202858439130595
+        }
+      ],
+      "availableMB": 607,
+      "collectionMs": 155.2525999999972,
+      "pagesInputPerSecond": 170.66878348878745,
+      "collectorCores": 0.006202858439130595
+    },
+    {
+      "from": 1791715786.27,
+      "to": 1791715791.311,
+      "utcFrom": "2026-10-11T10:49:46.270000+00:00",
+      "cpuTotalPercent": 92.75787062642856,
+      "groups": {
+        "RobloxStudioBeta": 2.1046170861031577,
+        "pwsh": 0.02479666669930083,
+        "codex": 0.018597500024475622,
+        "audiodg": 0.009298750012237811,
+        "chrome": 0.003099583337412604,
+        "codex-code-mode-host": 0.003099583337412604,
+        "node_repl": 0.003099583337412604,
+        "XboxGameBarWidgets": 0.003099583337412604,
+        "ApplicationFrameHost": 0.0,
+        "ChatGPT": 0.0,
+        "cmd": 0.0,
+        "codex-computer-use": 0.0
+      },
+      "consumers": [
+        {
+          "pid": 17800,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:17.9067921Z",
+          "identity": "known",
+          "usedCores": 0.6075183341328704
+        },
+        {
+          "pid": 26812,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:15.8774374Z",
+          "identity": "known",
+          "usedCores": 0.2479666669930083
+        },
+        {
+          "pid": 22756,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:04.8573539Z",
+          "identity": "known",
+          "usedCores": 0.22936916696853268
+        },
+        {
+          "pid": 30424,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:16.8916799Z",
+          "identity": "known",
+          "usedCores": 0.22936916696853268
+        },
+        {
+          "pid": 18116,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:13.8513562Z",
+          "identity": "known",
+          "usedCores": 0.21387125028146967
+        },
+        {
+          "pid": 28008,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:12.8271226Z",
+          "identity": "known",
+          "usedCores": 0.21387125028146967
+        },
+        {
+          "pid": 19988,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:14.8626104Z",
+          "identity": "known",
+          "usedCores": 0.19527375025699403
+        },
+        {
+          "pid": 29808,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:15:01.1776252Z",
+          "identity": "known",
+          "usedCores": 0.1580787502080428
+        },
+        {
+          "pid": 29956,
+          "name": "pwsh",
+          "startUtc": "2026-10-11T10:48:57.4237496Z",
+          "identity": "known",
+          "usedCores": 0.02479666669930083
+        },
+        {
+          "pid": 10044,
+          "name": "codex",
+          "startUtc": "2026-10-06T16:12:52.4365417Z",
+          "identity": "known",
+          "usedCores": 0.018597500024475622
+        },
+        {
+          "pid": 22320,
+          "name": "audiodg",
+          "startUtc": "2026-10-09T08:03:34.4323571Z",
+          "identity": "known",
+          "usedCores": 0.009298750012237811
+        },
+        {
+          "pid": 25632,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-09T15:42:18.6771496Z",
+          "identity": "known",
+          "usedCores": 0.006199166674825208
+        }
+      ],
+      "availableMB": 1547,
+      "collectionMs": 189.83639999999724,
+      "pagesInputPerSecond": 188.90175003864084,
+      "collectorCores": 0.021697083361888227
+    },
+    {
+      "from": 1791715791.311,
+      "to": 1791715796.294,
+      "utcFrom": "2026-10-11T10:49:51.311000+00:00",
+      "cpuTotalPercent": 95.32214760278401,
+      "groups": {
+        "RobloxStudioBeta": 2.2733544954750706,
+        "pwsh": 0.07525587295365752,
+        "codex": 0.043899259222966884,
+        "codex-computer-use": 0.03135661373069063,
+        "ChatGPT": 0.025085290984552505,
+        "audiodg": 0.012542645492276253,
+        "codex-code-mode-host": 0.003135661373069063,
+        "ApplicationFrameHost": 0.0,
+        "chrome": 0.0,
+        "cmd": 0.0,
+        "codex-computer-use-swift": 0.0,
+        "conhost": 0.0
+      },
+      "consumers": [
+        {
+          "pid": 17800,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:17.9067921Z",
+          "identity": "known",
+          "usedCores": 0.6428105814791579
+        },
+        {
+          "pid": 30424,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:16.8916799Z",
+          "identity": "known",
+          "usedCores": 0.3135661373069063
+        },
+        {
+          "pid": 22756,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:04.8573539Z",
+          "identity": "known",
+          "usedCores": 0.2539885712185941
+        },
+        {
+          "pid": 26812,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:15.8774374Z",
+          "identity": "known",
+          "usedCores": 0.2445815870993869
+        },
+        {
+          "pid": 28008,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:12.8271226Z",
+          "identity": "known",
+          "usedCores": 0.2289032802340416
+        },
+        {
+          "pid": 19988,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:14.8626104Z",
+          "identity": "known",
+          "usedCores": 0.2226319574879035
+        },
+        {
+          "pid": 18116,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:13.8513562Z",
+          "identity": "known",
+          "usedCores": 0.20695365062255816
+        },
+        {
+          "pid": 29808,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:15:01.1776252Z",
+          "identity": "known",
+          "usedCores": 0.13796910041503876
+        },
+        {
+          "pid": 29956,
+          "name": "pwsh",
+          "startUtc": "2026-10-11T10:48:57.4237496Z",
+          "identity": "known",
+          "usedCores": 0.07525587295365752
+        },
+        {
+          "pid": 10044,
+          "name": "codex",
+          "startUtc": "2026-10-06T16:12:52.4365417Z",
+          "identity": "known",
+          "usedCores": 0.043899259222966884
+        },
+        {
+          "pid": 28920,
+          "name": "codex-computer-use",
+          "startUtc": "2026-10-11T10:10:33.8379329Z",
+          "identity": "known",
+          "usedCores": 0.03135661373069063
+        },
+        {
+          "pid": 22320,
+          "name": "audiodg",
+          "startUtc": "2026-10-09T08:03:34.4323571Z",
+          "identity": "known",
+          "usedCores": 0.012542645492276253
+        }
+      ],
+      "availableMB": 2148,
+      "collectionMs": 159.43450000000325,
+      "pagesInputPerSecond": 140.04145745812826,
+      "collectorCores": 0.07839153432672658
+    },
+    {
+      "from": 1791715796.294,
+      "to": 1791715801.33,
+      "utcFrom": "2026-10-11T10:49:56.294000+00:00",
+      "cpuTotalPercent": 89.76584342031707,
+      "groups": {
+        "RobloxStudioBeta": 2.0849880802546474,
+        "pwsh": 0.021718625835985914,
+        "ChatGPT": 0.00930798250113682,
+        "audiodg": 0.006205321667424547,
+        "codex-computer-use": 0.0031026608337122734,
+        "ApplicationFrameHost": 0.0,
+        "chrome": 0.0,
+        "cmd": 0.0,
+        "codex": 0.0,
+        "codex-code-mode-host": 0.0,
+        "codex-computer-use-swift": 0.0,
+        "conhost": 0.0
+      },
+      "consumers": [
+        {
+          "pid": 17800,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:17.9067921Z",
+          "identity": "known",
+          "usedCores": 0.6174295059087423
+        },
+        {
+          "pid": 28008,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:12.8271226Z",
+          "identity": "known",
+          "usedCores": 0.23890488419584505
+        },
+        {
+          "pid": 18116,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:13.8513562Z",
+          "identity": "known",
+          "usedCores": 0.2326995625284205
+        },
+        {
+          "pid": 26812,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:15.8774374Z",
+          "identity": "known",
+          "usedCores": 0.22959690169470823
+        },
+        {
+          "pid": 19988,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:14.8626104Z",
+          "identity": "known",
+          "usedCores": 0.22339158002728368
+        },
+        {
+          "pid": 30424,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:16.8916799Z",
+          "identity": "known",
+          "usedCores": 0.20787827585872232
+        },
+        {
+          "pid": 22756,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:45:04.8573539Z",
+          "identity": "known",
+          "usedCores": 0.19236497169016095
+        },
+        {
+          "pid": 29808,
+          "name": "RobloxStudioBeta",
+          "startUtc": "2026-10-11T10:15:01.1776252Z",
+          "identity": "known",
+          "usedCores": 0.14272239835076458
+        },
+        {
+          "pid": 29956,
+          "name": "pwsh",
+          "startUtc": "2026-10-11T10:48:57.4237496Z",
+          "identity": "known",
+          "usedCores": 0.021718625835985914
+        },
+        {
+          "pid": 22320,
+          "name": "audiodg",
+          "startUtc": "2026-10-09T08:03:34.4323571Z",
+          "identity": "known",
+          "usedCores": 0.006205321667424547
+        },
+        {
+          "pid": 11576,
+          "name": "ChatGPT",
+          "startUtc": "2026-10-06T16:13:00.6837202Z",
+          "identity": "known",
+          "usedCores": 0.0031026608337122734
+        },
+        {
+          "pid": 12456,
+          "name": "ChatGPT",
+          "startUtc": "2026-10-06T16:13:16.1918248Z",
+          "identity": "known",
+          "usedCores": 0.0031026608337122734
+        }
+      ],
+      "availableMB": 2823,
+      "collectionMs": 181.68179999999978,
+      "pagesInputPerSecond": 94.20342146826773,
+      "collectorCores": 0.021718625835985914
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+PERF-03 final local verification, 2026-10-11, Windows PowerShell / Node24.19.0
+PASS ./scripts/Validate-Project.ps1 (full required suite; validation.txt)
+PASS node --check scripts/Read-PerformanceDump.mjs
+PASS node --check scripts/Summarize-PerformanceHost.mjs
+PASS node --check scripts/Test-PerformanceDump.mjs
+PASS node scripts/Test-PerformanceDump.mjs build/perf-03-raw/calibration.html build/perf-03-raw/natural-3-first.html
+PASS matching PERF-02 old native summary existing fields reproduced exactly (first archived capture was trace-start, not trace-churn; corrected comparison selection)
+PASS PERF-02 clean-2 host summary reproduced exactly excluding newly-added processConsumers=null field
+PASS all PERF-03 archive entries and archives SHA256/bytes/record counts verified
+PASS all three probe windows: one complete, six load records, seven exports; requested=accepted, rejected=0
+PASS all archived series nearest-rank p50/p95/p99/max and >50ms share recomputed against summaries
+PASS host streams:73 increasing-UTC samples each, nonempty allProcesses arrays
+PASS production src/place/default.project.json/rokit.toml unchanged against PERF-02 #27
+PASS git diff --check
+PASS native one-stall calibration retained; later natural hitches retained/aligned
+FAIL original natural first-trigger retention:13.030sec pause delay, original marker absent
+UNAVAILABLE scheduler trace: WPR start error0xc5585011; no recording remained
+PASS native gameplay preview Ready / diagnostic exclusion, local memory only
+These results are not clean performance sign-off, physical-device or real-service QA.

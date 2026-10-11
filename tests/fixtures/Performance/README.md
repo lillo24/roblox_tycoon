@@ -56,6 +56,9 @@ observer clicks **PERF03 arm foreground** in its actual native viewport. The
 first Churn/Quiet PreRender interval over 50 ms turns its label red and emits one
 `PERF03_SIGNAL` log line with phase, local frame, interval, clocks and calibration
 flag. It is disarmed on focus loss and at the end of a run; re-arm deliberately.
+`run` counts local phase changes and its frame ordinal resets on each change;
+these are not the sampler's window ID/global frame number. Match clock/phase and
+the retained marker sequence rather than equating native and probe frame indexes.
 The profiler label and Output line occur **after** the interval and do not assign
 its CPU cause. Signals and Output writes perturb diagnostic frames, so runs with
 this option are not clean frame-budget comparisons.
@@ -73,11 +76,24 @@ Run a fresh diagnostic session after calibrating, with the profiler recording
 before Churn. Arm only the confirmed foreground observer after focus setup; on
 its red signal pause/export immediately, inspect the dump, then re-arm only if a
 specific question needs another event. If the calibration stall is absent from
-the dump, resolve that capture gap before repeating six-client churn. Native
-Studio controls and capture timing have not been verified on this Linux checkout.
+the dump, resolve that capture gap before repeating six-client churn. On Windows
+Studio 742, PERF-03 calibration retained 506 complete frames over 8.516 seconds,
+including a 100.012 ms stall and its following signal marker; native pause came
+about 6.4 seconds after the signal. This is a measured example, not a guaranteed
+reaction deadline on every host. See `docs/PERF_03_REVIEW.md` for exact conditions.
+The subsequent natural first-trigger pause took 13 seconds and missed that
+event; later natural hitches in the same buffer were aligned using PERF-02
+markers. The native control path works, but timely reaction is not guaranteed.
+After successful calibration, allow at most three unsuccessful five-minute
+natural-capture windows. Recording must start before Churn, including startup.
+Do not rerun long workloads if the known calibration event cannot be retained.
 For host attribution, `Observe-PerformanceHost.ps1 -IncludeProcesses` additionally
 buffers names, PIDs, available start times and cumulative CPU seconds for all
 visible processes. The offline summary pairs samples using name/PID/start time
 and labels missing start times uncertain. This option is diagnostic overhead;
-review and sanitize raw process names before sharing evidence. Five-second CPU
+processes whose CPU is unavailable are omitted, so protected/kernel work may
+leave the aggregate CPU balance unexplained. Collector CPU excludes other
+services working on its behalf. SavedQualityLevel also need not equal the
+native renderer's quality: retain both when comparing captures.
+Review and sanitize raw process names before sharing evidence. Five-second CPU
 deltas cannot attribute a particular millisecond stall or replace a native trace.

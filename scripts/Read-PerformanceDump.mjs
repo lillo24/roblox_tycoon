@@ -88,17 +88,22 @@ if (frames.some(f => !Number.isFinite(f.intervalMs) || f.intervalMs <= 0)) {
 }
 const worst = [...frames].sort((a, b) => b.intervalMs - a.intervalMs)[0];
 const ranked = [...timers.values()].sort((a, b) => b.totalMs - a.totalMs);
+const overlappingScopes = frame => spans
+  .filter(s => s.threadIndex !== 0 && s.start < frame.endMs && s.end > frame.startMs)
+  .map(s => ({ ...s, overlapMs: Math.min(s.end, frame.endMs) - Math.max(s.start, frame.startMs) }))
+  .sort((a, b) => b.overlapMs - a.overlapMs).slice(0, 20);
 const result = {
   input: path.basename(input), exportUtc: data.DumpUtcCaptureTime,
   platform: JSON.parse(data.PlatformInfo), frameCount: frames.length,
   spanMs: frames.at(-1).endMs - frames[0].startMs,
   above50: frames.filter(f => f.intervalMs > 50).length, worst, frames,
   topElapsedScopes: ranked.slice(0, 20),
-  labels: ranked.filter(t => /PERF02|Garbage|GC/.test(t.name)),
-  worstOverlap: spans.filter(s => s.threadIndex !== 0 && s.start < worst.endMs && s.end > worst.startMs)
-    .map(s => ({ ...s, overlapMs: Math.min(s.end, worst.endMs) - Math.max(s.start, worst.startMs) }))
-    .sort((a, b) => b.overlapMs - a.overlapMs).slice(0, 20),
-  fixtureEvents: spans.filter(s => /PERF02 editor|PERF02 slow/.test(s.name)),
+  labels: ranked.filter(t => /PERF02|PERF03|Garbage|GC/.test(t.name)),
+  worstOverlap: overlappingScopes(worst),
+  // Additive context for each retained hitch; local frame indexes are not probe ordinals.
+  slowFrameOverlaps: frames.filter(f => f.intervalMs > 50)
+    .map(frame => ({ frame, scopes: overlappingScopes(frame) })),
+  fixtureEvents: spans.filter(s => /PERF02 editor|PERF02 slow|^PERF03 /.test(s.name)),
 };
 fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n');
 console.log(JSON.stringify({ input: result.input, frames: frames.length, spanMs: result.spanMs,

@@ -1,0 +1,69 @@
+PERF-03 native observation record — 2026-10-11 UTC
+Measured runtime/fixture revision: eff67e0fcac31ddd6b49cf41f095ebde6e163761
+Native UI controlled through computer-use @oai/sky. No restricted profiler API used.
+
+CALIBRATION (one Idle-only 100 ms test; excluded from natural evidence)
+Test click before: 10:16:28.338
+Signal log: 10:16:28.805 PERF03_SIGNAL run=0 phase=Idle frame=2432 intervalMs=107.794 clock=83.382189 serverTime=1791713788.561650 calibration=true
+Signal observed: 10:16:29.034
+Pause key before: 10:16:35.184; paused screenshot: 10:16:35.731
+Native export observed: 10:17:11.910; original basename microprofile-20261011-121711.html
+Byte-identical archived basename calibration.html; 506 complete frames, 8516.263672 ms.
+Known stall frame108 100.012259 ms; following marker frame109; native max103.195434 ms.
+Saved user quality Automatic; native export quality21(auto); probe viewport801x413; render area604x279.
+
+NATURAL 1 — actual foreground owner6 (inactive clients' focus flags not trusted)
+Six-client launch: 10:19:45.170
+Server verified six Ready, revision20 Garden/372 BaseParts/90 activity: 10:23:16.755
+Observer verified ten objects/nine placed/one stored/revision20/Automatic/801x413: 10:24:51.918
+Observer armed screenshot: 10:25:05.735; profiler recording before Churn.
+Sampler Churn/Quiet/Complete server times: 1791714320.956 / 1791714500.965 / 1791714620.978
+No foreground >50ms; no capture exported. Completion/disarmed screenshot: 10:30:45.700.
+Bounded 250ms log polling initially, then fs.watch notification. Host collector ran throughout.
+
+NATURAL 2 — actual foreground owner3
+Older task-owned stopped PERF-02 preview closed normally before this launch.
+Six-client launch: 10:33:23.918
+Server verified six Ready/every revision20/372 BaseParts/90 activity: 10:36:30.717
+Observer verified same profile/viewport/saved quality: 10:37:50.446
+Observer armed screenshot: 10:37:59.543; profiler recording before Churn.
+Sampler Churn/Quiet/Complete server times: 1791715099.206 / 1791715279.217 / 1791715399.231
+No foreground >50ms; no capture exported. File watcher and host collector active.
+
+NATURAL 3 — actual foreground owner3
+Six-client launch: 10:45:04.749
+Server verified six Ready/every revision20/372 BaseParts/90 activity: 10:47:44.697–699
+Observer verified same profile/viewport/saved quality: 10:49:10.826
+Observer arm screenshot: 10:49:20.315; profiler recording before Churn.
+Late CoreGui/chat appearance observed during setup; this difference is not hidden.
+Sampler Churn/Quiet/Complete server times: 1791715779.894 / 1791715959.903 / 1791716079.915
+Signal log: 10:49:40.948 PERF03_SIGNAL run=1 phase=Churn frame=3 intervalMs=56.335 clock=252.359672 serverTime=1791715779.996460 calibration=false
+Watcher returned already-existing signal: 10:49:46.760
+Pause key before: 10:49:53.978; paused screenshot: 10:49:55.064
+13.030sec log-to-pause-input. Original signal marker/frame not retained: CAPTURE FAILURE.
+Later natural frames42/81/148/149 retained at60.386597/78.124756/57.670410/83.979736ms.
+Eight PERF02 end markers align to deferred owner3 records; median clock offset257559.485954ms, max absolute residual0.045422ms.
+Native export observed: 10:51:06.508; original basename microprofile-20261011-125106.html
+Byte-identical archived basename natural-3-first.html; 506complete frames,8817.763672ms.
+Native quality5(manual), despite saved-user Automatic; actual renderer quality for runs1/2 unexported.
+Frozen capture precedes export; later run3 sampling overlaps export/decoding/inspection and is contaminated.
+No second artificial stall, fourth natural window or speculative game repair.
+
+SCHEDULER CAPABILITY LIMIT
+wpr -status: WPR is not recording.
+wpr -profiles: installed CPU profile available.
+wpr -start CPU -filemode: failed, Profile Id CPU.Verbose.File, error0xc5585011,
+  Failed to enable the policy to profile system performance.
+wpr -status afterward: WPR is not recording.
+No elevated retry, permissions/policy change or scheduler trace claimed.
+
+CLEANUP / GAMEPLAY HANDOFF
+All three task-owned six-client sessions ended through native Test > Termina sessione.
+All host observation commands completed; bounded file watchers closed on return.
+Legacy HTML toggled back off; profiler hidden. Generated capture editor closed without saving.
+Probe-free Infinite preview generated independently, then opened and played in Studio.
+11:15:03.730 log UTC: PERF03_PREVIEW_READY Ready 801,413 1791717304.050827
+That print follows successful assertions: assignmentReady, no ReplicatedStorage.PERF01,
+no PERF01Controls/PERF03Capture in PlayerGui, no PERF01Client/PERF03Capture in PlayerScripts.
+Preview is local reset-on-Stop memory, with two examples/four player lots/failed-return adapter.
+Only the gameplay preview remains running. No arbitrary Studio logs archived; bounded fixture lines only.

@@ -1,0 +1,75 @@
+[
+  {
+    "archive": "samples.zip",
+    "entry": "natural-1.jsonl",
+    "bytes": 5803480,
+    "sha256": "908cb60434ec7392d5f987023bb07b4aea2898e680dfe6cf13d40c6d8eb3c602",
+    "records": 27894
+  },
+  {
+    "archive": "samples.zip",
+    "entry": "natural-2.jsonl",
+    "bytes": 5807345,
+    "sha256": "b20f68b52cfefbb5856f477dccbc305435ede0f498e8e08f0c6f195f0aafafcd",
+    "records": 27907
+  },
+  {
+    "archive": "samples.zip",
+    "entry": "natural-3.jsonl",
+    "bytes": 5804876,
+    "sha256": "da58d656c493d1aa9512c9255bb50a440d44f3dd2190b768cc329b673a08438e",
+    "records": 27896
+  },
+  {
+    "archive": "samples.zip",
+    "entry": "host-natural-1.jsonl",
+    "bytes": 1905483,
+    "sha256": "6ec010ff57e1f6d03519ea14f880ac6bd7c0f971e6fa285316980a3d9828755d",
+    "records": 73
+  },
+  {
+    "archive": "samples.zip",
+    "entry": "host-natural-2.jsonl",
+    "bytes": 1876307,
+    "sha256": "b57c4e014d11f2b4db22f755aef169c58bc847aa54f9f58deaea4fc21ca553dc",
+    "records": 73
+  },
+  {
+    "archive": "samples.zip",
+    "entry": "host-natural-3.jsonl",
+    "bytes": 1878123,
+    "sha256": "a7365be510cddfc62815e0030e3f77bbe1f5bc1c333af96302cef7cf3ae0b299",
+    "records": 73
+  },
+  {
+    "archive": "samples.zip",
+    "entry": "host-perf03-process-smoke.jsonl",
+    "bytes": 47253,
+    "sha256": "425bfc49402ad4ad78bf006b4c8b4bfbc3e45670a7cb8c8a1e732ea201a51c41",
+    "records": 2
+  },
+  {
+    "archive": "samples.zip",
+    "bytes": 2937169,
+    "sha256": "a4a1f90268b58b0c16d1f261e4104db3ffbb0e0d131cdbcc64ad1c9ecfbc5d6c"
+  },
+  {
+    "archive": "native-captures.zip",
+    "entry": "calibration.html",
+    "bytes": 10044853,
+    "sha256": "62adbdb32185acdb6781681b2a106d1ccf2646a47ec487c737e1af3af23e45c6",
+    "records": null
+  },
+  {
+    "archive": "native-captures.zip",
+    "entry": "natural-3-first.html",
+    "bytes": 8579801,
+    "sha256": "f0829d6c141bbfef641fb33a7f2507e5f8156206cdec4ecbff494b42670e7f6f",
+    "records": null
+  },
+  {
+    "archive": "native-captures.zip",
+    "bytes": 13601257,
+    "sha256": "b333cf4690dff1f06b634aa76ea736a96eeab71105209b224bd3cc7d6eaaa09e"
+  }
+]

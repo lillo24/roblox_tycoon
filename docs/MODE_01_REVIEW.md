@@ -105,8 +105,11 @@ Open `build/mode-infinite-perf-review.rbxlx` and Play. It uses local reset-on-St
 memory and a failed-return adapter, with two labelled examples and four player
 lots. It includes no PERF probes or QA runners. Do not publish this local fixture.
 
-PERF-02's two clean six-owner repeats and the unobserved native hitch cause are
-recorded in [its review](PERF_02_REVIEW.md). [PERF-03](PERF_03_REVIEW.md) prepares
-an opt-in triggered capture fixture, but the calibration and natural native
-timeline still require Studio. The frame-budget miss remains open; the combined
-founder style/pacing review can proceed independently.
+PERF-02's two clean six-owner repeats are recorded in [its review](PERF_02_REVIEW.md).
+[PERF-03](PERF_03_REVIEW.md) completed Windows calibration and three bounded
+six-owner windows, retaining and aligning later natural hitches. Increased
+render/present waits are located, but their cause and the historical frame-budget
+miss remain unresolved; no game optimization or overall performance pass is
+claimed. The combined founder style/pacing review can proceed independently.
+The refreshed probe-free preview is `build/mode-infinite-perf-03-review.rbxlx`,
+generated with the same command above using that OutputName.

@@ -1,0 +1,681 @@
+[
+  {
+    "run": 1,
+    "observer": "client:owner6",
+    "phases": [
+      {
+        "seconds": 180,
+        "clients": 6,
+        "time": 1791714320.956,
+        "phase": "Churn",
+        "kind": "phase",
+        "side": "server",
+        "workload": "SixOwners"
+      },
+      {
+        "seconds": 120,
+        "clients": 6,
+        "time": 1791714500.965,
+        "phase": "Quiet",
+        "kind": "phase",
+        "side": "server",
+        "workload": "SixOwners"
+      }
+    ],
+    "completed": [
+      {
+        "removedParts": 5939,
+        "addedParts": 6304,
+        "clients": 6,
+        "time": 1791714620.978,
+        "kind": "complete",
+        "side": "server",
+        "action": "churn"
+      }
+    ],
+    "requested": 1438,
+    "accepted": 1438,
+    "observerRequested": 242,
+    "observerAccepted": 242,
+    "observerSlowFrames": [],
+    "series": [
+      {
+        "side": "client:owner6",
+        "metric": "editRoundTripMs:focused",
+        "distribution": {
+          "count": 242,
+          "p50": 33.299,
+          "p95": 36.615,
+          "p99": 46.787,
+          "max": 49.056,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "client:owner6",
+        "metric": "frameIntervalMs:Churn:focused",
+        "distribution": {
+          "count": 10801,
+          "p50": 16.644,
+          "p95": 19.539,
+          "p99": 21.406,
+          "max": 35.478,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "client:owner6",
+        "metric": "frameIntervalMs:Quiet:focused",
+        "distribution": {
+          "count": 7201,
+          "p50": 16.696,
+          "p95": 19.21,
+          "p99": 20.298,
+          "max": 23.255,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "snapshotWorkMs:Churn",
+        "distribution": {
+          "count": 6062,
+          "p50": 0.063,
+          "p95": 0.157,
+          "p99": 0.333,
+          "max": 1.451,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "snapshotWorkMs:Quiet",
+        "distribution": {
+          "count": 802,
+          "p50": 0.049,
+          "p95": 0.128,
+          "p99": 0.243,
+          "max": 0.407,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "worldWorkMs:Churn",
+        "distribution": {
+          "count": 2588,
+          "p50": 0.343,
+          "p95": 1.343,
+          "p99": 2.163,
+          "max": 5.355,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "worldWorkMs:Quiet",
+        "distribution": {
+          "count": 770,
+          "p50": 0.002,
+          "p95": 0.004,
+          "p99": 0.046,
+          "max": 0.859,
+          "above50Percent": 0.0
+        }
+      }
+    ],
+    "loads": [
+      {
+        "editors": 47,
+        "frames": 4500,
+        "accepted": 240,
+        "time": 1791714620.983,
+        "cycles": 47,
+        "side": "client:owner3",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      },
+      {
+        "editors": 47,
+        "frames": 4501,
+        "accepted": 240,
+        "time": 1791714620.999,
+        "cycles": 47,
+        "side": "client:owner4",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      },
+      {
+        "editors": 48,
+        "frames": 4501,
+        "accepted": 241,
+        "time": 1791714621.005,
+        "cycles": 48,
+        "side": "client:owner5",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 241
+      },
+      {
+        "editors": 48,
+        "frames": 18002,
+        "accepted": 242,
+        "time": 1791714621.005,
+        "cycles": 48,
+        "side": "client:owner6",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 242
+      },
+      {
+        "editors": 48,
+        "frames": 4501,
+        "accepted": 240,
+        "time": 1791714621.01,
+        "cycles": 48,
+        "side": "client:owner1",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      },
+      {
+        "editors": 47,
+        "frames": 4500,
+        "accepted": 235,
+        "time": 1791714621.016,
+        "cycles": 47,
+        "side": "client:owner2",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 235
+      }
+    ]
+  },
+  {
+    "run": 2,
+    "observer": "client:owner3",
+    "phases": [
+      {
+        "seconds": 180,
+        "clients": 6,
+        "time": 1791715099.206,
+        "phase": "Churn",
+        "kind": "phase",
+        "side": "server",
+        "workload": "SixOwners"
+      },
+      {
+        "seconds": 120,
+        "clients": 6,
+        "time": 1791715279.217,
+        "phase": "Quiet",
+        "kind": "phase",
+        "side": "server",
+        "workload": "SixOwners"
+      }
+    ],
+    "completed": [
+      {
+        "removedParts": 5960,
+        "addedParts": 6318,
+        "clients": 6,
+        "time": 1791715399.231,
+        "kind": "complete",
+        "side": "server",
+        "action": "churn"
+      }
+    ],
+    "requested": 1442,
+    "accepted": 1442,
+    "observerRequested": 240,
+    "observerAccepted": 240,
+    "observerSlowFrames": [],
+    "series": [
+      {
+        "side": "client:owner3",
+        "metric": "editRoundTripMs:focused",
+        "distribution": {
+          "count": 240,
+          "p50": 33.564,
+          "p95": 50.695,
+          "p99": 52.267,
+          "max": 53.438,
+          "above50Percent": 6.6667
+        }
+      },
+      {
+        "side": "client:owner3",
+        "metric": "frameIntervalMs:Churn:focused",
+        "distribution": {
+          "count": 10801,
+          "p50": 16.71,
+          "p95": 18.96,
+          "p99": 21.347,
+          "max": 34.964,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "client:owner3",
+        "metric": "frameIntervalMs:Quiet:focused",
+        "distribution": {
+          "count": 7201,
+          "p50": 16.75,
+          "p95": 18.28,
+          "p99": 19.039,
+          "max": 23.352,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "snapshotWorkMs:Churn",
+        "distribution": {
+          "count": 6082,
+          "p50": 0.066,
+          "p95": 0.197,
+          "p99": 0.477,
+          "max": 2.562,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "snapshotWorkMs:Quiet",
+        "distribution": {
+          "count": 798,
+          "p50": 0.057,
+          "p95": 0.255,
+          "p99": 0.546,
+          "max": 1.578,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "worldWorkMs:Churn",
+        "distribution": {
+          "count": 2594,
+          "p50": 0.343,
+          "p95": 1.397,
+          "p99": 2.167,
+          "max": 4.894,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "worldWorkMs:Quiet",
+        "distribution": {
+          "count": 768,
+          "p50": 0.003,
+          "p95": 0.005,
+          "p99": 0.032,
+          "max": 0.313,
+          "above50Percent": 0.0
+        }
+      }
+    ],
+    "loads": [
+      {
+        "editors": 48,
+        "frames": 4501,
+        "accepted": 241,
+        "time": 1791715399.251,
+        "cycles": 48,
+        "side": "client:owner6",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 241
+      },
+      {
+        "editors": 48,
+        "frames": 18002,
+        "accepted": 240,
+        "time": 1791715399.256,
+        "cycles": 48,
+        "side": "client:owner3",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      },
+      {
+        "editors": 48,
+        "frames": 4501,
+        "accepted": 240,
+        "time": 1791715399.258,
+        "cycles": 48,
+        "side": "client:owner2",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      },
+      {
+        "editors": 48,
+        "frames": 4501,
+        "accepted": 241,
+        "time": 1791715399.259,
+        "cycles": 48,
+        "side": "client:owner4",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 241
+      },
+      {
+        "editors": 47,
+        "frames": 4501,
+        "accepted": 240,
+        "time": 1791715399.262,
+        "cycles": 47,
+        "side": "client:owner1",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      },
+      {
+        "editors": 48,
+        "frames": 4501,
+        "accepted": 240,
+        "time": 1791715399.264,
+        "cycles": 48,
+        "side": "client:owner5",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      }
+    ]
+  },
+  {
+    "run": 3,
+    "observer": "client:owner3",
+    "phases": [
+      {
+        "seconds": 180,
+        "clients": 6,
+        "time": 1791715779.894,
+        "phase": "Churn",
+        "kind": "phase",
+        "side": "server",
+        "workload": "SixOwners"
+      },
+      {
+        "seconds": 120,
+        "clients": 6,
+        "time": 1791715959.903,
+        "phase": "Quiet",
+        "kind": "phase",
+        "side": "server",
+        "workload": "SixOwners"
+      }
+    ],
+    "completed": [
+      {
+        "removedParts": 5960,
+        "addedParts": 6318,
+        "clients": 6,
+        "time": 1791716079.915,
+        "kind": "complete",
+        "side": "server",
+        "action": "churn"
+      }
+    ],
+    "requested": 1442,
+    "accepted": 1442,
+    "observerRequested": 238,
+    "observerAccepted": 238,
+    "observerSlowFrames": [
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "none",
+        "time": 1791715779.996,
+        "kind": "slowFrame",
+        "clock": 252.35965410002973,
+        "frame": 3,
+        "slot": 1,
+        "intervalMs": 56.33480101823807
+      },
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "none",
+        "time": 1791715780.063,
+        "kind": "slowFrame",
+        "clock": 252.42601550003747,
+        "frame": 4,
+        "slot": 1,
+        "intervalMs": 66.29370152950287
+      },
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "theme",
+        "time": 1791715785.98,
+        "kind": "slowFrame",
+        "clock": 258.337806000025,
+        "frame": 351,
+        "slot": 1,
+        "intervalMs": 58.96209925413132
+      },
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "buy",
+        "time": 1791715786.642,
+        "kind": "slowFrame",
+        "clock": 259.0005405000411,
+        "frame": 387,
+        "slot": 1,
+        "intervalMs": 51.474299281835556
+      },
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "buy",
+        "time": 1791715786.784,
+        "kind": "slowFrame",
+        "clock": 259.1421600000467,
+        "frame": 390,
+        "slot": 1,
+        "intervalMs": 75.97339898347855
+      },
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "buy",
+        "time": 1791715787.943,
+        "kind": "slowFrame",
+        "clock": 260.3016110000317,
+        "frame": 457,
+        "slot": 1,
+        "intervalMs": 62.38109990954399
+      },
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "buy",
+        "time": 1791715788.056,
+        "kind": "slowFrame",
+        "clock": 260.4173333000508,
+        "frame": 458,
+        "slot": 1,
+        "intervalMs": 115.63300341367722
+      },
+      {
+        "side": "client:owner3",
+        "focused": true,
+        "phase": "Churn",
+        "lastAction": "place",
+        "time": 1791715869.373,
+        "kind": "slowFrame",
+        "clock": 341.73351670004195,
+        "frame": 5138,
+        "slot": 5,
+        "intervalMs": 3324.2712020874023
+      }
+    ],
+    "series": [
+      {
+        "side": "client:owner3",
+        "metric": "editRoundTripMs:focused",
+        "distribution": {
+          "count": 238,
+          "p50": 33.227,
+          "p95": 51.901,
+          "p99": 60.552,
+          "max": 80.629,
+          "above50Percent": 13.8655
+        }
+      },
+      {
+        "side": "client:owner3",
+        "metric": "frameIntervalMs:Churn:focused",
+        "distribution": {
+          "count": 10566,
+          "p50": 16.736,
+          "p95": 19.787,
+          "p99": 22.917,
+          "max": 3324.271,
+          "above50Percent": 0.0757
+        }
+      },
+      {
+        "side": "client:owner3",
+        "metric": "frameIntervalMs:Quiet:focused",
+        "distribution": {
+          "count": 7200,
+          "p50": 16.68,
+          "p95": 18.689,
+          "p99": 20.278,
+          "max": 33.051,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "snapshotWorkMs:Churn",
+        "distribution": {
+          "count": 6079,
+          "p50": 0.063,
+          "p95": 0.15,
+          "p99": 0.374,
+          "max": 1.445,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "snapshotWorkMs:Quiet",
+        "distribution": {
+          "count": 797,
+          "p50": 0.051,
+          "p95": 0.128,
+          "p99": 0.238,
+          "max": 0.785,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "worldWorkMs:Churn",
+        "distribution": {
+          "count": 2594,
+          "p50": 0.338,
+          "p95": 1.304,
+          "p99": 2.145,
+          "max": 4.264,
+          "above50Percent": 0.0
+        }
+      },
+      {
+        "side": "server",
+        "metric": "worldWorkMs:Quiet",
+        "distribution": {
+          "count": 768,
+          "p50": 0.002,
+          "p95": 0.004,
+          "p99": 0.02,
+          "max": 0.106,
+          "above50Percent": 0.0
+        }
+      }
+    ],
+    "loads": [
+      {
+        "editors": 47,
+        "frames": 17766,
+        "accepted": 238,
+        "time": 1791716079.936,
+        "cycles": 47,
+        "side": "client:owner3",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 238
+      },
+      {
+        "editors": 47,
+        "frames": 4497,
+        "accepted": 240,
+        "time": 1791716079.938,
+        "cycles": 47,
+        "side": "client:owner5",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      },
+      {
+        "editors": 48,
+        "frames": 4495,
+        "accepted": 241,
+        "time": 1791716079.94,
+        "cycles": 48,
+        "side": "client:owner6",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 241
+      },
+      {
+        "editors": 48,
+        "frames": 4496,
+        "accepted": 242,
+        "time": 1791716079.942,
+        "cycles": 48,
+        "side": "client:owner2",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 242
+      },
+      {
+        "editors": 48,
+        "frames": 4498,
+        "accepted": 241,
+        "time": 1791716079.944,
+        "cycles": 48,
+        "side": "client:owner4",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 241
+      },
+      {
+        "editors": 47,
+        "frames": 4498,
+        "accepted": 240,
+        "time": 1791716079.948,
+        "cycles": 47,
+        "side": "client:owner1",
+        "rejected": 0,
+        "kind": "load",
+        "requested": 240
+      }
+    ]
+  }
+]

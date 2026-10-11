@@ -29,7 +29,14 @@ generators and optional offline performance readers. It contains no gameplay cod
   <legacy.html> <summary.json>` reads complete frame/event spans from trusted local
   Studio 742 Legacy HTML (R0FL), using its embedded vendor decoder offline. It
   rejects unsupported/truncated captures; do not use it on arbitrary HTML. Its
-  inclusive elapsed scopes are not exclusive CPU accounting. These two optional
+  inclusive elapsed scopes are not exclusive CPU accounting. Its labels and
+  fixtureEvents include PERF-03 calibration/signal spans as well as PERF-02 events,
+  so the artificial stall and following marker can be verified in the frozen buffer.
+  `slowFrameOverlaps` adds the same bounded inclusive scope context for every
+  retained native frame over 50 ms; frame indexes are local to the dump, not probe
+  ordinals. `Test-PerformanceDump.mjs <calibration.html> <natural-3-first.html>`
+  checks the retained PERF-03 captures and explicit truncated-input failure after
+  extracting `docs/perf-03/native-captures.zip`. These optional
   readers were exercised with Node 24.19.0, use only built-ins, and add no runtime
   or CI dependency. Reproduction/capture limits: `docs/PERF_02_REVIEW.md`.
 
@@ -196,5 +203,5 @@ INF-03: `New-InfiniteReviewPlace.ps1 -Showcase` is restricted to LocalPreview. I
 
 MODE-01: `New-ModeReviewPlace.ps1 -Role Entry|Prototype|Infinite` creates `mode-entry`, `mode-session` or `mode-infinite` in build. `-Scenario LateFailure|ImmediateFailure|MissingDestination` selects an explicit unmapped Studio adapter; fake IDs never enter a real teleport. `-IncludeQA` adds routing/handoff/domain assertions and actual-client role observations; `-Showcase` only applies to Infinite. Production source remains exact, with copied bootstrap disabled in favour of AppRuntime plus explicit fixture injection. `Test-ModeReviewPlace` adds three small builds to the existing complete validator to check this startup isolation boundary; CI trigger policy is unchanged. Real-service setup and combined review: docs/MODE_01_REVIEW.md.
 
-PERF-03: `New-PerformanceReviewPlace.ps1 -Workload SixOwners -CaptureDiagnostics -OutputName mode-perf-sixowners-capture.rbxlx` adds an opt-in, one-shot hitch signal and labelled calibration stall to a disposable Studio-only performance place. Ordinary timing and gameplay-only builds exclude this script; the boundary is checked by `Test-PerformanceReviewPlace.ps1`. The native pause/export procedure and its unverified Studio gate are in `tests/fixtures/Performance/README.md` and `docs/PERF_03_REVIEW.md`.
-For diagnostic runs, `Observe-PerformanceHost.ps1 -Name hitch -Seconds 350 -IncludeProcesses` adds process identity and CPU counters to its otherwise unchanged read-only collector; the offline summary shows leading consumers per contained interval. Its presence and overhead must be recorded. Inspect process names before sharing raw data.
+PERF-03: `New-PerformanceReviewPlace.ps1 -Workload SixOwners -CaptureDiagnostics -OutputName mode-perf-sixowners-capture.rbxlx` adds an opt-in, one-shot hitch signal and labelled calibration stall to a disposable Studio-only performance place. Ordinary timing and gameplay-only builds exclude this script; the boundary is checked by `Test-PerformanceReviewPlace.ps1`. Native Windows calibration, three bounded natural attempts, retained hitches and attribution limits are in `tests/fixtures/Performance/README.md` and `docs/PERF_03_REVIEW.md`.
+For diagnostic runs, `Observe-PerformanceHost.ps1 -Name hitch -Seconds 350 -IncludeProcesses` adds process identity and readable CPU counters to its otherwise unchanged read-only collector; the offline summary shows leading consumers per contained interval. Unavailable CPU values are omitted and unavailable start identities are labelled; this cannot close a protected/kernel CPU balance or prove scheduling. Collector CPU excludes services working on its behalf. Its presence and overhead must be recorded. Inspect process names before sharing raw data.
