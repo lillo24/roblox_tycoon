@@ -16,6 +16,13 @@ first-purchase hints and recoverable startup states. Use the
 startup/review instructions. The source review packets retain historical evidence;
 final approval and consolidation belong to this combined checkpoint.
 
+For wireless private phone playtesting, use the manual
+[GitHub → Roblox development deployment setup](docs/MOBILE_DEPLOYMENT.md).
+After one-time owner setup, **Actions → Deploy Development → Run workflow** on
+`main` builds the saved map with fresh code, validates it and publishes one
+development version. Close and rejoin in the Roblox phone app afterward.
+Merging code does not trigger publication.
+
 ## Prerequisites
 
 - [Git](https://git-scm.com/downloads), installed separately.
@@ -230,4 +237,5 @@ container preservation flags and Git's build-output ignore rule were checked.
 Current remote validation results are recorded in PR checks and GitHub Actions.
 
 Wally, packages, gameplay frameworks, persistence, custom purchase remotes, binary assets,
-Git LFS, and publishing automation are deferred until there is an actual need.
+and Git LFS are deferred until there is an actual need. Development publishing is
+manual and scoped to the separate private target described above.
