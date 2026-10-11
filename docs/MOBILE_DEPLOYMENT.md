@@ -74,7 +74,10 @@ remains an owner-initiated action.
    | Secret | `ROBLOX_OPEN_CLOUD_API_KEY` | The restricted key from step 4 |
 
    IDs must be positive decimal digits without spaces or leading zeros. Values
-   stay out of source. Environment settings are owner setup; the workflow does
+   stay out of source. Existing **repository-level** Actions entries with these
+   same names are also inherited by this job; reuse them rather than entering the
+   key again. Environment entries take precedence if both levels are configured.
+   Environment settings are owner setup; the workflow does
    not configure them. A required reviewer is optional; enabling one adds an
    approval step to each run. Leave it unset if you want dispatch alone to start
    deployment. Protect `main` and restrict who can edit Actions/environment

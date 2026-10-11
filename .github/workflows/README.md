@@ -11,6 +11,8 @@
   canceling a running upload. `contents: read` is the sole token permission;
   maintained actions are pinned to commit SHAs as in validation. It uses the
   `roblox-development` environment and a three-day, single-file build artifact.
+  Its variable/secret expressions accept environment entries or inherited
+  repository-level entries of the documented names; no credential is copied by code.
   It never invokes deployment automatically when this workflow or game code merges.
 
 Full validation per manual deployment is intentional: publishing must validate
