@@ -1,0 +1,12 @@
+MODE01 EXECUTED Routing assertions: 35
+MODE01 EXECUTED Handoff assertions: 35
+MODE01 EXECUTED Session regression assertions: 186
+MODE01 EXECUTED SupplyEvent regression assertions: 196
+INF02 EXECUTED Property assertions: 246
+INF03 EXECUTED Growth assertions: 296
+PERF01 EXECUTED PropertyRendering assertions: 731
+INF01 EXECUTED Persistence assertions: 46
+INF01 EXECUTED ProfileLifecycle assertions: 21
+INF01 EXECUTED InfiniteState assertions: 14
+INF01 EXECUTED Session regression assertions: 186
+INF01 EXECUTED SupplyEvent regression assertions: 196

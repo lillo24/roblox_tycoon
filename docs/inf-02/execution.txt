@@ -1,0 +1,7 @@
+INF02 EXECUTED Property assertions: 240
+INF01 EXECUTED Persistence assertions: 46
+INF01 EXECUTED ProfileLifecycle assertions: 21
+INF01 EXECUTED InfiniteState assertions: 11
+INF01 EXECUTED Session regression assertions: 186
+INF01 EXECUTED SupplyEvent regression assertions: 196
+INF01 LOCAL PREVIEW: memory backend, no cross-session saving evidence

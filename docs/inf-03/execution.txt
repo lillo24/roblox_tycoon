@@ -1,0 +1,19 @@
+INF02 EXECUTED Property assertions: 246
+INF03 PACING simulated ordinary online seconds 12 seed_table
+INF03 PACING simulated ordinary online seconds 42 greenhouse
+INF03 PACING simulated ordinary online seconds 70 rear_garden
+INF03 PACING simulated ordinary online seconds 126 pond
+INF03 SIX DEVELOPED properties: 258 parts; build seconds 0.03050610001082532
+INF03 EXECUTED Growth assertions: 296
+INF01 EXECUTED Persistence assertions: 46
+INF01 EXECUTED ProfileLifecycle assertions: 21
+INF01 EXECUTED InfiniteState assertions: 11
+INF01 EXECUTED Session regression assertions: 186
+INF01 EXECUTED SupplyEvent regression assertions: 196
+INF01 ACTUAL client calm-mode assertions: 6
+INF03 ACTUAL late-metadata activity assertion: 1
+INF03 ACTUAL fresh purchase/edit place o1
+INF03 ACTUAL fresh purchase/edit buy greenhouse
+INF03 ACTUAL fresh purchase/edit place o2
+INF03 ACTUAL fresh purchase/edit buy rear_garden
+INF03 ACTUAL fresh ordinary-earnings expansion passed

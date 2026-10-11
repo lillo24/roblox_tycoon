@@ -1,0 +1,7 @@
+MODE01 EXECUTED Routing assertions: 35
+MODE01 EXECUTED Handoff assertions: 35
+MODE01 EXECUTED Session regression assertions: 186
+MODE01 EXECUTED SupplyEvent regression assertions: 196
+MODE01 ACTUAL entry isolation assertions: 5
+MODE01 LOCAL route intent: Infinite LateFailure
+MODE01 ACTUAL late-startup recovery message assertion: 1

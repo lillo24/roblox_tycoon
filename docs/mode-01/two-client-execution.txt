@@ -1,0 +1,10 @@
+INF01 ACTUAL client calm-mode assertions: 6 Player2
+MODE01 ACTUAL Infinite isolation assertions: 3
+MODE01 ACTUAL modal clearance assertion: 1
+INF03 ACTUAL late-metadata activity assertion: 1
+MODE01 ACTUAL neighbour isolation assertions: 4; replicated owner object, separate inventory, uninterrupted writer and income, server mode unchanged
+INF01 ACTUAL client calm-mode assertions: 6 Player1
+MODE01 ACTUAL Infinite isolation assertions: 3
+MODE01 ACTUAL modal clearance assertion: 1
+INF03 ACTUAL late-metadata activity assertion: 1
+MODE01 ACTUAL two-client owner/visitor assertions: 4; second Ready owner, foreign edit rejected, earned nursery bought and placed

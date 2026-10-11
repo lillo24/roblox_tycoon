@@ -6,11 +6,14 @@ is a reversible upgrade-order experiment; costs, names, and prerequisites below
 are provisional. Technical tests do not establish balance, strategic depth, or fun.
 GAMEPLAY-03 adds one provisional shared Supply Cache opportunity. Neither
 experiment establishes balance, fairness under latency, or retention.
-Round-based versus persistent/infinite progression remains unresolved.
+INF-01 adds an explicit optional persistent/infinite mode; the existing session-only
+prototype remains the default. See [persistence setup and format](server/Persistence/README.md).
 
 | File | Responsibility |
 | --- | --- |
 | `shared/Config.luau` | Frozen six-owner tuning, runtime/map names and attribute names |
+| `shared/GameMode.luau` | Explicit Studio-owned mode selection; absent preserves Prototype |
+| `server/Persistence/` | Account schema, single-writer ownership, save/load lifecycle and Roblox adapter |
 | `shared/UpgradeCatalogue.luau` | Typed IDs/readonly definitions, startup validation, availability/result text, purchase attribute names |
 | `shared/SupplyRules.luau` | Frozen provisional event constants, validation, snapshot types, HUD text and runtime names |
 | `server/Bootstrap.server.luau` | Starts the server runtime once |
@@ -25,7 +28,7 @@ Round-based versus persistent/infinite progression remains unresolved.
 | `client/Hud.luau` | Composes the compact interface, read-only subscriptions, independent feedback lifetimes and teardown; see [client module map](client/README.md) |
 | `client/SupplyFeedback.luau` | Supplied-time private event feedback retention, matching public identity, expiry and reset/timeout protection |
 
-No packages, persistence, exclusivity, combat, prestige, finale, or round/reset rules.
+No packages, exclusivity, combat, prestige, finale, or round/reset rules.
 There are separate outbound purchase/event feedback RemoteEvents, no custom
 purchase/claim remote, and no client-to-server event handler.
 
@@ -269,7 +272,8 @@ Camping and repeat wins are possible; neither is silently
 prevented. Ordinary income continues while away from a plot, so the trip does not
 create an income opportunity cost. Rewards after completing all upgrades still
 have no further spending use. No endgame/shop, rebalancing, paid advantage,
-persistence, round rules, telemetry, or GAMEPLAY-04 feature is added.
+round rules, telemetry, or GAMEPLAY-04 feature is added by the event. Persistence
+belongs only to the separately selected Infinite mode, which disables this event.
 
 The preceding purchase-order table is unchanged **without events**. A separately
 calculated early reward example: an unupgraded owner with 20 ordinary ticks has

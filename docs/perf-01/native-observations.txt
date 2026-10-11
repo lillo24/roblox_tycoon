@@ -1,0 +1,5 @@
+Outside timed windows; PERF01_NATIVE output only. Epochs are aliased in arrival order.
+PERF01_NATIVE {"plot":1,"revision":347,"ghost":false,"owned":62,"epoch":"epoch1","placed":40,"available":true,"stored":22,"gui":180,"bytes":4793,"cash":143446}
+PERF01_NATIVE reduced-motion stops visible spin: PASS
+PERF01_NATIVE HUD activity stop/restart: PASS; motion restored Off
+PERF01_NATIVE {"plot":1,"revision":347,"ghost":false,"owned":62,"epoch":"epoch2","placed":40,"available":true,"stored":22,"gui":135,"bytes":4793,"cash":165049}

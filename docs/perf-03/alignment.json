@@ -1,0 +1,89 @@
+{
+  "observer": "client:owner3",
+  "nativeToClockOffsetMs": 257559.48595403077,
+  "pairs": [
+    {
+      "nativeFrame": 40,
+      "nativeMarkerMs": 686.3121354255888,
+      "probeFrame": 349,
+      "probeClock": 258.2458265000023,
+      "probeTime": 1791715785.888,
+      "intervalMs": 34.29289907217026,
+      "offsetMs": 257559.5143645767,
+      "residualMs": 0.028410545928636566
+    },
+    {
+      "nativeFrame": 42,
+      "nativeMarkerMs": 778.2950459220867,
+      "probeFrame": 351,
+      "probeClock": 258.337806000025,
+      "probeTime": 1791715785.98,
+      "intervalMs": 58.96209925413132,
+      "offsetMs": 257559.51095410294,
+      "residualMs": 0.025000072171678767
+    },
+    {
+      "nativeFrame": 78,
+      "nativeMarkerMs": 1441.051716995284,
+      "probeFrame": 387,
+      "probeClock": 259.0005405000411,
+      "probeTime": 1791715786.642,
+      "intervalMs": 51.474299281835556,
+      "offsetMs": 257559.48878304582,
+      "residualMs": 0.002829015051247552
+    },
+    {
+      "nativeFrame": 79,
+      "nativeMarkerMs": 1487.590504020656,
+      "probeFrame": 388,
+      "probeClock": 259.04707820003387,
+      "probeTime": 1791715786.689,
+      "intervalMs": 46.461500227451324,
+      "offsetMs": 257559.4876960132,
+      "residualMs": 0.001741982443490997
+    },
+    {
+      "nativeFrame": 81,
+      "nativeMarkerMs": 1582.675787998392,
+      "probeFrame": 390,
+      "probeClock": 259.1421600000467,
+      "probeTime": 1791715786.784,
+      "intervalMs": 75.97339898347855,
+      "offsetMs": 257559.48421204832,
+      "residualMs": -0.001741982443490997
+    },
+    {
+      "nativeFrame": 148,
+      "nativeMarkerMs": 2742.1521530277237,
+      "probeFrame": 457,
+      "probeClock": 260.3016110000317,
+      "probeTime": 1791715787.943,
+      "intervalMs": 62.38109990954399,
+      "offsetMs": 257559.458847004,
+      "residualMs": -0.027107026777230203
+    },
+    {
+      "nativeFrame": 149,
+      "nativeMarkerMs": 2857.891339379826,
+      "probeFrame": 458,
+      "probeClock": 260.4173333000508,
+      "probeTime": 1791715788.056,
+      "intervalMs": 115.63300341367722,
+      "offsetMs": 257559.44196067099,
+      "residualMs": -0.04399335978087038
+    },
+    {
+      "nativeFrame": 150,
+      "nativeMarkerMs": 2901.633267380848,
+      "probeFrame": 459,
+      "probeClock": 260.4610738000483,
+      "probeTime": 1791715788.1,
+      "intervalMs": 43.96960139274597,
+      "offsetMs": 257559.44053266748,
+      "residualMs": -0.045421363291097805
+    }
+  ],
+  "nativeFirstProbeClock": 257.5594859540308,
+  "nativeLastProbeClock": 266.37724962603073,
+  "caveat": "Marker endpoints aligned; native frame spans and PreRender intervals have different boundaries. Original one-shot frame 3 is absent."
+}

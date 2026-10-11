@@ -1,0 +1,59 @@
+{
+  "caveat": "Inclusive elapsed spans on the same foreground observer/route/quality/workload. Ordinary means the scope does not intersect any >50ms native frame. This locates waits, not their cause.",
+  "renderWaitScopes": {
+    "Present": {
+      "ordinary": {
+        "count": 502,
+        "p50": 3.179348889373614,
+        "p95": 7.00601662259669,
+        "max": 34.95989500272117
+      },
+      "overlappingHitch": {
+        "count": 4,
+        "p50": 18.24430184856385,
+        "p95": 62.428048033923915,
+        "max": 62.428048033923915
+      }
+    },
+    "WaitOnRenderNodeQueryFence": {
+      "ordinary": {
+        "count": 502,
+        "p50": 0.0001566673363981863,
+        "p95": 1.6878103781959908,
+        "max": 24.307188539154595
+      },
+      "overlappingHitch": {
+        "count": 4,
+        "p50": 5.767293164191869,
+        "p95": 34.09315955179272,
+        "max": 34.09315955179272
+      }
+    }
+  },
+  "fixtureScopes": {
+    "PERF02 client sample": {
+      "count": 506,
+      "p50": 0.022116396247838566,
+      "p95": 0.05080052738489371,
+      "max": 0.3721306662382631
+    },
+    "PERF02 editor create": {
+      "count": 2,
+      "p50": 1.0718944727268536,
+      "p95": 1.213897117482702,
+      "max": 1.213897117482702
+    },
+    "PERF02 editor destroy": {
+      "count": 2,
+      "p50": 0.4528992536061196,
+      "p95": 0.6209049596441218,
+      "max": 0.6209049596441218
+    },
+    "PERF02 slow interval end": {
+      "count": 8,
+      "p50": 0.005125709259573341,
+      "p95": 0.019663180164570804,
+      "max": 0.019663180164570804
+    }
+  }
+}

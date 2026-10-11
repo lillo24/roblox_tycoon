@@ -1,0 +1,2118 @@
+{
+  "name": "natural-2",
+  "start": 1791715099.206,
+  "finish": 1791715404.166,
+  "series": [
+    {
+      "side": "client:owner1",
+      "metric": "editRoundTripMs:focused",
+      "distribution": {
+        "count": 240,
+        "p50": 44.558,
+        "p95": 52.563,
+        "p99": 55.402,
+        "max": 60.116,
+        "above50Percent": 17.5
+      }
+    },
+    {
+      "side": "client:owner1",
+      "metric": "frameIntervalMs:Churn:focused",
+      "distribution": {
+        "count": 2700,
+        "p50": 66.684,
+        "p95": 70.428,
+        "p99": 73.52,
+        "max": 78.254,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner1",
+      "metric": "frameIntervalMs:Quiet:focused",
+      "distribution": {
+        "count": 1801,
+        "p50": 66.691,
+        "p95": 69.272,
+        "p99": 70.881,
+        "max": 77.92,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner2",
+      "metric": "editRoundTripMs:focused",
+      "distribution": {
+        "count": 240,
+        "p50": 33.761,
+        "p95": 36.659,
+        "p99": 51.124,
+        "max": 52.229,
+        "above50Percent": 2.0833
+      }
+    },
+    {
+      "side": "client:owner2",
+      "metric": "frameIntervalMs:Churn:focused",
+      "distribution": {
+        "count": 2701,
+        "p50": 66.669,
+        "p95": 69.511,
+        "p99": 72.578,
+        "max": 81.602,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner2",
+      "metric": "frameIntervalMs:Quiet:focused",
+      "distribution": {
+        "count": 1800,
+        "p50": 66.668,
+        "p95": 68.136,
+        "p99": 69.522,
+        "max": 74.845,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner3",
+      "metric": "editRoundTripMs:focused",
+      "distribution": {
+        "count": 240,
+        "p50": 33.564,
+        "p95": 50.695,
+        "p99": 52.267,
+        "max": 53.438,
+        "above50Percent": 6.6667
+      }
+    },
+    {
+      "side": "client:owner3",
+      "metric": "frameIntervalMs:Churn:focused",
+      "distribution": {
+        "count": 10801,
+        "p50": 16.71,
+        "p95": 18.96,
+        "p99": 21.347,
+        "max": 34.964,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "client:owner3",
+      "metric": "frameIntervalMs:Quiet:focused",
+      "distribution": {
+        "count": 7201,
+        "p50": 16.75,
+        "p95": 18.28,
+        "p99": 19.039,
+        "max": 23.352,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "client:owner4",
+      "metric": "editRoundTripMs:focused",
+      "distribution": {
+        "count": 241,
+        "p50": 33.239,
+        "p95": 43.229,
+        "p99": 48.197,
+        "max": 51.589,
+        "above50Percent": 0.8299
+      }
+    },
+    {
+      "side": "client:owner4",
+      "metric": "frameIntervalMs:Churn:focused",
+      "distribution": {
+        "count": 2701,
+        "p50": 66.687,
+        "p95": 71.627,
+        "p99": 73.799,
+        "max": 77.297,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner4",
+      "metric": "frameIntervalMs:Quiet:focused",
+      "distribution": {
+        "count": 1800,
+        "p50": 66.646,
+        "p95": 70.493,
+        "p99": 72.186,
+        "max": 76.743,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner5",
+      "metric": "editRoundTripMs:focused",
+      "distribution": {
+        "count": 240,
+        "p50": 33.737,
+        "p95": 49.039,
+        "p99": 50.828,
+        "max": 51.902,
+        "above50Percent": 2.0833
+      }
+    },
+    {
+      "side": "client:owner5",
+      "metric": "frameIntervalMs:Churn:focused",
+      "distribution": {
+        "count": 2700,
+        "p50": 66.714,
+        "p95": 69.429,
+        "p99": 72.262,
+        "max": 78.831,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner5",
+      "metric": "frameIntervalMs:Quiet:focused",
+      "distribution": {
+        "count": 1801,
+        "p50": 66.71,
+        "p95": 68.393,
+        "p99": 69.556,
+        "max": 73.481,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner6",
+      "metric": "editRoundTripMs:focused",
+      "distribution": {
+        "count": 241,
+        "p50": 33.206,
+        "p95": 50.744,
+        "p99": 55.063,
+        "max": 64.465,
+        "above50Percent": 8.7137
+      }
+    },
+    {
+      "side": "client:owner6",
+      "metric": "frameIntervalMs:Churn:focused",
+      "distribution": {
+        "count": 2701,
+        "p50": 66.785,
+        "p95": 68.095,
+        "p99": 69.541,
+        "max": 73.772,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "client:owner6",
+      "metric": "frameIntervalMs:Quiet:focused",
+      "distribution": {
+        "count": 1800,
+        "p50": 66.796,
+        "p95": 67.796,
+        "p99": 68.276,
+        "max": 69.421,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "heartbeatIntervalMs:Churn",
+      "distribution": {
+        "count": 10800,
+        "p50": 16.973,
+        "p95": 20.977,
+        "p99": 23.005,
+        "max": 31.331,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "heartbeatIntervalMs:Quiet",
+      "distribution": {
+        "count": 7201,
+        "p50": 16.978,
+        "p95": 19.976,
+        "p99": 21.108,
+        "max": 26.973,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "incomeTickIntervalMs:Churn",
+      "distribution": {
+        "count": 180,
+        "p50": 999.902,
+        "p95": 1004.633,
+        "p99": 1007.234,
+        "max": 1007.54,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "incomeTickIntervalMs:Quiet",
+      "distribution": {
+        "count": 120,
+        "p50": 999.94,
+        "p95": 1002.804,
+        "p99": 1004.92,
+        "max": 1005.758,
+        "above50Percent": 100.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "incomeWorkMs:Churn",
+      "distribution": {
+        "count": 180,
+        "p50": 0.006,
+        "p95": 0.011,
+        "p99": 0.058,
+        "max": 0.186,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "incomeWorkMs:Quiet",
+      "distribution": {
+        "count": 120,
+        "p50": 0.006,
+        "p95": 0.027,
+        "p99": 0.058,
+        "max": 0.134,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "memoryCheckpointWorkMs",
+      "distribution": {
+        "count": 60,
+        "p50": 0.225,
+        "p95": 0.374,
+        "p99": 0.433,
+        "max": 0.433,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "snapshotWorkMs:Churn",
+      "distribution": {
+        "count": 6082,
+        "p50": 0.066,
+        "p95": 0.197,
+        "p99": 0.477,
+        "max": 2.562,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "snapshotWorkMs:Quiet",
+      "distribution": {
+        "count": 798,
+        "p50": 0.057,
+        "p95": 0.255,
+        "p99": 0.546,
+        "max": 1.578,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "transactionWorkMs:Churn",
+      "distribution": {
+        "count": 1442,
+        "p50": 0.09,
+        "p95": 0.331,
+        "p99": 0.639,
+        "max": 2.465,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "worldWorkMs:Churn",
+      "distribution": {
+        "count": 2594,
+        "p50": 0.343,
+        "p95": 1.397,
+        "p99": 2.167,
+        "max": 4.894,
+        "above50Percent": 0.0
+      }
+    },
+    {
+      "side": "server",
+      "metric": "worldWorkMs:Quiet",
+      "distribution": {
+        "count": 768,
+        "p50": 0.003,
+        "p95": 0.005,
+        "p99": 0.032,
+        "max": 0.313,
+        "above50Percent": 0.0
+      }
+    }
+  ],
+  "stats": [
+    {
+      "side": "client:owner1",
+      "phase": "Churn",
+      "focused": true,
+      "observations": 35,
+      "metrics": {
+        "luaKB": {
+          "first": 2972,
+          "last": 4916,
+          "min": 2437.0,
+          "max": 5073.0,
+          "mean": 3726.2
+        },
+        "totalMB": {
+          "first": 1682.87890625,
+          "last": 893.25390625,
+          "min": 879.0625,
+          "max": 1692.015625,
+          "mean": 1252.84609375
+        },
+        "luaMB": {
+          "first": 417.626708984375,
+          "last": 419.7890625,
+          "min": 417.626708984375,
+          "max": 420.12255859375,
+          "mean": 419.08457728794644
+        },
+        "instances": {
+          "first": 50913,
+          "last": 50944,
+          "min": 50913.0,
+          "max": 50998.0,
+          "mean": 50957.91428571429
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 163.0,
+          "mean": 135.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.6618509888648987,
+          "last": 0.996533215045929,
+          "min": 0.522417426109314,
+          "max": 1.1050455570220947,
+          "mean": 0.7572778071675982
+        },
+        "renderCPUms": {
+          "first": 7.54150003194809,
+          "last": 7.515900302678347,
+          "min": 4.627600312232971,
+          "max": 10.331599973142147,
+          "mean": 6.881962836320911
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 19.572287797927856,
+          "mean": 2.565327585744979
+        },
+        "heartbeatWorkMs": {
+          "first": 0.47152003389783204,
+          "last": 0.5513955838978291,
+          "min": 0.21293947065714747,
+          "max": 0.5513955838978291,
+          "mean": 0.385348527925089
+        },
+        "physicsWorkMs": {
+          "first": 0.5417639622464776,
+          "last": 0.5274321301840246,
+          "min": 0.3367399040143937,
+          "max": 0.9674366447143257,
+          "mean": 0.6743731218323644
+        }
+      }
+    },
+    {
+      "side": "client:owner1",
+      "phase": "Quiet",
+      "focused": true,
+      "observations": 24,
+      "metrics": {
+        "luaKB": {
+          "first": 5225,
+          "last": 5559,
+          "min": 4158.0,
+          "max": 6696.0,
+          "mean": 5404.875
+        },
+        "totalMB": {
+          "first": 893.51953125,
+          "last": 894.84375,
+          "min": 891.3359375,
+          "max": 894.84375,
+          "mean": 893.2361653645834
+        },
+        "luaMB": {
+          "first": 420.252197265625,
+          "last": 422.89453125,
+          "min": 420.244873046875,
+          "max": 424.07568359375,
+          "mean": 421.7655843098958
+        },
+        "instances": {
+          "first": 50934,
+          "last": 50934,
+          "min": 50934.0,
+          "max": 50934.0,
+          "mean": 50934.0
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 128.0,
+          "mean": 128.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.7849310636520386,
+          "last": 0.4552779197692871,
+          "min": 0.40503785014152527,
+          "max": 0.7849310636520386,
+          "mean": 0.48778704057137173
+        },
+        "renderCPUms": {
+          "first": 5.072199739515781,
+          "last": 4.139299970120192,
+          "min": 4.139299970120192,
+          "max": 8.783699944615364,
+          "mean": 6.0957374710900085
+        },
+        "renderGPUms": {
+          "first": 16.410622745752335,
+          "last": 0,
+          "min": 0.0,
+          "max": 19.312575459480286,
+          "mean": 2.9168692836232246
+        },
+        "heartbeatWorkMs": {
+          "first": 0.2866790455300361,
+          "last": 0.28932953136973083,
+          "min": 0.2201716706622392,
+          "max": 0.5037204246036708,
+          "mean": 0.34323927078124444
+        },
+        "physicsWorkMs": {
+          "first": 0.5748337134718895,
+          "last": 0.4787925281561911,
+          "min": 0.35945678246207535,
+          "max": 0.7814338896423578,
+          "mean": 0.5779244711447973
+        }
+      }
+    },
+    {
+      "side": "client:owner2",
+      "phase": "Churn",
+      "focused": true,
+      "observations": 35,
+      "metrics": {
+        "luaKB": {
+          "first": 2878,
+          "last": 4559,
+          "min": 2458.0,
+          "max": 5595.0,
+          "mean": 3706.0
+        },
+        "totalMB": {
+          "first": 1545.63671875,
+          "last": 779.51171875,
+          "min": 769.4375,
+          "max": 1554.90234375,
+          "mean": 1151.4100446428572
+        },
+        "luaMB": {
+          "first": 412.3525390625,
+          "last": 416.939208984375,
+          "min": 412.296875,
+          "max": 416.95166015625,
+          "mean": 414.61584821428573
+        },
+        "instances": {
+          "first": 50963,
+          "last": 50954,
+          "min": 50903.0,
+          "max": 50963.0,
+          "mean": 50946.45714285714
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 128.0,
+          "mean": 128.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.6065589785575867,
+          "last": 0.6231269240379333,
+          "min": 0.5267723798751831,
+          "max": 1.0815094709396362,
+          "mean": 0.7833146333694458
+        },
+        "renderCPUms": {
+          "first": 12.121099978685379,
+          "last": 8.182299323379993,
+          "min": 5.2987998351454735,
+          "max": 17.808901146054268,
+          "mean": 8.757322867001806
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 22.586720064282417,
+          "mean": 1.7821230132175816
+        },
+        "heartbeatWorkMs": {
+          "first": 0.33822629484348,
+          "last": 0.30535002588294446,
+          "min": 0.18653941515367478,
+          "max": 0.42729161214083433,
+          "mean": 0.31363243262083934
+        },
+        "physicsWorkMs": {
+          "first": 0.35364352515898645,
+          "last": 0.06633440352743492,
+          "min": 0.06633440352743492,
+          "max": 0.7009036489762366,
+          "mean": 0.2901620160888082
+        }
+      }
+    },
+    {
+      "side": "client:owner2",
+      "phase": "Quiet",
+      "focused": true,
+      "observations": 24,
+      "metrics": {
+        "luaKB": {
+          "first": 5410,
+          "last": 5133,
+          "min": 4215.0,
+          "max": 7006.0,
+          "mean": 5530.875
+        },
+        "totalMB": {
+          "first": 779.890625,
+          "last": 783.8828125,
+          "min": 779.890625,
+          "max": 783.8828125,
+          "mean": 781.6901041666666
+        },
+        "luaMB": {
+          "first": 416.939208984375,
+          "last": 421.337890625,
+          "min": 416.939208984375,
+          "max": 421.337890625,
+          "mean": 418.8624776204427
+        },
+        "instances": {
+          "first": 50934,
+          "last": 50934,
+          "min": 50934.0,
+          "max": 50934.0,
+          "mean": 50934.0
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 128.0,
+          "mean": 128.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.6275534629821777,
+          "last": 0.4870964586734772,
+          "min": 0.38676807284355164,
+          "max": 0.6275534629821777,
+          "mean": 0.4760817214846611
+        },
+        "renderCPUms": {
+          "first": 9.80759970843792,
+          "last": 7.038099691271782,
+          "min": 6.019299849867821,
+          "max": 11.332999914884567,
+          "mean": 7.5763083683947725
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 18.959615379571915,
+          "min": 0.0,
+          "max": 21.21724933385849,
+          "mean": 3.3568280639655335
+        },
+        "heartbeatWorkMs": {
+          "first": 0.27288086130283773,
+          "last": 0.1795282296370715,
+          "min": 0.14614028623327613,
+          "max": 0.38379110628739,
+          "mean": 0.27769537579539855
+        },
+        "physicsWorkMs": {
+          "first": 0.17068373563233763,
+          "last": 0.1244006707565859,
+          "min": 0.04157399962423369,
+          "max": 0.20959600806236267,
+          "mean": 0.11885155860606271
+        }
+      }
+    },
+    {
+      "side": "client:owner3",
+      "phase": "Churn",
+      "focused": true,
+      "observations": 36,
+      "metrics": {
+        "luaKB": {
+          "first": 3032,
+          "last": 3059,
+          "min": 2208.0,
+          "max": 3505.0,
+          "mean": 2848.6666666666665
+        },
+        "totalMB": {
+          "first": 1765.609375,
+          "last": 1137.94921875,
+          "min": 1122.15234375,
+          "max": 1774.5078125,
+          "mean": 1431.548828125
+        },
+        "luaMB": {
+          "first": 423.9794921875,
+          "last": 424.510986328125,
+          "min": 422.334228515625,
+          "max": 424.791015625,
+          "mean": 423.435540093316
+        },
+        "instances": {
+          "first": 50999,
+          "last": 50990,
+          "min": 50904.0,
+          "max": 50999.0,
+          "mean": 50960.055555555555
+        },
+        "guiInstances": {
+          "first": 163,
+          "last": 163,
+          "min": 128.0,
+          "max": 163.0,
+          "mean": 135.77777777777777
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.664705753326416,
+          "last": 0.6914622783660889,
+          "min": 0.4788980484008789,
+          "max": 1.0387519598007202,
+          "mean": 0.737190412150489
+        },
+        "renderCPUms": {
+          "first": 6.501200143247843,
+          "last": 5.777699872851372,
+          "min": 5.564399994909763,
+          "max": 13.644200749695301,
+          "mean": 7.309341725582878
+        },
+        "renderGPUms": {
+          "first": 2.32499185949564,
+          "last": 2.2901759948581457,
+          "min": 2.090591937303543,
+          "max": 5.692800041288137,
+          "mean": 2.8001768773214684
+        },
+        "heartbeatWorkMs": {
+          "first": 0.5172605742700398,
+          "last": 0.49010361544787884,
+          "min": 0.26138772955164313,
+          "max": 0.7327080820687115,
+          "mean": 0.48531581948433694
+        },
+        "physicsWorkMs": {
+          "first": 0.30017050448805094,
+          "last": 0.274902704404667,
+          "min": 0.15969740343280137,
+          "max": 1.0734482202678919,
+          "mean": 0.3843284575850703
+        }
+      }
+    },
+    {
+      "side": "client:owner3",
+      "phase": "Quiet",
+      "focused": true,
+      "observations": 24,
+      "metrics": {
+        "luaKB": {
+          "first": 2590,
+          "last": 3028,
+          "min": 2590.0,
+          "max": 3860.0,
+          "mean": 3184.75
+        },
+        "totalMB": {
+          "first": 1138.3515625,
+          "last": 1134.484375,
+          "min": 1132.9296875,
+          "max": 1138.375,
+          "mean": 1134.3414713541667
+        },
+        "luaMB": {
+          "first": 424.695556640625,
+          "last": 426.798583984375,
+          "min": 424.695556640625,
+          "max": 426.970703125,
+          "mean": 425.8870544433594
+        },
+        "instances": {
+          "first": 50935,
+          "last": 50935,
+          "min": 50935.0,
+          "max": 50935.0,
+          "mean": 50935.0
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 128.0,
+          "mean": 128.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.46706342697143555,
+          "last": 0.4833126366138458,
+          "min": 0.4236924946308136,
+          "max": 0.5602462887763977,
+          "mean": 0.4760032755633195
+        },
+        "renderCPUms": {
+          "first": 5.914600100368261,
+          "last": 6.156400311738253,
+          "min": 5.277799908071756,
+          "max": 14.816300012171268,
+          "mean": 6.769058430412163
+        },
+        "renderGPUms": {
+          "first": 2.123775891959667,
+          "last": 2.776704030111432,
+          "min": 2.017280086874962,
+          "max": 5.531775765120983,
+          "mean": 2.8146986927216253
+        },
+        "heartbeatWorkMs": {
+          "first": 0.5121229332871735,
+          "last": 0.5957766552455723,
+          "min": 0.3142675559502095,
+          "max": 0.62102812808007,
+          "mean": 0.45424355994327925
+        },
+        "physicsWorkMs": {
+          "first": 0.09822789434110746,
+          "last": 0.12382824206724763,
+          "min": 0.08607032214058563,
+          "max": 0.5029322928749025,
+          "mean": 0.22379792365730586
+        }
+      }
+    },
+    {
+      "side": "client:owner4",
+      "phase": "Churn",
+      "focused": true,
+      "observations": 35,
+      "metrics": {
+        "luaKB": {
+          "first": 2405,
+          "last": 3908,
+          "min": 2250.0,
+          "max": 5115.0,
+          "mean": 3701.0285714285715
+        },
+        "totalMB": {
+          "first": 1631.3203125,
+          "last": 1138.625,
+          "min": 1132.02734375,
+          "max": 1638.53515625,
+          "mean": 1363.8814732142857
+        },
+        "luaMB": {
+          "first": 438.630126953125,
+          "last": 440.823486328125,
+          "min": 438.614501953125,
+          "max": 441.133544921875,
+          "mean": 439.70762416294644
+        },
+        "instances": {
+          "first": 50963,
+          "last": 50954,
+          "min": 50944.0,
+          "max": 50998.0,
+          "mean": 50966.4
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 163.0,
+          "mean": 139.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.6528969407081604,
+          "last": 0.6194974184036255,
+          "min": 0.5210991501808167,
+          "max": 1.1064245700836182,
+          "mean": 0.7734039136341639
+        },
+        "renderCPUms": {
+          "first": 7.4547999538481236,
+          "last": 7.964800111949444,
+          "min": 4.207099787890911,
+          "max": 11.176199652254581,
+          "mean": 7.321434281766415
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 3.199999909497819E-05,
+          "min": 0.0,
+          "max": 22.60940708220005,
+          "mean": 2.273386899858159
+        },
+        "heartbeatWorkMs": {
+          "first": 0.4404614446684718,
+          "last": 0.4355571581982076,
+          "min": 0.18485532200429589,
+          "max": 0.5658094305545092,
+          "mean": 0.3917492668343974
+        },
+        "physicsWorkMs": {
+          "first": 0.34458120353519917,
+          "last": 0.434361572843045,
+          "min": 0.34458120353519917,
+          "max": 0.831495737656951,
+          "mean": 0.5488720971957913
+        }
+      }
+    },
+    {
+      "side": "client:owner4",
+      "phase": "Quiet",
+      "focused": true,
+      "observations": 24,
+      "metrics": {
+        "luaKB": {
+          "first": 4818,
+          "last": 6975,
+          "min": 4492.0,
+          "max": 6975.0,
+          "mean": 5483.458333333333
+        },
+        "totalMB": {
+          "first": 1139.02734375,
+          "last": 1140.92578125,
+          "min": 1137.96875,
+          "max": 1140.92578125,
+          "mean": 1139.3837890625
+        },
+        "luaMB": {
+          "first": 440.38037109375,
+          "last": 443.999755859375,
+          "min": 440.38037109375,
+          "max": 443.999755859375,
+          "mean": 442.0470479329427
+        },
+        "instances": {
+          "first": 50934,
+          "last": 50934,
+          "min": 50934.0,
+          "max": 50934.0,
+          "mean": 50934.0
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 128.0,
+          "mean": 128.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.6713261604309082,
+          "last": 0.5210559368133545,
+          "min": 0.4282451570034027,
+          "max": 0.6713261604309082,
+          "mean": 0.48074430599808693
+        },
+        "renderCPUms": {
+          "first": 7.811200339347124,
+          "last": 7.965699769556522,
+          "min": 4.313199780881405,
+          "max": 9.62579995393753,
+          "mean": 6.309945854203154
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 3.199999909497819E-05,
+          "min": 0.0,
+          "max": 22.81344123184681,
+          "mean": 3.3729213398265103
+        },
+        "heartbeatWorkMs": {
+          "first": 0.5045014549978077,
+          "last": 0.21273373567964882,
+          "min": 0.2105085295625031,
+          "max": 0.6149135297164321,
+          "mean": 0.38672995772988844
+        },
+        "physicsWorkMs": {
+          "first": 0.31150385621003807,
+          "last": 0.3695714985951781,
+          "min": 0.20873190078418702,
+          "max": 0.5054048378951848,
+          "mean": 0.364969617294264
+        }
+      }
+    },
+    {
+      "side": "client:owner5",
+      "phase": "Churn",
+      "focused": true,
+      "observations": 36,
+      "metrics": {
+        "luaKB": {
+          "first": 2411,
+          "last": 5010,
+          "min": 2299.0,
+          "max": 5175.0,
+          "mean": 3676.4166666666665
+        },
+        "totalMB": {
+          "first": 1563.0546875,
+          "last": 892.9296875,
+          "min": 876.17578125,
+          "max": 1571.4765625,
+          "mean": 1207.040798611111
+        },
+        "luaMB": {
+          "first": 412.352294921875,
+          "last": 417.227783203125,
+          "min": 412.352294921875,
+          "max": 417.378662109375,
+          "mean": 414.9812282986111
+        },
+        "instances": {
+          "first": 50999,
+          "last": 50955,
+          "min": 50914.0,
+          "max": 50999.0,
+          "mean": 50962.77777777778
+        },
+        "guiInstances": {
+          "first": 163,
+          "last": 128,
+          "min": 128.0,
+          "max": 163.0,
+          "mean": 136.5
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.7195488214492798,
+          "last": 0.6100907921791077,
+          "min": 0.5327432751655579,
+          "max": 1.0853025913238525,
+          "mean": 0.7605942421489291
+        },
+        "renderCPUms": {
+          "first": 6.6860998049378395,
+          "last": 8.246599696576595,
+          "min": 4.554999992251396,
+          "max": 12.062100693583488,
+          "mean": 7.57885006411622
+        },
+        "renderGPUms": {
+          "first": 3.199999909497819E-05,
+          "last": 19.96268890798092,
+          "min": 0.0,
+          "max": 20.762816071510315,
+          "mean": 2.80591738198578
+        },
+        "heartbeatWorkMs": {
+          "first": 0.4781030002050102,
+          "last": 0.45570952352136374,
+          "min": 0.2525668533053249,
+          "max": 0.7393827545456588,
+          "mean": 0.42719084982915473
+        },
+        "physicsWorkMs": {
+          "first": 0.549174437765032,
+          "last": 0.4809849488083273,
+          "min": 0.3621029027272016,
+          "max": 0.8553901570849121,
+          "mean": 0.6168831185075558
+        }
+      }
+    },
+    {
+      "side": "client:owner5",
+      "phase": "Quiet",
+      "focused": true,
+      "observations": 23,
+      "metrics": {
+        "luaKB": {
+          "first": 3937,
+          "last": 6908,
+          "min": 3937.0,
+          "max": 6908.0,
+          "mean": 5430.913043478261
+        },
+        "totalMB": {
+          "first": 886.125,
+          "last": 889.5234375,
+          "min": 886.10546875,
+          "max": 889.5234375,
+          "mean": 888.0944293478261
+        },
+        "luaMB": {
+          "first": 418.11865234375,
+          "last": 421.563232421875,
+          "min": 417.475830078125,
+          "max": 421.563232421875,
+          "mean": 419.1643703294837
+        },
+        "instances": {
+          "first": 50935,
+          "last": 50935,
+          "min": 50935.0,
+          "max": 50935.0,
+          "mean": 50935.0
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 128.0,
+          "mean": 128.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.4308217763900757,
+          "last": 0.5154056549072266,
+          "min": 0.41500696539878845,
+          "max": 0.5364525318145752,
+          "mean": 0.4744804216467816
+        },
+        "renderCPUms": {
+          "first": 8.836799301207066,
+          "last": 5.931499879807234,
+          "min": 4.812699742615223,
+          "max": 10.132200084626675,
+          "mean": 6.8158565048614275
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 23.823808878660202,
+          "mean": 3.200562121708982
+        },
+        "heartbeatWorkMs": {
+          "first": 0.3829337074421346,
+          "last": 0.2823171380441636,
+          "min": 0.24762877728790045,
+          "max": 0.5453350022435188,
+          "mean": 0.40866081785086705
+        },
+        "physicsWorkMs": {
+          "first": 0.4943062667734921,
+          "last": 0.5591090302914381,
+          "min": 0.33887234167195857,
+          "max": 0.6673343013972044,
+          "mean": 0.4996695295077465
+        }
+      }
+    },
+    {
+      "side": "client:owner6",
+      "phase": "Churn",
+      "focused": true,
+      "observations": 36,
+      "metrics": {
+        "luaKB": {
+          "first": 2912,
+          "last": 3938,
+          "min": 2235.0,
+          "max": 5159.0,
+          "mean": 3624.75
+        },
+        "totalMB": {
+          "first": 1577.41015625,
+          "last": 1059.484375,
+          "min": 1044.5703125,
+          "max": 1586.84375,
+          "mean": 1302.2094184027778
+        },
+        "luaMB": {
+          "first": 416.49951171875,
+          "last": 418.938720703125,
+          "min": 416.49951171875,
+          "max": 419.4609375,
+          "mean": 418.27103000217016
+        },
+        "instances": {
+          "first": 50966,
+          "last": 50967,
+          "min": 50924.0,
+          "max": 51001.0,
+          "mean": 50965.38888888889
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 141,
+          "min": 128.0,
+          "max": 163.0,
+          "mean": 139.05555555555554
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.8247514963150024,
+          "last": 0.8567185401916504,
+          "min": 0.49037298560142517,
+          "max": 1.0890376567840576,
+          "mean": 0.7598196475042237
+        },
+        "renderCPUms": {
+          "first": 4.680600017309189,
+          "last": 4.977500066161156,
+          "min": 3.8501000963151455,
+          "max": 21.01230062544346,
+          "mean": 5.772263924073842
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 18.817855045199394,
+          "mean": 1.5340284247167761
+        },
+        "heartbeatWorkMs": {
+          "first": 0.24028174811974168,
+          "last": 0.35239034332334995,
+          "min": 0.19771505321841687,
+          "max": 0.4254801897332072,
+          "mean": 0.3114301370159309
+        },
+        "physicsWorkMs": {
+          "first": 0.4757831047754735,
+          "last": 0.2617787104099989,
+          "min": 0.10798044240800664,
+          "max": 0.5943519645370543,
+          "mean": 0.3158460630301205
+        }
+      }
+    },
+    {
+      "side": "client:owner6",
+      "phase": "Quiet",
+      "focused": true,
+      "observations": 24,
+      "metrics": {
+        "luaKB": {
+          "first": 4800,
+          "last": 6835,
+          "min": 4390.0,
+          "max": 7004.0,
+          "mean": 5574.75
+        },
+        "totalMB": {
+          "first": 1059.578125,
+          "last": 1056.8125,
+          "min": 1055.328125,
+          "max": 1059.578125,
+          "mean": 1056.20751953125
+        },
+        "luaMB": {
+          "first": 419.24609375,
+          "last": 422.12548828125,
+          "min": 419.143798828125,
+          "max": 422.607421875,
+          "mean": 420.90749104817706
+        },
+        "instances": {
+          "first": 50934,
+          "last": 50934,
+          "min": 50934.0,
+          "max": 50934.0,
+          "mean": 50934.0
+        },
+        "guiInstances": {
+          "first": 128,
+          "last": 128,
+          "min": 128.0,
+          "max": 128.0,
+          "mean": 128.0
+        },
+        "ghosts": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 0.48513931035995483,
+          "last": 0.4698212146759033,
+          "min": 0.4001048803329468,
+          "max": 0.5118836760520935,
+          "mean": 0.47135018929839134
+        },
+        "renderCPUms": {
+          "first": 4.897299688309431,
+          "last": 4.286600276827812,
+          "min": 3.8327998481690884,
+          "max": 7.166000083088875,
+          "mean": 4.732187488116324
+        },
+        "renderGPUms": {
+          "first": 19.15731281042099,
+          "last": 3.199999909497819E-05,
+          "min": 0.0,
+          "max": 20.301854237914085,
+          "mean": 3.2251919541619323
+        },
+        "heartbeatWorkMs": {
+          "first": 0.3303756529930979,
+          "last": 0.22020786127541214,
+          "min": 0.14241189637687057,
+          "max": 0.41983879054896533,
+          "mean": 0.28159851596380275
+        },
+        "physicsWorkMs": {
+          "first": 0.2299313637195155,
+          "last": 0.11317140888422728,
+          "min": 0.04716537659987807,
+          "max": 0.6986750522628427,
+          "mean": 0.20612285516108386
+        }
+      }
+    },
+    {
+      "side": "server",
+      "phase": "Churn",
+      "focused": null,
+      "observations": 36,
+      "metrics": {
+        "luaKB": {
+          "first": 1012,
+          "last": 1659,
+          "min": 773.0,
+          "max": 1842.0,
+          "mean": 1262.8333333333333
+        },
+        "totalMB": {
+          "first": 1353.53125,
+          "last": 658.89453125,
+          "min": 650.65234375,
+          "max": 1360.8515625,
+          "mean": 987.1603732638889
+        },
+        "luaMB": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "instances": {
+          "first": 51041,
+          "last": 51031,
+          "min": 50991.0,
+          "max": 51041.0,
+          "mean": 51035.444444444445
+        },
+        "worldParts": {
+          "first": 372,
+          "last": 365,
+          "min": 337.0,
+          "max": 372.0,
+          "mean": 368.1111111111111
+        },
+        "animatedParts": {
+          "first": 90,
+          "last": 87,
+          "min": 75.0,
+          "max": 90.0,
+          "mean": 88.33333333333333
+        },
+        "addedParts": {
+          "first": 522,
+          "last": 6220,
+          "min": 522.0,
+          "max": 6220.0,
+          "mean": 3329.777777777778
+        },
+        "removedParts": {
+          "first": 150,
+          "last": 5855,
+          "min": 150.0,
+          "max": 5855.0,
+          "mean": 2961.6666666666665
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 13.498257637023926,
+          "last": 7.417792320251465,
+          "min": 1.8770486116409302,
+          "max": 17.902976989746094,
+          "mean": 8.105186949173609
+        },
+        "renderCPUms": {
+          "first": 5.795400124043226,
+          "last": 3.7706000730395317,
+          "min": 3.7706000730395317,
+          "max": 8.184599690139294,
+          "mean": 5.462466642105331
+        },
+        "renderGPUms": {
+          "first": 19.92294378578663,
+          "last": 0,
+          "min": 0.0,
+          "max": 20.901920273900032,
+          "mean": 4.774327920702229
+        },
+        "heartbeatWorkMs": {
+          "first": 0.07822742918506265,
+          "last": 0.332028343109414,
+          "min": 0.07822742918506265,
+          "max": 0.3748687740880996,
+          "mean": 0.21352067718301745
+        },
+        "physicsWorkMs": {
+          "first": 0.550975848454982,
+          "last": 0.21844347065780312,
+          "min": 0.12076811253791675,
+          "max": 0.6185421370901167,
+          "mean": 0.34823007869514794
+        }
+      }
+    },
+    {
+      "side": "server",
+      "phase": "Quiet",
+      "focused": null,
+      "observations": 24,
+      "metrics": {
+        "luaKB": {
+          "first": 1437,
+          "last": 1977,
+          "min": 1395.0,
+          "max": 2225.0,
+          "mean": 1711.0833333333333
+        },
+        "totalMB": {
+          "first": 659.12109375,
+          "last": 666.58984375,
+          "min": 659.12109375,
+          "max": 666.58984375,
+          "mean": 662.7018229166666
+        },
+        "luaMB": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "instances": {
+          "first": 51021,
+          "last": 51021,
+          "min": 51021.0,
+          "max": 51021.0,
+          "mean": 51021.0
+        },
+        "worldParts": {
+          "first": 358,
+          "last": 358,
+          "min": 358.0,
+          "max": 358.0,
+          "mean": 358.0
+        },
+        "animatedParts": {
+          "first": 84,
+          "last": 84,
+          "min": 84.0,
+          "max": 84.0,
+          "mean": 84.0
+        },
+        "addedParts": {
+          "first": 6318,
+          "last": 6318,
+          "min": 6318.0,
+          "max": 6318.0,
+          "mean": 6318.0
+        },
+        "removedParts": {
+          "first": 5960,
+          "last": 5960,
+          "min": 5960.0,
+          "max": 5960.0,
+          "mean": 5960.0
+        },
+        "receiveKbps": {
+          "first": 0,
+          "last": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "sendKbps": {
+          "first": 1.481446623802185,
+          "last": 0.7339798808097839,
+          "min": 0.4681273102760315,
+          "max": 1.481446623802185,
+          "mean": 0.6106876755754153
+        },
+        "renderCPUms": {
+          "first": 3.8879001513123512,
+          "last": 3.767699934542179,
+          "min": 3.171500051394105,
+          "max": 4.478499758988619,
+          "mean": 3.707679182601472
+        },
+        "renderGPUms": {
+          "first": 0,
+          "last": 3.199999909497819E-05,
+          "min": 0.0,
+          "max": 20.385824143886566,
+          "mean": 3.0143025718740724
+        },
+        "heartbeatWorkMs": {
+          "first": 0.10024539369624108,
+          "last": 0.2847314754035324,
+          "min": 0.0806760072009638,
+          "max": 0.30686554964631796,
+          "mean": 0.1794758178827275
+        },
+        "physicsWorkMs": {
+          "first": 0.3687134594656527,
+          "last": 0.2711206616368145,
+          "min": 0.14938438835088164,
+          "max": 0.3687134594656527,
+          "mean": 0.2514783718652325
+        }
+      }
+    }
+  ],
+  "completed": [
+    {
+      "removedParts": 5960,
+      "addedParts": 6318,
+      "clients": 6,
+      "time": 1791715399.231,
+      "kind": "complete",
+      "side": "server",
+      "action": "churn"
+    }
+  ],
+  "checkpoints": [
+    {
+      "bytes": 1060,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715105.006
+    },
+    {
+      "bytes": 1129,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715107.006
+    },
+    {
+      "bytes": 1196,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715111.006
+    },
+    {
+      "bytes": 1196,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715112.005
+    },
+    {
+      "bytes": 1196,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715113.006
+    },
+    {
+      "bytes": 1273,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715117.006
+    },
+    {
+      "bytes": 1339,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715135.006
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715137.006
+    },
+    {
+      "bytes": 1343,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715141.005
+    },
+    {
+      "bytes": 1343,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715142.004
+    },
+    {
+      "bytes": 1343,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715143.006
+    },
+    {
+      "bytes": 1339,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715147.006
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715165.004
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715167.003
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715171.004
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715172.003
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715173.003
+    },
+    {
+      "bytes": 1343,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715177.004
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715195.003
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715197.002
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715201.003
+    },
+    {
+      "bytes": 1340,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715202.003
+    },
+    {
+      "bytes": 1340,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715203.003
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715207.003
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715225.002
+    },
+    {
+      "bytes": 1340,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715227.003
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715231.019
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715232.002
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715233.001
+    },
+    {
+      "bytes": 1340,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715237.001
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715255.018
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715257.003
+    },
+    {
+      "bytes": 1340,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715261.017
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715262.018
+    },
+    {
+      "bytes": 1346,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715263.017
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Churn",
+      "kind": "checkpoint",
+      "time": 1791715267.017
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715285.016
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715287.016
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715291.015
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715292.016
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715293.016
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715297.016
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715315.015
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715317.015
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715321.014
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715322.015
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715323.014
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715327.015
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715345.014
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715347.014
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715351.013
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715352.014
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715353.014
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715357.013
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715375.013
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715377.012
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715381.013
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715382.012
+    },
+    {
+      "bytes": 1345,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715383.013
+    },
+    {
+      "bytes": 1344,
+      "side": "server",
+      "phase": "Quiet",
+      "kind": "checkpoint",
+      "time": 1791715387.012
+    }
+  ]
+}

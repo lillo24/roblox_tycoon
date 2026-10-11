@@ -8,13 +8,33 @@ local Catalogue = require(ReplicatedStorage.TycoonShared.UpgradeCatalogue)
 local Session = require(script.Parent.Session)
 local PlotWorld = require(script.Parent.PlotWorld)
 local SupplyRuntime = require(script.Parent.SupplyRuntime)
+local Mode = require(ReplicatedStorage.TycoonShared.GameMode)
+local Profiles = require(script.Parent.Persistence.Profiles)
+local ProfileStore = require(script.Parent.Persistence.ProfileStore)
+local Backend = require(script.Parent.Persistence.DataStoreBackend)
+local Schema = require(script.Parent.Persistence.ProfileSchema)
+local PropertyWorld = require(script.Parent.PropertyWorld)
 
 local TycoonRuntime = {}
 local started = false
 
-function TycoonRuntime.start()
+-- Injection is restricted to disposable Studio previews/tests; production has no
+-- in-memory fallback. The preview label replaces every save claim in that copy.
+export type Preview = {
+	update: (string, (any) -> any) -> any,
+	label: string,
+	examples: { [number]: string }?,
+}
+function TycoonRuntime.start(preview: Preview?)
 	assert(RunService:IsServer(), "Tycoon: runtime must start on the server")
 	assert(not started, "Tycoon: runtime started twice")
+	local role = Mode.read()
+	assert(role == "Prototype" or role == "Infinite", "Entry must not start gameplay")
+	local infinite = role == "Infinite"
+	assert(
+		not preview or RunService:IsStudio() and infinite and #preview.label > 0,
+		"Tycoon: preview backend is Studio-only"
+	)
 	local numbers: { [string]: number } = {
 		IncomeInterval = Config.IncomeInterval,
 		PromptDistance = Config.PromptDistance,
@@ -38,11 +58,17 @@ function TycoonRuntime.start()
 		PlotCount = Config.PlotCount,
 		StartingCash = Config.StartingCash,
 		BaseIncome = Config.BaseIncome,
+		CashLimit = if infinite then Schema.MaxCash else nil,
 	}
 	local session = Session.new(tuning, Catalogue.Definitions)
 	local layout = PlotWorld.inspect() -- All authored geometry is validated before writes.
-	local supplyCenter = SupplyRuntime.inspect()
+	local supplyCenter = if infinite then nil else SupplyRuntime.inspect()
 	local plots = PlotWorld.create(layout)
+	if infinite then
+		for _, plot in plots do
+			PropertyWorld.prepare(plot)
+		end
+	end
 	-- Outbound only: no client purchase remote, message forwarding, or broadcast.
 	local feedback = Instance.new("RemoteEvent")
 	feedback.Name = Config.FeedbackName
@@ -50,6 +76,8 @@ function TycoonRuntime.start()
 	feedback.Parent = ReplicatedStorage
 	local active: { [number]: Player } = {}
 	local nextRequest: { [number]: number } = {}
+	local profiles: Profiles.Profiles? = nil
+	local publishedPlots: { [number]: number } = {}
 	started = true
 
 	local function publish(player: Player, state: Session.State)
@@ -59,12 +87,18 @@ function TycoonRuntime.start()
 		player:SetAttribute(Config.Attributes.Cash, state.cash)
 		player:SetAttribute(Config.Attributes.IncomeRate, state.incomeRate)
 		player:SetAttribute(Config.Attributes.PlotId, state.plotId)
-		player:SetAttribute(Config.Attributes.Assignment, "Assigned")
-		PlotWorld.reconcile(plots[state.plotId], state.purchases, state.cash)
+		player:SetAttribute(Config.Attributes.Assignment, if infinite then "Ready" else "Assigned")
+		local data = if profiles then profiles:snapshot(player.UserId) else nil
+		if data then
+			PropertyWorld.reconcile(plots[state.plotId], data)
+		else
+			PlotWorld.reconcile(plots[state.plotId], state.purchases, state.cash)
+		end
 	end
 
 	local function clear(player: Player)
 		player:SetAttribute(Config.Attributes.Assignment, nil)
+		player:SetAttribute(Config.Attributes.SaveStatus, nil)
 		for _, definition in Catalogue.Definitions do
 			player:SetAttribute(Catalogue.purchaseAttribute(definition.Id), nil)
 		end
@@ -74,7 +108,60 @@ function TycoonRuntime.start()
 	end
 	local runtimeFolder = workspace:FindFirstChild(Config.RuntimeName)
 	assert(runtimeFolder, "Tycoon: runtime geometry is missing")
-	local supply = SupplyRuntime.new(session, active, publish, runtimeFolder, supplyCenter)
+	local supply = if supplyCenter
+		then SupplyRuntime.new(session, active, publish, runtimeFolder, supplyCenter)
+		else nil
+	local backendIssue: string? = nil
+	if infinite then
+		local update = if preview then preview.update else nil
+		if not update then
+			update, backendIssue = Backend.open()
+		end
+		if update then
+			profiles = Profiles.new(
+				session,
+				ProfileStore.new(update),
+				function(userId: number, status: string, saveStatus: string, state: Session.State?, _data: Schema.Data?)
+					local player = active[userId]
+					local example = if preview and preview.examples then preview.examples[userId] else nil
+					if example and state and _data then
+						local plot = plots[state.plotId]
+						plot.model:SetAttribute(Config.Attributes.OwnerUserId, userId)
+						plot.label.Text = example .. "\nDEVELOPMENT EXAMPLE"
+						PropertyWorld.reconcile(plot, _data)
+						return
+					end
+					if not player or player.Parent ~= Players then
+						return
+					end
+					local previous = publishedPlots[userId]
+					if previous and (not state or previous ~= state.plotId) then
+						PlotWorld.setOwner(plots[previous], nil)
+						publishedPlots[userId] = nil
+					end
+					if state then
+						if not publishedPlots[userId] then
+							PlotWorld.setOwner(plots[state.plotId], player)
+						end
+						publishedPlots[userId] = state.plotId
+						publish(player, state)
+					else
+						clear(player)
+					end
+					player:SetAttribute(Config.Attributes.SaveStatus, if preview then preview.label else saveStatus)
+					player:SetAttribute(Config.Attributes.Assignment, status)
+				end
+			)
+		else
+			warn(`Infinite persistence unavailable: {backendIssue}`)
+		end
+	end
+	if profiles and preview and preview.examples then
+		for userId, label in preview.examples do
+			assert(userId < 0 and #label <= 40, "Invalid Studio example identity")
+			profiles:join(userId)
+		end
+	end
 
 	local function join(player: Player)
 		if player.Parent ~= Players or active[player.UserId] == player then
@@ -83,6 +170,18 @@ function TycoonRuntime.start()
 		assert(active[player.UserId] == nil, `Tycoon: duplicate active user {player.UserId}`)
 		clear(player)
 		active[player.UserId] = player
+		if infinite then
+			if profiles then
+				profiles:join(player.UserId)
+			else
+				player:SetAttribute(Config.Attributes.Assignment, "Unavailable")
+				player:SetAttribute(
+					Config.Attributes.SaveStatus,
+					"Saving is not configured for this preview. Your saved data has not been changed."
+				)
+			end
+			return
+		end
 		local state = session:assign(player.UserId)
 		if not state then
 			player:SetAttribute(Config.Attributes.Assignment, "Full")
@@ -93,20 +192,31 @@ function TycoonRuntime.start()
 		end
 		PlotWorld.setOwner(plots[state.plotId], player)
 		publish(player, state)
-		supply:sync(workspace:GetServerTimeNow())
+		if supply then
+			supply:sync(workspace:GetServerTimeNow())
+		end
 	end
 
 	local function leave(player: Player)
 		nextRequest[player.UserId] = nil
 		if active[player.UserId] == player then
 			active[player.UserId] = nil
-			local id = session:release(player.UserId)
+			local state = session:get(player.UserId)
+			local id = if state then state.plotId else nil
+			if profiles then
+				profiles:leave(player.UserId)
+			else
+				session:release(player.UserId)
+			end
+			publishedPlots[player.UserId] = nil
 			if id then
 				PlotWorld.setOwner(plots[id], nil)
 			end
 		end
 		clear(player)
-		supply:leave(player)
+		if supply then
+			supply:leave(player)
+		end
 	end
 
 	local function sendResult(player: Player, message: string)
@@ -114,11 +224,38 @@ function TycoonRuntime.start()
 		feedback:FireClient(player, if state then state.plotId else nil, message)
 	end
 
+	if infinite then
+		local remote = Instance.new("RemoteFunction")
+		remote.Name, remote.Parent = "TycoonProperty", ReplicatedStorage
+		remote.OnServerInvoke = function(player: Player, request: any): any
+			local persistent = profiles
+			if player.Parent ~= Players or active[player.UserId] ~= player or not persistent then
+				return { available = false, message = "Property unavailable" }
+			end
+			local now = os.clock()
+			if now < (nextRequest[player.UserId] or 0) then
+				return { available = false, message = "Please wait a moment" }
+			end
+			nextRequest[player.UserId] = now + Config.RequestInterval
+			local message, accepted = "", false
+			if request ~= "read" then
+				accepted, message = persistent:edit(player.UserId, request)
+			end
+			local response = persistent:read(player.UserId)
+			response.message, response.accepted = message, accepted
+			return response
+		end
+	end
+
 	for plotId, plot in plots do
 		for upgradeId, pad in plot.pads do
 			pad.prompt.Triggered:Connect(function(player: Player)
 				-- Attributes and prompt visibility are presentation, never eligibility inputs.
 				if player.Parent ~= Players or active[player.UserId] ~= player then
+					return
+				end
+				if infinite and (not profiles or not profiles:ready(player.UserId)) then
+					sendResult(player, "Your place must be ready before buying")
 					return
 				end
 				-- Bound both processing and private result messages to four attempts/sec.
@@ -151,6 +288,12 @@ function TycoonRuntime.start()
 	end
 	Players.PlayerAdded:Connect(join)
 	Players.PlayerRemoving:Connect(leave)
+	if profiles then
+		local persistent = profiles
+		game:BindToClose(function()
+			persistent:shutdown()
+		end)
+	end
 	for _, player in Players:GetPlayers() do
 		join(player)
 	end
@@ -159,7 +302,12 @@ function TycoonRuntime.start()
 	-- Joining players enter this server-wide cadence (first tick may be less than 1s away).
 	local elapsed = 0
 	RunService.Heartbeat:Connect(function(delta: number)
-		supply:sync(workspace:GetServerTimeNow())
+		if supply then
+			supply:sync(workspace:GetServerTimeNow())
+		end
+		if profiles then
+			profiles:step()
+		end
 		elapsed += delta
 		local ticks = math.floor(elapsed / Config.IncomeInterval)
 		if ticks == 0 then
@@ -169,11 +317,29 @@ function TycoonRuntime.start()
 		session:accrue(ticks)
 		for userId, player in active do
 			local state = session:get(userId)
-			if state then
+			if state and (not profiles or profiles:ready(userId)) then
 				publish(player, state)
 			end -- Full-capacity players have no economy.
 		end
 	end)
+	return {
+		prepare = function(userId: number, done: (boolean, string) -> ())
+			if profiles then
+				profiles:prepare(userId, done)
+			else
+				done(true, "No persistent profile")
+			end
+		end,
+		recover = function(userId: number, done: (boolean, string) -> ())
+			if profiles then
+				profiles:recover(userId, done)
+			elseif infinite then
+				done(false, "Saving is not configured. Return to modes or rejoin after setup.")
+			else
+				done(true, "Session remains available")
+			end
+		end,
+	}
 end
 
 return TycoonRuntime

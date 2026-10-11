@@ -1,0 +1,105 @@
+Validation scope: all 11 cases passed.
+src/client/Bootstrap.client.luau
+src/server/Bootstrap.server.luau
+src/shared/.gitkeep
+Results:
+0 errors
+0 warnings
+0 parse errors
+Building project 'roblox_tycoon'
+Built project to validation.rbxlx
+Project structure: all 12 regression probes passed.
+Created sourcemap at <checkout>\build\sourcemap.json
+[INFO] Loading definitions file: @roblox - types/roblox.d.luau
+[WARN] client does not allow didChangeWatchedFiles registration - automatic updating on sourcemap changes disabled
+Luau analysis probes: positive control and 5 expected type failures passed; source/tests unchanged.
+place/tycoon.rbxlx
+Authored map: saved six-lot contract, inward frames, SAT separation, anchored parts, one spawn, code ownership and residue checks passed.
+Authored map: all 7 serialized regression probes passed.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-helper-qa-test.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Play executes Session/SupplyEvent/SupplyFeedback/UiState/WorldLabels/PlayerGuidance assertions. UI01QA/RunMapAssertions is opt-in Edit-only. UI01ClientQA contains opt-in lifecycle/delivery/readiness/display checks. See docs/UX_02_REVIEW.md. QA exists only in this disposable place.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-helper-gameplay-test.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+UI review variants passed: exact production/test sources, unchanged map/hash, default QA routes, fixture-free gameplay output.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-inf-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Infinite preview (LocalPreview, IncludeQA=True): <checkout>\build\inf-helper-qa.rbxlx
+Explicit memory fixture: playable locally, resets on Stop; NOT real DataStore evidence.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-inf-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Infinite preview (LocalPreview, IncludeQA=False): <checkout>\build\inf-helper-play.rbxlx
+Explicit memory fixture: playable locally, resets on Stop; NOT real DataStore evidence.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-inf-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Infinite preview (DataStore, IncludeQA=False): <checkout>\build\inf-helper-real.rbxlx
+Real persistence path: requires an isolated published test universe configured in Persistence/Settings; no fallback.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-inf-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Infinite preview (LocalPreview, IncludeQA=False): <checkout>\build\inf-helper-showcase.rbxlx
+Explicit memory fixture: playable locally, resets on Stop; NOT real DataStore evidence.
+Infinite preview: exact recursive source/class checks, local fixture boundary, real-backend bootstrap and unchanged map passed.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-mode-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Mode preview (Entry / LateFailure): <checkout>\build\mode-helper-entry.rbxlx
+Local adapter only: no real teleport, publication or cross-session durability. Open each destination file separately.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-mode-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Mode preview (Prototype / LateFailure): <checkout>\build\mode-helper-prototype.rbxlx
+Local adapter only: no real teleport, publication or cross-session durability. Open each destination file separately.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-inf-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Infinite preview (LocalPreview, IncludeQA=True): <checkout>\build\inf-mode-base.rbxlx
+Explicit memory fixture: playable locally, resets on Stop; NOT real DataStore evidence.
+Mode preview (Infinite / LateFailure): <checkout>\build\mode-helper-infinite.rbxlx
+Local adapter only: no real teleport, publication or cross-session durability. Open each destination file separately.
+Mode preview roles, explicit adapters, startup boundary and canonical map checks passed.
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-inf-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Infinite preview (LocalPreview, IncludeQA=False): <checkout>\build\inf-mode-base.rbxlx
+Explicit memory fixture: playable locally, resets on Stop; NOT real DataStore evidence.
+Mode preview (Infinite / LateFailure): <checkout>\build\mode-perf-base.rbxlx
+Local adapter only: no real teleport, publication or cross-session durability. Open each destination file separately.
+PERF01 Fresh (local memory, unmapped probes): <checkout>\build\mode-perf-check-fresh.rbxlx
+Building project 'roblox_tycoon'
+Built project to ui-review-source.rbxlx
+Disposable UI review: <checkout>\build\ui-review-inf-base.rbxlx
+Canonical scene unchanged: 9D6A9FE65A25E0C1D8CF6FA4FE7D4E582EA234FF618DC758BC71FD4675C9F8E8
+Gameplay-only review: no QA modules, assertion runners or synthetic fixtures included.
+Infinite preview (LocalPreview, IncludeQA=False): <checkout>\build\inf-mode-base.rbxlx
+Explicit memory fixture: playable locally, resets on Stop; NOT real DataStore evidence.
+Mode preview (Infinite / LateFailure): <checkout>\build\mode-perf-base.rbxlx
+Local adapter only: no real teleport, publication or cross-session durability. Open each destination file separately.
+PERF01 SixOwners (local memory, unmapped probes): <checkout>\build\mode-perf-check-sixowners.rbxlx
+Performance workload startup, exact probe source, production exclusion and unchanged map checks passed.
+Canonical snapshot is tracked; Studio save/reopen/restore still requires observed evidence.
+CLI checks passed: formatting, lint, fresh build/sourcemap, Luau type analysis and failure probes, source ownership, serialized structure, and Git ignore rules. Studio integration/runtime gates are separate.
