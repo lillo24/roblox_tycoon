@@ -21,6 +21,7 @@ return table.freeze({
 		PlotId = "TycoonPlotId",
 		IncomeRate = "TycoonIncomeRate",
 		Assignment = "TycoonAssignment",
+		SaveStatus = "TycoonSaveStatus",
 		OwnerUserId = "TycoonOwnerUserId",
 	}),
 })

@@ -15,7 +15,8 @@ permissions:
 jobs:
   validate:
     runs-on: windows-latest
-    timeout-minutes: 10
+    # Integration adds executed Luau suites and four-place publisher regressions.
+    timeout-minutes: 25
     defaults:
       run:
         shell: pwsh
@@ -60,7 +61,24 @@ jobs:
 
       - name: Install pinned tools
         if: steps.scope.outputs.run_checks == 'true'
-        run: rokit install --no-trust-check
+        env:
+          ROKIT_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # Rokit 1.2 reads auth.toml, not GITHUB_TOKEN. Avoid anonymous API limits.
+          $rokitAuthPath = Join-Path $env:USERPROFILE '.rokit/auth.toml'
+          if ([string]::IsNullOrWhiteSpace($env:ROKIT_GITHUB_TOKEN)) {
+            throw 'The read-only workflow token is required to install pinned tools.'
+          }
+          try {
+            Set-Content -LiteralPath $rokitAuthPath -Encoding utf8NoBOM -Value ('github = ' + (ConvertTo-Json $env:ROKIT_GITHUB_TOKEN -Compress))
+            rokit install --no-trust-check
+            $installExit = $LASTEXITCODE
+          } finally {
+            if (Test-Path -LiteralPath $rokitAuthPath) {
+              Remove-Item -LiteralPath $rokitAuthPath -Force
+            }
+          }
+          exit $installExit
 
       - name: Validate project
         if: steps.scope.outputs.run_checks == 'true'

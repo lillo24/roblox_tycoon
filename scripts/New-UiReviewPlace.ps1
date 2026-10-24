@@ -98,6 +98,11 @@ end
 '@
         [void](Add-QAItem $qa 'ModuleScript' 'RunMapAssertions' $mapRunner)
         $replicated = $scene.SelectSingleNode('/roblox/Item[@class="ReplicatedStorage"]')
+        # Legacy UI observers exercise Factory; selecting it is explicit and
+        # Studio-only. Gameplay/release builds never carry this preview value.
+        $previewMode = Add-QAItem $replicated 'StringValue' 'TycoonMode' ''
+        $roleValue = $scene.CreateElement('string'); $roleValue.SetAttribute('name','Value'); $roleValue.InnerText = 'Prototype'
+        [void]$previewMode.SelectSingleNode('Properties').AppendChild($roleValue)
         $clientQA = Add-QAItem $replicated 'Folder' 'UI01ClientQA' ''
         foreach ($test in @('HudLifecycle', 'HudFeedback', 'HudReadiness')) {
             [void](Add-QAItem $clientQA 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))

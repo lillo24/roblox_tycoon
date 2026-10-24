@@ -24,7 +24,7 @@ function Find-ArtifactItem([xml]$Document, [string]$Path) {
     return $items[0]
 }
 
-function Assert-SourceFolder($Folder, [string]$Directory, [string]$InstancePath) {
+function Assert-SourceFolder($Folder, [string]$Directory, [string]$InstancePath, [string]$RoutingSource = '') {
     Assert-OrdinaryPath $Directory
     if ($Folder.GetAttribute('class') -cne 'Folder') { throw "Deployment source: $InstancePath must be a Folder." }
     $expected = @{}
@@ -50,14 +50,19 @@ function Assert-SourceFolder($Folder, [string]$Directory, [string]$InstancePath)
             throw "Deployment source: $InstancePath/$name expected one $class."
         }
         if ($file.PSIsContainer) {
-            Assert-SourceFolder $children[0] $file.FullName "$InstancePath/$name"
+            Assert-SourceFolder $children[0] $file.FullName "$InstancePath/$name" $RoutingSource
         } else {
             if (@($children[0].SelectNodes('Item')).Count -ne 0) {
                 throw "Deployment source: unexpected descendants in $InstancePath/$name."
             }
             $sources = @($children[0].SelectNodes('Properties/*[@name="Source"]'))
-            if ($sources.Count -ne 1 -or $sources[0].InnerText.Replace("`r`n", "`n") -cne
-                [IO.File]::ReadAllText($file.FullName).Replace("`r`n", "`n")) {
+            $expectedSource = [IO.File]::ReadAllText($file.FullName)
+            # The only allowed generated source is this exact server-only
+            # manifest, reconstructed independently from the validated inputs.
+            if ($RoutingSource -and "$InstancePath/$name" -ceq 'ServerScriptService/TycoonServer/Routing/Settings') {
+                $expectedSource = $RoutingSource
+            }
+            if ($sources.Count -ne 1 -or $sources[0].InnerText.Replace("`r`n", "`n") -cne $expectedSource.Replace("`r`n", "`n")) {
                 throw "Deployment source: $InstancePath/$name does not contain current checkout source."
             }
         }
@@ -68,7 +73,9 @@ function Assert-SourceFolder($Folder, [string]$Directory, [string]$InstancePath)
 }
 
 function Assert-DevelopmentPlace {
-    param([Parameter(Mandatory)][xml]$PlaceXml, [string]$RepositoryRoot = $script:RepositoryRoot)
+    param([Parameter(Mandatory)][xml]$PlaceXml, [string]$RepositoryRoot = $script:RepositoryRoot,
+        [ValidateSet('Entry','Session','Infinite','Clash')][string]$Role = 'Entry', [System.Collections.IDictionary]$Configuration)
+    $routingSource = if ($Configuration) { Get-DevelopmentRoutingSource -Role $Role -Configuration $Configuration } else { '' }
     $canonicalPath = Join-Path $RepositoryRoot 'place/tycoon.rbxlx'
     Assert-OrdinaryPath $canonicalPath
     Assert-OrdinaryPath (Join-Path $RepositoryRoot 'default.project.json')
@@ -109,7 +116,7 @@ function Assert-DevelopmentPlace {
     [xml]$expectedScene = $canonical.CloneNode($true)
     foreach ($route in $script:Routes) {
         $actual = Find-ArtifactItem $PlaceXml $route.Path
-        Assert-SourceFolder $actual (Join-Path $RepositoryRoot $route.Source) $route.Path
+        Assert-SourceFolder $actual (Join-Path $RepositoryRoot $route.Source) $route.Path $routingSource
         foreach ($document in @($actualScene, $expectedScene)) {
             $folder = Find-ArtifactItem $document $route.Path
             [void]$folder.ParentNode.RemoveChild($folder)
@@ -120,7 +127,41 @@ function Assert-DevelopmentPlace {
     }
 }
 
-function New-DevelopmentPlace {
+function Get-DevelopmentRoutingSource {
+    param([ValidateSet('Entry','Session','Infinite','Clash')][string]$Role,
+        [Parameter(Mandatory)][System.Collections.IDictionary]$Configuration)
+    $roles = @('Entry','Session','Infinite','Clash')
+    if (-not $Configuration.Contains('Enabled') -or $Configuration.Enabled -isnot [bool] -or
+        -not $Configuration.Contains('UniverseId') -or -not $Configuration.Contains('Places')) { throw 'Incomplete routing build configuration.' }
+    $ids = @([string]$Configuration.UniverseId)
+    foreach ($name in $roles) {
+        if (-not $Configuration.Places.Contains($name)) { throw "Routing build configuration missing $name." }
+        $ids += [string]$Configuration.Places[$name]
+    }
+    foreach ($id in $ids) {
+        if ($Configuration.Enabled) {
+            if ($id -cnotmatch '^[1-9][0-9]*$' -or [decimal]$id -ge 9007199254740992) { throw 'Routing IDs must be positive exact Luau integers below 2^53.' }
+        } elseif ($id -cne '0') { throw 'Offline routing builds must use disabled, all-zero IDs.' }
+    }
+    if ($Configuration.Enabled -and @($ids[1..4] | Select-Object -Unique).Count -ne 4) { throw 'Routing place IDs must be distinct.' }
+    $internalRole = if ($Role -ceq 'Session') { 'Prototype' } else { $Role }
+    $enabled = ([string]$Configuration.Enabled).ToLowerInvariant()
+    return @"
+--!strict
+-- Generated server-only deployment manifest. Session retains the Prototype role contract.
+return table.freeze({
+    Enabled = $enabled,
+    BuildRole = "$internalRole",
+    UniverseId = $($ids[0]),
+    Places = table.freeze({ Entry = $($ids[1]), Prototype = $($ids[2]), Infinite = $($ids[3]), Clash = $($ids[4]) }),
+})
+"@
+}
+
+function New-DevelopmentPlaces {
+    param([System.Collections.IDictionary]$Configuration = @{
+        Enabled = $false; UniverseId = '0'; Places = @{ Entry = '0'; Session = '0'; Infinite = '0'; Clash = '0' }
+    })
     $canonicalPath = Join-Path $script:RepositoryRoot 'place/tycoon.rbxlx'
     Assert-OrdinaryPath $canonicalPath
     Assert-OrdinaryPath (Join-Path $script:RepositoryRoot 'default.project.json')
@@ -134,16 +175,28 @@ function New-DevelopmentPlace {
     }
     $initialHash = (Get-FileHash -LiteralPath $canonicalPath -Algorithm SHA256).Hash
     & { Set-StrictMode -Off; & (Join-Path $script:RepositoryRoot 'scripts/Assert-AuthoredMap.ps1') } | Out-Null
-    & { Set-StrictMode -Off; & (Join-Path $script:RepositoryRoot 'scripts/New-UiReviewPlace.ps1') -OutputName 'ui-review-development.rbxlx' -GameplayOnly } |
+    foreach ($role in @('Entry','Session','Infinite','Clash')) { Get-DevelopmentRoutingSource -Role $role -Configuration $Configuration | Out-Null }
+    & { Set-StrictMode -Off; & (Join-Path $script:RepositoryRoot 'scripts/New-UiReviewPlace.ps1') -OutputName 'ui-review-development-base.rbxlx' -GameplayOnly } |
         ForEach-Object { Write-Host $_ }
-    $path = Join-Path $script:RepositoryRoot 'build/ui-review-development.rbxlx'
-    Assert-OrdinaryPath $path
-    [xml]$place = [IO.File]::ReadAllText($path)
-    Assert-DevelopmentPlace -PlaceXml $place
+    [xml]$base = [IO.File]::ReadAllText((Join-Path $script:RepositoryRoot 'build/ui-review-development-base.rbxlx'))
+    $builds = [ordered]@{}
+    foreach ($role in @('Entry','Session','Infinite','Clash')) {
+        $path = Join-Path $script:RepositoryRoot ('build/ui-review-development-' + $role.ToLowerInvariant() + '.rbxlx')
+        if (Test-Path -LiteralPath $path) { Assert-OrdinaryPath $path }
+        [xml]$place = $base.CloneNode($true)
+        $settingsModule = Find-ArtifactItem $place 'ServerScriptService/TycoonServer/Routing/Settings'
+        $settingsModule.SelectSingleNode('Properties/*[@name="Source"]').InnerText = Get-DevelopmentRoutingSource -Role $role -Configuration $Configuration
+        Assert-DevelopmentPlace -PlaceXml $place -Role $role -Configuration $Configuration
+        $settings = [Xml.XmlWriterSettings]::new()
+        $settings.OmitXmlDeclaration = $true; $settings.Indent = $true; $settings.Encoding = [Text.UTF8Encoding]::new($false)
+        $writer = [Xml.XmlWriter]::Create($path, $settings)
+        try { $place.Save($writer) } finally { $writer.Dispose() }
+        $builds[$role] = $path
+    }
     if ((Get-FileHash -LiteralPath $canonicalPath -Algorithm SHA256).Hash -cne $initialHash) {
         throw 'Deployment build changed the canonical scene.'
     }
-    return $path
+    return $builds
 }
 
-Export-ModuleMember -Function Assert-DevelopmentPlace, New-DevelopmentPlace
+Export-ModuleMember -Function Assert-DevelopmentPlace, New-DevelopmentPlaces, Get-DevelopmentRoutingSource

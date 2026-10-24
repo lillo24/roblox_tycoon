@@ -1,4 +1,4 @@
-# Session tycoon prototype
+# Integrated game source
 
 This source tree owns gameplay inside the existing three code-only Rojo folders.
 Bootstraps compose the feature and retain the setup startup messages. GAMEPLAY-02
@@ -6,11 +6,21 @@ is a reversible upgrade-order experiment; costs, names, and prerequisites below
 are provisional. Technical tests do not establish balance, strategic depth, or fun.
 GAMEPLAY-03 adds one provisional shared Supply Cache opportunity. Neither
 experiment establishes balance, fairness under latency, or retention.
-Round-based versus persistent/infinite progression remains unresolved.
+INTEGRATE-01 composes the three requested modes on this foundation. Entry shows
+Factory Challenge, Infinite World and Aim Clash. Each gameplay server has a
+trusted destination role; modes do not switch inside a running server. Source
+opens Entry in Studio; hosted unconfigured builds fail closed. See
+[routing](server/Routing/README.md), [persistence](server/Persistence/README.md),
+and [four-place publishing](../docs/MOBILE_DEPLOYMENT.md).
 
 | File | Responsibility |
 | --- | --- |
 | `shared/Config.luau` | Frozen six-owner tuning, runtime/map names and attribute names |
+| `shared/GameMode.luau` | Shared names/three menu choices and trusted role projection; source defaults to Entry |
+| `server/AppRuntime.luau`, `server/Routing/` | Trusted four-place startup, return, teleport failures and Infinite departure lifecycle |
+| `server/Experiments/FactoryPurchases/` | Factory's default walk-on offers, expiry/character/exit fences; original EXP-02 paths retained |
+| `server/Experiments/AimClash/` | Standalone Practice/two-user queue and authoritative Match; original EXP-03 paths retained |
+| `server/Persistence/` | Account schema, single-writer ownership, save/load lifecycle and Roblox adapter |
 | `shared/UpgradeCatalogue.luau` | Typed IDs/readonly definitions, startup validation, availability/result text, purchase attribute names |
 | `shared/SupplyRules.luau` | Frozen provisional event constants, validation, snapshot types, HUD text and runtime names |
 | `server/Bootstrap.server.luau` | Starts the server runtime once |
@@ -21,13 +31,15 @@ Round-based versus persistent/infinite progression remains unresolved.
 | `server/SupplyWorld.luau` | Neutral footprint validation, anchored cache/marker and phase presentation |
 | `server/MapLayout.luau` | Saved-map contract, support/obstacle preflight and oriented footprint clearance |
 | `server/PlotWorld.luau` | Local-frame equipment/pads/signs and purchase reconciliation on saved foundations |
-| `client/Bootstrap.client.luau` | Starts the HUD once |
+| `client/Bootstrap.client.luau` | Starts the matching role controller and always the Modes chooser |
 | `client/Hud.luau` | Composes the compact interface, read-only subscriptions, independent feedback lifetimes and teardown; see [client module map](client/README.md) |
 | `client/SupplyFeedback.luau` | Supplied-time private event feedback retention, matching public identity, expiry and reset/timeout protection |
 
-No packages, persistence, exclusivity, combat, prestige, finale, or round/reset rules.
-There are separate outbound purchase/event feedback RemoteEvents, no custom
-purchase/claim remote, and no client-to-server event handler.
+Factory has no prestige, automatic reset or forced combat. Its purchase feedback
+and Supply Cache remain separate. FactoryWalkOn accepts only a server-issued
+one-use token; the shared Session purchase still decides costs and eligibility.
+Infinite has a separate owner-only editor/profile protocol. Aim Clash has its
+own input/queue remote and no factory/profile economy. Entry has only routing.
 
 ## Provisional catalogue and tuning
 
@@ -75,10 +87,11 @@ prerequisites, replay, and funds, then deducts, records, and adds income without
 yielding. Rejections change none of cash, rate, assignment, or purchases. Rapid
 requests cannot spend the same balance twice.
 
-Each `Triggered` callback closes over a server-known plot/upgrade pair. The
-runtime independently checks the exact active Player, a living character/root,
-and distance to the anchored pad. There are no client-supplied prices/effects or
-custom purchase payloads. Attributes and prompt visibility are presentation only.
+Factory samples a live character's root in its own pad's oriented bounds, issues
+a single-use nonce and checks the client modal/focus response. The server rechecks
+the nonce, active Player, current character, owned plot and pad bounds before
+the common purchase callback checks distance and Session's atomic transaction.
+The client never supplies a price/effect. Attributes and labels are presentation.
 See Roblox's [client/server boundary guidance](https://create.roblox.com/docs/scripting/security/client-server-boundary).
 
 Server-written presentation attributes:
@@ -119,12 +132,12 @@ Missing/duplicate anchors, wrong IDs/facing, intersecting footprints and blocked
 entrances/pads/equipment fail before runtime writes. See place/README.md for safe
 editing. Workspace remains outside the live Rojo mapping.
 
-Each plot has four separated, surface-labeled pads. The built-in ProximityPrompt
-shows the upgrade, delta, and price/state near the selected pad; clickable prompts
-support the built-in keyboard/gamepad/touch route. One-per-button exclusivity avoids
-stacking prompt controls. Gray means locked/unowned, amber unaffordable, cyan
-affordable, green purchased. Locked/unaffordable prompts stay usable to explain
-rejection; purchased prompts retire. The HUD lists name/cost/delta plus each state.
+Each plot has four separated, surface-labeled pads. Regular purchase prompts are
+disabled: walking onto a valid pad attempts once. Gray means locked/unowned,
+amber unaffordable, cyan affordable, green purchased. An unaffordable, modal-blocked
+or expired visit requires stepping off/on; funds arriving or a menu closing does
+not trigger a purchase. Mouse, touch and controller movement use the same server
+path. Supply Cache retains a deliberate prompt. The HUD lists price/delta/state.
 Completion reads "Complete — income continues".
 
 `PlotWorld.reconcile` reads the authoritative set, creating missing visuals and
@@ -135,7 +148,8 @@ Only bases/housings collide; decorations have no touch processing. Reconciliatio
 does not duplicate equipment, and late observers see the current replicated set.
 Nearby ownership labels are 130×36, 12px, at most 90 studs, with depth occlusion.
 
-Owner reset reconciles an empty set, restoring every prompt and removing visuals.
+Owner departure reconciles an empty set and removes visuals; Factory's walk-on
+adapter keeps regular prompts disabled after reconciliation.
 
 ## Calculated purchase orders (not playtest results)
 
@@ -269,7 +283,8 @@ Camping and repeat wins are possible; neither is silently
 prevented. Ordinary income continues while away from a plot, so the trip does not
 create an income opportunity cost. Rewards after completing all upgrades still
 have no further spending use. No endgame/shop, rebalancing, paid advantage,
-persistence, round rules, telemetry, or GAMEPLAY-04 feature is added.
+round rules, telemetry, or GAMEPLAY-04 feature is added by the event. Persistence
+belongs only to the separately selected Infinite mode, which disables this event.
 
 The preceding purchase-order table is unchanged **without events**. A separately
 calculated early reward example: an unupgraded owner with 20 ordinary ticks has
@@ -282,7 +297,9 @@ arithmetic. The event has not proven balanced orders, strategic depth or fun.
 ## Validation and short Studio playtest
 
 Run `./scripts/Validate-Project.ps1`. It formats/lints/type-checks `src` and `tests`
-and validates the original three-folder build; it does not execute tests or gameplay.
+and validates the original three-folder build, four release scenes and mocked
+publisher. It executes the domain suites in pinned Lune; Studio client/engine and
+live-service checks remain separate. See the integration review for current evidence.
 Tool versions, API definitions, strict pragmas, and nullable guards remain intact.
 
 `tests/Session.spec.luau` is outside Rojo. Load its exact file into a temporary
@@ -356,9 +373,9 @@ print("SupplyFeedback assertions passed:", count)
 This executes the actual Instance-free client helper with supplied times: current,
 future and initialization feedback; intermediate/skipped snapshots; stale/multiple
 results; repeated lifetimes/old timeouts; exact expiry; same-ID phase updates;
-cancellation/assignment/teardown resets and unassigned messages. CLI/CI analysis
-does not execute it. Unchanged server-domain suites may reuse prior executed
-evidence for this client-only fix.
+cancellation/assignment/teardown resets and unassigned messages. INTEGRATE-01's
+full validator also executes this domain suite in Lune; old review packets retain
+their historical execution evidence.
 
 For controlled integration ordering in a disposable Play client, temporarily
 present an older snapshot ID through the actual `TycoonSupplyState.Value` handler,

@@ -21,10 +21,12 @@ foreach ($variant in $variants) {
     $clientQA = @($preview.SelectNodes("/roblox/Item[@class='ReplicatedStorage']/Item[Properties/string[@name='Name']='UI01ClientQA']"))
     $orderQA = @($preview.SelectNodes("/roblox/Item[@class='ReplicatedStorage']/Item[Properties/string[@name='Name']='UI01OrderQA']"))
     if ($variant.GameplayOnly) {
+        if ($preview.SelectSingleNode("//Item[Properties/string[@name='Name']='TycoonMode']")) { throw 'Studio role selector leaked into gameplay output.' }
         if ($qa.Count -ne 0 -or $clientQA.Count -ne 0 -or $orderQA.Count -ne 0) {
             throw "Gameplay-only preview contains QA fixtures: $output"
         }
     } else {
+        if ($preview.SelectSingleNode("//Item[Properties/string[@name='Name']='TycoonMode']/Properties/string[@name='Value']").InnerText -cne 'Prototype') { throw 'Legacy UI QA must explicitly open Factory in Studio.' }
         if ($qa.Count -ne 1 -or $clientQA.Count -ne 1 -or $orderQA.Count -ne 1) {
             throw "Default preview is missing unique QA fixtures: $output"
         }

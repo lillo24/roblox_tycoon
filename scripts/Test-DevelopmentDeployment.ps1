@@ -19,19 +19,42 @@ function Assert-Rejected([string]$Name, [scriptblock]$Action, [string]$Pattern) 
     Assert-Test $rejected "$Name did not fail"
 }
 
-$goodPath = New-DevelopmentPlace
+$configuration = @{ Enabled = $true; UniverseId = '123'; Places = @{ Entry = '456'; Session = '457'; Infinite = '458'; Clash = '459' } }
+$generated = New-DevelopmentPlaces -Configuration $configuration
+$goodPaths = @{}
+foreach ($role in @('Entry','Session','Infinite','Clash')) {
+    $path = Join-Path $repositoryRoot ('build/deploy-regression-good-' + $role.ToLowerInvariant() + '.rbxlx')
+    Copy-Item -LiteralPath $generated[$role] -Destination $path
+    $goodPaths[$role] = $path
+    [xml]$artifact = [IO.File]::ReadAllText($path)
+    Assert-DevelopmentPlace -PlaceXml $artifact -Role $role -Configuration $configuration
+    Assert-Test (-not [IO.File]::ReadAllText($path).StartsWith('<?xml')) "$role Studio-incompatible XML declaration"
+}
+$offlinePaths = New-DevelopmentPlaces
+$goodPath = $goodPaths.Entry
 [xml]$good = [IO.File]::ReadAllText($goodPath)
-Assert-DevelopmentPlace -PlaceXml $good
+Assert-DevelopmentPlace -PlaceXml $good -Configuration $configuration
 Assert-Test (-not [IO.File]::ReadAllText($goodPath).StartsWith('<?xml')) 'Studio-incompatible XML declaration'
-$state = @{ Events = [Collections.Generic.List[string]]::new(); Requests = [Collections.Generic.List[object]]::new() }
+$state = @{ Events = [Collections.Generic.List[string]]::new(); Requests = [Collections.Generic.List[object]]::new(); Reads = [Collections.Generic.List[object]]::new() }
+$membership = {
+    param($request)
+    if ($request.Method -ceq 'GET') {
+        $state.Events.Add('verify')
+        $state.Reads.Add($request)
+        if ($request.Uri -ceq 'https://develop.roblox.com/v1/universes/123') { return @{ StatusCode = 200; Body = '{"id":123,"rootPlaceId":456}' } }
+        if ($request.Uri -cne 'https://develop.roblox.com/v1/universes/123/places?sortOrder=Asc&limit=100') { throw 'wrong membership endpoint' }
+        return @{ StatusCode = 200; Body = '{"data":[{"id":456,"universeId":123},{"id":457,"universeId":123},{"id":458,"universeId":123},{"id":459,"universeId":123}],"nextPageCursor":null}' }
+    }
+}.GetNewClosure()
 $base = @{
     EventName = 'workflow_dispatch'; Ref = 'refs/heads/main'; DefaultBranch = 'main'
-    UniverseId = '123'; PlaceId = '456'; ApiKey = 'offline-credential-marker'; CommitSha = ('a' * 40)
+    UniverseId = '123'; PlaceId = '456'; SessionPlaceId = '457'; InfinitePlaceId = '458'; ClashPlaceId = '459'; ApiKey = 'offline-credential-marker'; CommitSha = ('a' * 40)
     Validate = { $state.Events.Add('validate') }.GetNewClosure()
-    Build = { $state.Events.Add('build'); return $goodPath }.GetNewClosure()
+    Build = { param($config) $state.Events.Add('build'); return $goodPaths }.GetNewClosure()
     CheckCheckout = { param($commit) $state.Events.Add('checkout') }.GetNewClosure()
     Transport = {
         param($request)
+        if ($request.Method -ceq 'GET') { return & $membership $request }
         $state.Events.Add('http'); $state.Requests.Add($request)
         return @{ StatusCode = 200; Body = '{"versionNumber":7}' }
     }.GetNewClosure()
@@ -39,6 +62,12 @@ $base = @{
 foreach ($case in @(
     @{ Name = 'missing universe'; Key = 'UniverseId'; Value = ''; Pattern = 'ROBLOX_DEV_UNIVERSE_ID' },
     @{ Name = 'missing place'; Key = 'PlaceId'; Value = ''; Pattern = 'ROBLOX_DEV_PLACE_ID' },
+    @{ Name = 'missing Session'; Key = 'SessionPlaceId'; Value = ''; Pattern = 'ROBLOX_DEV_SESSION_PLACE_ID' },
+    @{ Name = 'missing Infinite'; Key = 'InfinitePlaceId'; Value = ''; Pattern = 'ROBLOX_DEV_INFINITE_PLACE_ID' },
+    @{ Name = 'missing Clash'; Key = 'ClashPlaceId'; Value = ''; Pattern = 'ROBLOX_DEV_CLASH_PLACE_ID' },
+    @{ Name = 'duplicate destination'; Key = 'ClashPlaceId'; Value = '456'; Pattern = 'distinct' },
+    @{ Name = 'inexact Luau ID'; Key = 'ClashPlaceId'; Value = '9007199254740992'; Pattern = '2\^53' },
+    @{ Name = 'overflow ID'; Key = 'PlaceId'; Value = ('9' * 50); Pattern = 'positive decimal' },
     @{ Name = 'zero ID'; Key = 'PlaceId'; Value = '0'; Pattern = 'positive decimal' },
     @{ Name = 'negative ID'; Key = 'UniverseId'; Value = '-1'; Pattern = 'positive decimal' },
     @{ Name = 'nondecimal ID'; Key = 'PlaceId'; Value = '1e3'; Pattern = 'positive decimal' },
@@ -85,12 +114,12 @@ foreach ($case in @(
     $node = $mutated.SelectSingleNode($case.XPath)
     Assert-Test ($null -ne $node) "test mutation target missing: $($case.Name)"
     & $case.Change $node
-    Assert-Rejected $case.Name { Assert-DevelopmentPlace -PlaceXml $mutated } $case.Pattern
+    Assert-Rejected $case.Name { Assert-DevelopmentPlace -PlaceXml $mutated -Configuration $configuration } $case.Pattern
 }
 foreach ($class in @('EditableImage','EditableMesh','PartOperation','UnionOperation','NegateOperation','IntersectOperation','SurfaceAppearance','BaseWrap','WrapLayer','WrapTarget','WrapDeformer')) {
     [xml]$mutated = $good.CloneNode($true)
     $mutated.SelectSingleNode("//Item[Properties/string[@name='Name']='TestService']").SetAttribute('class', $class)
-    Assert-Rejected "API-limited $class" { Assert-DevelopmentPlace -PlaceXml $mutated } 'manual Studio publishing'
+    Assert-Rejected "API-limited $class" { Assert-DevelopmentPlace -PlaceXml $mutated -Configuration $configuration } 'manual Studio publishing'
 }
 
 $invalidPath = Join-Path $repositoryRoot ('build/deploy-regression-' + [guid]::NewGuid().ToString('N') + '.rbxlx')
@@ -99,7 +128,8 @@ try {
     $fixture.SelectSingleNode("//Item[Properties/string[@name='Name']='TestService']/Properties/string[@name='Name']").InnerText = 'RunDisplayFixture'
     $fixture.Save($invalidPath)
     $arguments = $base.Clone()
-    $arguments.Build = { return $invalidPath }.GetNewClosure()
+    $invalidPaths = $goodPaths.Clone(); $invalidPaths.Entry = $invalidPath
+    $arguments.Build = { param($config) return $invalidPaths }.GetNewClosure()
     $state.Requests.Clear()
     Assert-Rejected 'fixture through publisher' { Invoke-DevelopmentDeployment @arguments } 'QA/fixture'
     Assert-Test ($state.Requests.Count -eq 0) 'fixture artifact reached HTTP'
@@ -107,13 +137,19 @@ try {
 
 $state.Events.Clear(); $state.Requests.Clear()
 $success = Invoke-DevelopmentDeployment @base
-Assert-Test (($state.Events -join ',') -ceq 'checkout,validate,build,checkout,http') 'publish order must be checkout, validation, build, checkout, HTTP'
-Assert-Test ($state.Requests.Count -eq 1 -and $success.Published -and $success.VersionNumber -eq 7) 'valid version must be recorded once'
+Assert-Test (($state.Events -join ',') -ceq 'checkout,validate,build,checkout,verify,verify,http,http,http,http') 'all validation/build/membership must precede four uploads'
+Assert-Test ($state.Requests.Count -eq 4 -and $success.Complete -and $success.Places.Count -eq 4) 'four valid versions must be recorded'
+Assert-Test ($state.Reads.Count -eq 2) 'membership must confirm root place and all destinations'
+foreach ($read in $state.Reads) { Assert-Test ($read.Method -ceq 'GET' -and $read.Headers.Count -eq 0 -and $read.TimeoutSeconds -eq 30) 'membership must not carry credentials' }
 $request = $state.Requests[0]
-Assert-Test ($request.Method -ceq 'POST' -and $request.Uri -ceq 'https://apis.roblox.com/universes/v1/123/places/456/versions?versionType=Published') 'wrong publishing endpoint/method'
+Assert-Test ($request.Method -ceq 'POST' -and $request.Uri -ceq 'https://apis.roblox.com/universes/v1/123/places/457/versions?versionType=Published') 'wrong publishing endpoint/method'
 Assert-Test ($request.ContentType -ceq 'application/xml' -and $request.Headers['x-api-key'] -ceq $base.ApiKey -and $request.Headers.Count -eq 1 -and $request.TimeoutSeconds -eq 120) 'wrong XML/header/timeout contract'
-Assert-Test ([Convert]::ToBase64String($request.Payload) -ceq [Convert]::ToBase64String([IO.File]::ReadAllBytes($goodPath))) 'payload must be exact verified XML bytes'
-Assert-Test ($success.Sha256 -ceq (Get-FileHash -LiteralPath $goodPath -Algorithm SHA256).Hash -and $success.CommitSha -ceq $base.CommitSha) 'digest/commit audit mismatch'
+for ($index = 0; $index -lt 4; $index++) {
+    $record = $success.Places[$index]; $request = $state.Requests[$index]
+    Assert-Test ($record.Role -ceq @('Session','Infinite','Clash','Entry')[$index] -and $request.Uri -ceq "https://apis.roblox.com/universes/v1/123/places/$($record.PlaceId)/versions?versionType=Published") 'destinations must publish before Entry'
+    Assert-Test ([Convert]::ToBase64String($request.Payload) -ceq [Convert]::ToBase64String([IO.File]::ReadAllBytes($goodPaths[$record.Role]))) 'payload must be exact verified XML bytes'
+    Assert-Test ($record.Sha256 -ceq (Get-FileHash -LiteralPath $goodPaths[$record.Role] -Algorithm SHA256).Hash -and $success.CommitSha -ceq $base.CommitSha -and $record.VersionNumber -eq 7 -and $record.Status -ceq 'Published') 'digest/version/commit audit mismatch'
+}
 Assert-Test (($success | ConvertTo-Json) -notmatch $base.ApiKey) 'result leaked the key'
 
 foreach ($case in @(
@@ -129,35 +165,108 @@ foreach ($case in @(
     @{ Name = 'string version'; Code = 200; Body = '{"versionNumber":"7"}'; Pattern = 'positive integer versionNumber' },
     @{ Name = 'fractional version'; Code = 200; Body = '{"versionNumber":1.5}'; Pattern = 'positive integer versionNumber' },
     @{ Name = 'boolean version'; Code = 200; Body = '{"versionNumber":true}'; Pattern = 'positive integer versionNumber' },
-    @{ Name = 'JSON array'; Code = 200; Body = '[{"versionNumber":7}]'; Pattern = 'positive integer versionNumber' },
-    @{ Name = 'no content'; Code = 204; Body = ''; Pattern = 'invalid JSON|positive integer versionNumber' }
+    @{ Name = 'JSON array'; Code = 200; Body = '[{"versionNumber":7}]'; Pattern = 'invalid response object' },
+    @{ Name = 'no content'; Code = 204; Body = ''; Pattern = 'invalid JSON|invalid response object|positive integer versionNumber' }
 )) {
     $state.Requests.Clear()
     $arguments = $base.Clone()
     $reply = @{ StatusCode = $case.Code; Body = $case.Body }
-    $arguments.Transport = { param($request) $state.Requests.Add($request); return $reply }.GetNewClosure()
+    $arguments.Transport = { param($request) if ($request.Method -ceq 'GET') { return & $membership $request }; $state.Requests.Add($request); return $reply }.GetNewClosure()
     Assert-Rejected $case.Name { Invoke-DevelopmentDeployment @arguments } $case.Pattern
     Assert-Test ($state.Requests.Count -eq 1) "$($case.Name) retried HTTP"
 }
 foreach ($reply in @(@{}, @{ StatusCode = '200'; Body = 'offline-credential-marker' }, @{ StatusCode = 200 })) {
     $arguments = $base.Clone()
-    $arguments.Transport = { param($request) $state.Requests.Add($request); return $reply }.GetNewClosure()
+    $arguments.Transport = { param($request) if ($request.Method -ceq 'GET') { return & $membership $request }; $state.Requests.Add($request); return $reply }.GetNewClosure()
     $state.Requests.Clear()
     Assert-Rejected 'invalid transport reply' { Invoke-DevelopmentDeployment @arguments } 'invalid response'
     Assert-Test ($state.Requests.Count -eq 1) 'invalid transport reply retried HTTP'
 }
 $arguments = $base.Clone()
 $state.Requests.Clear()
-$arguments.Transport = { param($request) $state.Requests.Add($request); throw [TimeoutException]::new('offline-credential-marker') }.GetNewClosure()
+$arguments.Transport = { param($request) if ($request.Method -ceq 'GET') { return & $membership $request }; $state.Requests.Add($request); throw [TimeoutException]::new('offline-credential-marker') }.GetNewClosure()
 Assert-Rejected 'ambiguous timeout' { Invoke-DevelopmentDeployment @arguments } 'Outcome unknown'
 Assert-Test ($state.Requests.Count -eq 1) 'timeout retried HTTP'
 $arguments = $base.Clone(); $arguments.ApiKey = ''; $arguments.UniverseId = ''; $arguments.PlaceId = ''; $arguments.DryRun = $true
+$arguments.Build = { param($config) return $offlinePaths }.GetNewClosure()
 $state.Requests.Clear()
 $dryRun = Invoke-DevelopmentDeployment @arguments
-Assert-Test (-not $dryRun.Published -and $null -eq $dryRun.VersionNumber -and $state.Requests.Count -eq 0) 'dry run must never publish, even without credentials'
+Assert-Test (-not $dryRun.Complete -and $dryRun.DryRun -and $dryRun.Places.Count -eq 4 -and $state.Requests.Count -eq 0) 'dry run must build four and never publish, even without credentials'
 $arguments = $base.Clone(); $arguments.DryRun = $true
+$arguments.Build = { param($config) return $offlinePaths }.GetNewClosure()
 $dryRunWithKey = Invoke-DevelopmentDeployment @arguments
-Assert-Test (-not $dryRunWithKey.Published -and $state.Requests.Count -eq 0) 'dry run must never publish with credentials supplied either'
+Assert-Test (-not $dryRunWithKey.Complete -and $state.Requests.Count -eq 0) 'dry run must never publish with credentials supplied either'
+
+# A changed manifest/artifact role may never use the source exception to smuggle
+# arbitrary server code, foreign destinations, or swapped release files.
+foreach ($case in @(
+    @{ Name = 'wrong artifact role'; Role = 'Clash'; Pattern = 'current checkout source' },
+    @{ Name = 'changed routing IDs'; Role = 'Entry'; Pattern = 'current checkout source' }
+)) {
+    $config = @{ Enabled = $true; UniverseId = '123'; Places = @{ Entry = '456'; Session = '457'; Infinite = '458'; Clash = '460' } }
+    if ($case.Name -eq 'wrong artifact role') { $config = $configuration }
+    Assert-Rejected $case.Name { Assert-DevelopmentPlace -PlaceXml $good -Role $case.Role -Configuration $config } $case.Pattern
+}
+foreach ($case in @(
+    @{ Name = 'wrong universe'; Uri = '/123$'; Body = '{"id":124,"rootPlaceId":456}' },
+    @{ Name = 'wrong start place'; Uri = '/123$'; Body = '{"id":123,"rootPlaceId":459}' },
+    @{ Name = 'foreign place'; Uri = '/places\?'; Body = '{"data":[{"id":456,"universeId":999}],"nextPageCursor":null}' },
+    @{ Name = 'missing Clash membership'; Uri = '/places\?'; Body = '{"data":[{"id":456,"universeId":123},{"id":457,"universeId":123},{"id":458,"universeId":123}],"nextPageCursor":null}' },
+    @{ Name = 'bad place page'; Uri = '/places\?'; Body = '{"data":{},"nextPageCursor":null}' },
+    @{ Name = 'bad membership JSON'; Uri = '/places\?'; Body = 'offline-credential-marker' }
+)) {
+    $state.Requests.Clear()
+    $arguments = $base.Clone()
+    $arguments.Transport = {
+        param($request)
+        if ($request.Method -ceq 'POST') { $state.Requests.Add($request); throw 'unexpected upload' }
+        if ($request.Uri -match $case.Uri) { return @{ StatusCode = 200; Body = $case.Body } }
+        return & $membership $request
+    }.GetNewClosure()
+    Assert-Rejected $case.Name { Invoke-DevelopmentDeployment @arguments } 'verification|not confirmed'
+    Assert-Test ($state.Requests.Count -eq 0) "$($case.Name) uploaded a place"
+}
+$state.Requests.Clear()
+$arguments = $base.Clone()
+$arguments.Transport = { param($request) if ($request.Method -ceq 'POST') { $state.Requests.Add($request) }; throw [TimeoutException]::new('offline-credential-marker') }.GetNewClosure()
+Assert-Rejected 'membership network error' { Invoke-DevelopmentDeployment @arguments } 'Nothing published'
+Assert-Test ($state.Requests.Count -eq 0) 'membership network error reached upload'
+
+for ($failedIndex = 0; $failedIndex -lt 4; $failedIndex++) {
+    $state.Requests.Clear(); $state.Audit = $null
+    $arguments = $base.Clone()
+    $arguments.Record = { param($audit) $state.Audit = $audit | ConvertTo-Json -Depth 8 | ConvertFrom-Json }.GetNewClosure()
+    $arguments.Transport = {
+        param($request)
+        if ($request.Method -ceq 'GET') { return & $membership $request }
+        $state.Requests.Add($request)
+        if ($state.Requests.Count -eq $failedIndex + 1) { return @{ StatusCode = 503; Body = 'offline-credential-marker' } }
+        return @{ StatusCode = 200; Body = '{"versionNumber":8}' }
+    }.GetNewClosure()
+    Assert-Rejected "partial failure at place $failedIndex" { Invoke-DevelopmentDeployment @arguments } 'HTTP 503'
+    Assert-Test ($state.Requests.Count -eq $failedIndex + 1 -and -not $state.Audit.Complete) 'partial upload retried or falsely completed'
+    for ($index = 0; $index -lt 4; $index++) {
+        $expected = if ($index -lt $failedIndex) { 'Published' } elseif ($index -eq $failedIndex) { 'Outcome unknown' } else { 'Built' }
+        Assert-Test ($state.Audit.Places[$index].Status -ceq $expected) 'partial audit does not distinguish confirmed/unknown/unattempted'
+    }
+    Assert-Test (($state.Audit | ConvertTo-Json -Depth 8) -notmatch 'offline-credential-marker') 'partial summary exposed a credential'
+}
+
+# Mutation after validation cannot change the already frozen Entry upload.
+$entryBytes = [IO.File]::ReadAllBytes($goodPaths.Entry)
+try {
+    $state.Requests.Clear()
+    $arguments = $base.Clone()
+    $arguments.Transport = {
+        param($request)
+        if ($request.Method -ceq 'GET') { return & $membership $request }
+        $state.Requests.Add($request)
+        [IO.File]::WriteAllText($goodPaths.Entry, 'changed after all four buffers were verified')
+        return @{ StatusCode = 200; Body = '{"versionNumber":9}' }
+    }.GetNewClosure()
+    $immutable = Invoke-DevelopmentDeployment @arguments
+    Assert-Test ($immutable.Complete -and [Convert]::ToBase64String($state.Requests[3].Payload) -ceq [Convert]::ToBase64String($entryBytes)) 'Entry payload changed after earlier upload'
+} finally { [IO.File]::WriteAllBytes($goodPaths.Entry, $entryBytes) }
 
 # Guard the actual Actions wiring without introducing a YAML dependency.
 $workflow = [IO.File]::ReadAllText((Join-Path $repositoryRoot '.github/workflows/deploy-development.yml')).Replace("`r`n", "`n")
@@ -167,6 +276,9 @@ Assert-Test ($workflow -match "GITHUB_REF -cne 'refs/heads/main'" -and $workflow
 Assert-Test ($workflow -match '(?m)^          ref: main$' -and $workflow -match 'persist-credentials: false') 'checkout must resolve main and discard Git credentials'
 Assert-Test ($workflow -match 'group: roblox-development-start-place' -and $workflow -match 'cancel-in-progress: false') 'deployment serialization changed'
 Assert-Test ($workflow -match 'run: ./scripts/Invoke-DevelopmentDeployment.ps1\s*\n' -and $workflow -notmatch 'Invoke-DevelopmentDeployment.ps1 -DryRun') 'workflow must call the validated publishing entry point'
-Assert-Test ($workflow -match '(?m)^          path: build/ui-review-development.rbxlx$' -and $workflow -match 'retention-days: 3') 'artifact scope/retention changed'
+foreach ($role in @('entry','session','infinite','clash')) {
+    Assert-Test ($workflow -match "(?m)^            build/ui-review-development-$role.rbxlx$") "missing explicit $role artifact"
+}
+Assert-Test ($workflow -match 'retention-days: 3' -and $workflow -notmatch 'path:.*\*') 'artifact scope/retention changed'
 Assert-Test ($workflow -notmatch '(?m)^\s*if:.*always\(') 'failed/ambiguous publishing must not upload build artifacts'
 Write-Output "Development deployment: $script:checks offline assertions passed; no Roblox HTTP or credentials used."

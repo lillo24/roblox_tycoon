@@ -1,0 +1,12 @@
+# Walk-on purchase server
+
+TycoonRuntime starts this subsystem by default only for the trusted Factory role.
+`WalkOn.luau` owns 20 Hz oriented pad sampling, requester-only entry offers,
+live character/ownership/position rechecks, and pad instructions. It routes accepted
+offers through the original server-authoritative purchase callback and catalogue.
+`Visits.luau` owns one-use/expiring offers, exit hysteresis, character generations
+and disconnect cleanup. A visit consumes one attempt even when blocked or unfunded.
+Outbound offers contain `(nonce, plotId, upgradeId)` for exact client-side modal
+suppression; the inbound acknowledgement remains nonce-only. These metadata fields
+never select a server purchase target. Client VisitGate adds a conservative local
+exit lock for delayed server offers; Visits and Session retain purchase authority.
