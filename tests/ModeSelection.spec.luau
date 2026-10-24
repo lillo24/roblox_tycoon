@@ -33,8 +33,10 @@ return function(): number
 	assert(input, "Studio VirtualInput unavailable")
 	local function click(button: TextButton)
 		assert(button.Visible and button.Active, "Test action must be visible and active")
-		local inset = game:GetService("GuiService"):GetGuiInset()
-		local center = button.AbsolutePosition + button.AbsoluteSize / 2 + inset
+		-- Include device cutouts as well as the top bar. GetGuiInset alone omits
+		-- the portrait notch offset used by Studio's virtual input coordinates.
+		local origin = game:GetService("GuiService"):GetInsetArea(Enum.ScreenInsets.None).Min
+		local center = button.AbsolutePosition + button.AbsoluteSize / 2 - origin
 		input:SendMousePosition(center)
 		input:SendMouseButton(center, Enum.UserInputType.MouseButton1, true, 0)
 		task.wait(0.05)
@@ -48,7 +50,7 @@ return function(): number
 		check(before.available, "Infinite ready before departure")
 	end
 	if role ~= "Entry" then
-		click(gui:FindFirstChild("Modes") :: TextButton)
+		click(player.PlayerGui:FindFirstChild("Modes", true) :: TextButton)
 		waitFor(function()
 			return gui:GetAttribute("ModalOpen") == true
 		end, "Modes button opens the return panel")

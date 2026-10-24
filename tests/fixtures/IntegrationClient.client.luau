@@ -68,10 +68,25 @@ local ok, result = xpcall(function()
 			print("INTEGRATE01 ACTUAL solo Practice completed")
 		end
 		print("INTEGRATE01 ACTUAL Clash display assertions:", loadFixture(checks:WaitForChild("AimClashDisplay"))())
-	elseif role == "Prototype" then
-		waitFor(function()
-			return receipt:GetAttribute("WalkingComplete") == true
-		end, "Actual Humanoid walk-on smoke must finish")
+	elseif role == "Prototype" and receipt:GetAttribute("WalkOn") == true then
+		print("INTEGRATE01 ACTUAL native Factory input assertions:", loadFixture(checks:WaitForChild("FactoryInput"))())
+		receipt:FireServer("walked")
+		local production = parent:WaitForChild("TycoonClient")
+		local preferences = loadFixture(production:WaitForChild("UiPreferences"))
+		local previous = preferences.read().reduceMotion
+		if not game:GetService("GuiService").ReducedMotionEnabled then
+			preferences.set("reduceMotion", false)
+			print(
+				"INTEGRATE01 ACTUAL factory standard-motion assertions:",
+				loadFixture(checks:WaitForChild("FactoryPurchasesPresentation"))(false)
+			)
+		end
+		preferences.set("reduceMotion", true)
+		print(
+			"INTEGRATE01 ACTUAL factory reduced-motion assertions:",
+			loadFixture(checks:WaitForChild("FactoryPurchasesPresentation"))(true)
+		)
+		preferences.set("reduceMotion", previous)
 	end
 	-- The two-player duel covers queue/scoring. Test cancellation/return in a
 	-- separate solo run; concurrent simulated pointer clicks share Studio input.

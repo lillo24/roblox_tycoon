@@ -10,7 +10,7 @@ in the currently assigned lot's frame. Neither a lot number nor an Instance is s
 
 | File | Owns |
 | --- | --- |
-| `ProfileSchema.luau` | v1→v2 migration, strict data validation, detached snapshots, individually owned objects and local footprints |
+| `ProfileSchema.luau` | v1/v2→v3 migration, strict data validation, detached snapshots, individually owned objects and local footprints |
 | `LegacyProfile.luau` | Frozen v1 validator and four-asset slot capture used by the migration |
 | `ProfileStore.luau` | Atomic load/lease acquisition, fenced checkpoint/final writes, retry ordering and confirmations |
 | `Profiles.luau` | Loading reservations, ready/full/unavailable states, stale arrival/save callbacks, final saves and shutdown |

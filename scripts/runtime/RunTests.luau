@@ -71,6 +71,7 @@ local suites = {
 	{ "InfiniteState", {} },
 	{ "Routing", {} },
 	{ "FactoryPurchases", {} },
+	{ "FactoryInputGate", {} },
 	{ "AimClash", {} },
 	{ "Persistence", { memory } },
 	{ "ProfileLifecycle", { memory } },

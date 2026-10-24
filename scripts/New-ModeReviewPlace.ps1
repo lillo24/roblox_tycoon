@@ -52,7 +52,7 @@ if ($Role -eq 'Infinite') {
     [void](Add-Item $folder 'Script' 'StartModePreview' "require(game.ServerScriptService.TycoonServer.AppRuntime).start(nil, require(script.Parent.ModePreview).new('$Role', '$Scenario'))")
 }
 if ($IncludeQA) {
-    foreach ($test in @('Routing','Handoff','Session','SupplyEvent','FactoryPurchases','FactoryPurchasesLive','AimClash','Persistence','ProfileLifecycle','Property','Growth','PropertyRendering','InfiniteState')) {
+    foreach ($test in @('Routing','Handoff','Session','SupplyEvent','FactoryPurchases','FactoryInputGate','FactoryPurchasesLive','AimClash','Persistence','ProfileLifecycle','Property','Growth','PropertyRendering','InfiniteState')) {
         [void](Add-Item $folder 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
     }
     [void](Add-Item $folder 'ModuleScript' 'ProfileMemoryStore' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/ProfileMemoryStore.luau'))))
@@ -62,6 +62,7 @@ local memory = require(script.Parent.ProfileMemoryStore)
 print("MODE01 EXECUTED Routing assertions:", require(script.Parent.Routing)())
 print("MODE01 EXECUTED Handoff assertions:", require(script.Parent.Handoff)(memory))
 print("INTEGRATE01 EXECUTED FactoryPurchases assertions:", require(script.Parent.FactoryPurchases)())
+print("INTEGRATE01 EXECUTED FactoryInputGate assertions:", require(script.Parent.FactoryInputGate)())
 print("INTEGRATE01 EXECUTED AimClash assertions:", require(script.Parent.AimClash)())
 print("INTEGRATE01 EXECUTED Persistence assertions:", require(script.Parent.Persistence)(memory))
 print("INTEGRATE01 EXECUTED ProfileLifecycle assertions:", require(script.Parent.ProfileLifecycle)(memory))
@@ -78,7 +79,7 @@ script.Parent:SetAttribute("AssertionsPassed", true)
     [void](Add-Item $folder 'Script' 'IntegrationAutomation' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/IntegrationServer.server.luau'))))
     $starter = $scene.SelectSingleNode('/roblox/Item[@class="StarterPlayer"]/Item[@class="StarterPlayerScripts"]')
     $clientChecks = Add-Item $starter 'Folder' 'INTEGRATE01ClientQA'
-    foreach ($test in @('ModeSelection','AimClashClient','AimClashDisplay','FactoryPurchasesPresentation')) {
+    foreach ($test in @('ModeSelection','FactoryInput','AimClashClient','AimClashDisplay','FactoryPurchasesPresentation')) {
         [void](Add-Item $clientChecks 'ModuleScript' $test ([IO.File]::ReadAllText((Join-Path $repositoryRoot "tests/$test.spec.luau"))))
     }
     [void](Add-Item $starter 'LocalScript' 'MODE01Observer' ([IO.File]::ReadAllText((Join-Path $repositoryRoot 'tests/fixtures/ModeClient.client.luau'))))

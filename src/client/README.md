@@ -29,6 +29,9 @@ keys and the current preferred input. No menu pauses the shared game.
 
 ModeChooser shows three named destination buttons in Entry. In gameplay, Modes
 opens a modal return panel (also M / controller Select; controller B stays).
+Factory/Infinite place it in HudView's measured navigation row, with four compact
+buttons and a left-side wide-screen slot, preserving native player-list clearance.
+Clash hides that player list and uses its separate launcher above game controls.
 Its visible active actions form the controller selection order, including Infinite
 reload and Stay. The scrollable safe-area panel handles small portrait screens.
 Factory offers and Clash aim input are suppressed while Modes is open. Infinite

@@ -297,7 +297,9 @@ arithmetic. The event has not proven balanced orders, strategic depth or fun.
 ## Validation and short Studio playtest
 
 Run `./scripts/Validate-Project.ps1`. It formats/lints/type-checks `src` and `tests`
-and validates the original three-folder build; it does not execute tests or gameplay.
+and validates the original three-folder build, four release scenes and mocked
+publisher. It executes the domain suites in pinned Lune; Studio client/engine and
+live-service checks remain separate. See the integration review for current evidence.
 Tool versions, API definitions, strict pragmas, and nullable guards remain intact.
 
 `tests/Session.spec.luau` is outside Rojo. Load its exact file into a temporary
@@ -371,9 +373,9 @@ print("SupplyFeedback assertions passed:", count)
 This executes the actual Instance-free client helper with supplied times: current,
 future and initialization feedback; intermediate/skipped snapshots; stale/multiple
 results; repeated lifetimes/old timeouts; exact expiry; same-ID phase updates;
-cancellation/assignment/teardown resets and unassigned messages. CLI/CI analysis
-does not execute it. Unchanged server-domain suites may reuse prior executed
-evidence for this client-only fix.
+cancellation/assignment/teardown resets and unassigned messages. INTEGRATE-01's
+full validator also executes this domain suite in Lune; old review packets retain
+their historical execution evidence.
 
 For controlled integration ordering in a disposable Play client, temporarily
 present an older snapshot ID through the actual `TycoonSupplyState.Value` handler,

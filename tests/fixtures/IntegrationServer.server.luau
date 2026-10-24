@@ -12,13 +12,12 @@ local Players = game:GetService("Players")
 local root = game:GetService("ReplicatedStorage")
 local qa = script.Parent
 assert(qa, "Integration server fixture folder expected")
--- These opt-in specs are outside the production Rojo map; the generated preview
--- verifies their exact sources. Resolve them through the engine module loader.
-local loadFixture = require
 local remote = Instance.new("RemoteEvent")
+local walking = args.WalkOn == true
 remote.Name = "INTEGRATE01Receipt"
 remote:SetAttribute("Players", args.Players)
 remote:SetAttribute("Duel", args.Duel == true)
+remote:SetAttribute("WalkOn", walking)
 remote.Parent = root
 local ready: { [Player]: boolean } = {}
 local passed: { [Player]: boolean } = {}
@@ -36,29 +35,21 @@ remote.OnServerEvent:Connect(function(player: Player, kind: any, value: any)
 		remote:SetAttribute("Ready", count == args.Players)
 	elseif kind == "passed" then
 		passed[player] = true
+	elseif kind == "walked" and walking and args.Players == 1 then
+		walking = false
 	elseif kind == "failed" then
 		issue = tostring(value)
 	end
 end)
-local walking = args.WalkOn == true
 if walking then
-	assert(root:GetAttribute("TycoonServerRole") == "Prototype", "Walk-on smoke requires Factory")
-	task.spawn(function()
-		local ok, result = xpcall(function()
-			return loadFixture(qa:WaitForChild("FactoryPurchasesLive"))()
-		end, function(message: any): string
-			return debug.traceback(tostring(message))
-		end)
-		if not ok then
-			issue = tostring(result)
-		else
-			print("INTEGRATE01 ACTUAL walk-on assertions:", result)
-		end
-		walking = false
-		remote:SetAttribute("WalkingComplete", ok)
-	end)
-else
-	remote:SetAttribute("WalkingComplete", true)
+	local startupDeadline = os.clock() + 20
+	while root:GetAttribute("TycoonServerRole") == nil and os.clock() < startupDeadline do
+		task.wait(0.05)
+	end
+	if root:GetAttribute("TycoonServerRole") ~= "Prototype" then
+		service:EndTest({ Passed = false, Issue = "Walk-on smoke requires a ready Factory role" })
+		return
+	end
 end
 local deadline = os.clock() + 150
 while os.clock() < deadline and not issue do

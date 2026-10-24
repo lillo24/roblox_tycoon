@@ -96,6 +96,10 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?, walkOn: 
 	local factory = button(navigation, "Factory", if infinite then "My place" else "Factory")
 	local settings = button(navigation, "Settings", "Settings")
 	local help = button(navigation, "Help", "? Help")
+	-- ModeChooser binds this slot; keeping it in the HUD's measured navigation
+	-- avoids the native player list that covers a standalone top-right button.
+	local modes = button(navigation, "Modes", "Modes")
+	modes.Active = false
 	local event = text(
 		root,
 		if infinite then "Persistence" else "Event",
@@ -290,12 +294,14 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?, walkOn: 
 			Theme.Target,
 			factory.AbsoluteSize.Y / factor,
 			settings.AbsoluteSize.Y / factor,
-			help.AbsoluteSize.Y / factor
+			help.AbsoluteSize.Y / factor,
+			modes.AbsoluteSize.Y / factor
 		)
 		local top = startY + summaryHeight + 8
 		if wide then
 			navigation.Position, navigation.Size = UDim2.fromOffset(12, top), UDim2.fromOffset(usable, target)
 			factory.Position, factory.Size = UDim2.fromOffset(0, 0), UDim2.fromOffset(140, Theme.Target)
+			modes.Position, modes.Size = UDim2.fromOffset(148, 0), UDim2.fromOffset(100, Theme.Target)
 			-- Native list rows occupy screen pixels, independent of our interface scale.
 			-- Keep the 48px header/clearance reservation, with 40px rows; a height cap overlapped six rows.
 			local listBottom = (48 + #Players:GetPlayers() * 40) / factor
@@ -305,8 +311,8 @@ function View.new(gui: ScreenGui, changed: () -> (), actions: Actions?, walkOn: 
 				UDim2.fromOffset(usable - 96, -top + listBottom), UDim2.fromOffset(96, Theme.Target)
 		else
 			navigation.Position, navigation.Size = UDim2.fromOffset(startX, top), UDim2.fromOffset(compactWidth, target)
-			local each = (compactWidth - 16) / 3
-			for index, object in { factory, settings, help } do
+			local each = (compactWidth - 24) / 4
+			for index, object in { factory, settings, help, modes } do
 				object.Position, object.Size =
 					UDim2.fromOffset((index - 1) * (each + 8), 0), UDim2.fromOffset(each, Theme.Target)
 			end

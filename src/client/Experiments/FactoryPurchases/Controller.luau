@@ -6,25 +6,83 @@ local ProximityPromptService = game:GetService("ProximityPromptService")
 local GuiService = game:GetService("GuiService")
 local UserInputService = game:GetService("UserInputService")
 local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
 local Config = require(ReplicatedStorage.TycoonShared.Config)
 local Rules = require(ReplicatedStorage.TycoonShared.Experiments.FactoryPurchases.Rules)
 local Hud = require(script.Parent.Parent.Parent.Hud)
 local Activity = require(script.Parent.Activity)
+local VisitGate = require(script.Parent.VisitGate)
 local Controller = {}
 
 function Controller.start(): ScreenGui
-	assert(Players.LocalPlayer, "Factory purchases requires LocalPlayer")
+	local player = Players.LocalPlayer
+	assert(player, "Factory purchases requires LocalPlayer")
 	local remote = ReplicatedStorage:WaitForChild(Rules.RemoteName, 10)
 	assert(remote and remote:IsA("RemoteEvent"), "Factory walk-on channel missing after 10 seconds")
 	local focused = true
 	local gui: ScreenGui? = nil
+	local gate = VisitGate.new()
+	local function sample()
+		local current = gui
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		local panel = current and current:FindFirstChild("Panel", true)
+		local chooser = current and current.Parent and current.Parent:FindFirstChild("TycoonModeChooser")
+		local modal = not current
+			or not current.Enabled
+			or not panel
+			or not panel:IsA("Frame")
+			or panel.Visible
+			or (chooser ~= nil and chooser:GetAttribute("ModalOpen") == true)
+			or GuiService.MenuIsOpen
+			or UserInputService:GetFocusedTextBox() ~= nil
+			or not ProximityPromptService.Enabled
+			or not focused
+		local samples: { VisitGate.Sample } = {}
+		local world = workspace:FindFirstChild(Config.RuntimeName)
+		local plot = world and world:FindFirstChild(`Plot{player:GetAttribute(Config.Attributes.PlotId)}`)
+		if
+			root
+			and root:IsA("BasePart")
+			and plot
+			and plot:GetAttribute(Config.Attributes.OwnerUserId) == player.UserId
+		then
+			for _, pad in plot:GetChildren() do
+				if pad:IsA("BasePart") and pad.Name:sub(1, 4) == "Pad_" then
+					local position = pad.CFrame:PointToObjectSpace(root.Position)
+					table.insert(samples, {
+						key = pad.Name,
+						inside = Rules.contains(position, pad.Size, false),
+						withinExit = Rules.contains(position, pad.Size, true),
+					})
+				end
+			end
+		end
+		gate:sample(character, modal, samples)
+	end
 	local released = UserInputService.WindowFocusReleased:Connect(function()
 		focused = false
 	end)
 	local gained = UserInputService.WindowFocused:Connect(function()
 		focused = true
 	end)
-	local offer = remote.OnClientEvent:Connect(function(token: number)
+	local elapsed = 0
+	local sampler = RunService.Heartbeat:Connect(function(delta)
+		elapsed += delta
+		if elapsed >= Rules.SampleInterval then
+			elapsed = 0
+			sample()
+		end
+	end)
+	local offer = remote.OnClientEvent:Connect(function(token: number, plotId: number, upgradeId: string)
+		sample()
+		if
+			plotId ~= player:GetAttribute(Config.Attributes.PlotId)
+			or typeof(upgradeId) ~= "string"
+			or not gate:respond("Pad_" .. upgradeId)
+		then
+			return
+		end
 		local current = gui
 		if not current or not current.Enabled then
 			return
@@ -64,6 +122,7 @@ function Controller.start(): ScreenGui
 	actual.Destroying:Connect(function()
 		gui = nil
 		offer:Disconnect()
+		sampler:Disconnect()
 		released:Disconnect()
 		gained:Disconnect()
 		result:Disconnect()

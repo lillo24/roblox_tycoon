@@ -64,7 +64,7 @@ elseif role == "Clash" then
 end
 if role == "Prototype" or role == "Infinite" then
 	local hud = player.PlayerGui:FindFirstChild(Config.HudName)
-	local launcher = gui:FindFirstChild("Modes")
+	local launcher = player.PlayerGui:FindFirstChild("Modes", true)
 	assert(hud and hud:IsA("ScreenGui") and launcher and launcher:IsA("TextButton"), "Gameplay controls expected")
 	local wasEnabled = hud.Enabled
 	hud.Enabled = false

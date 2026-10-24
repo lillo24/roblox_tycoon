@@ -92,7 +92,9 @@ function WalkOn.start(
 					now
 				)
 				if token then
-					remote:FireClient(player, token)
+					-- Read-only target metadata lets the client reject delayed offers
+					-- for a locally blocked/left pad. Only the nonce returns to server.
+					remote:FireClient(player, token, plotId, definition.Id)
 				end
 			end
 		end

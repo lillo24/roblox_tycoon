@@ -27,6 +27,10 @@ function Controller.start(): ScreenGui
 		table.insert(connections, connection)
 	end
 	local function control(action: string)
+		local chooser = gui.Parent and gui.Parent:FindFirstChild("TycoonModeChooser")
+		if chooser and chooser:GetAttribute("ModalOpen") == true then
+			return
+		end
 		remote:FireServer(action)
 	end
 	track(view.practice.Activated:Connect(function()

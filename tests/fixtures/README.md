@@ -17,7 +17,10 @@ These files are outside the production Rojo mappings.
   opt-in StudioTestService checks only when passed `{Kind="INTEGRATE01", Players=1}`
   (or two clients with Duel). The server requires suite completion and explicit
   client results; failures/timeouts end as failures. Factory `WalkOn=true` uses
-  the actual movement fixture. Normal Play has no automated movement/input.
+  native keyboard input, regular earnings and modal/re-entry assertions through
+  FactoryInput. Use a desktop simulation with the game viewport focused; normal
+  Play has no automated movement/input. The older server MoveTo fixture remains
+  opt-in and is sensitive to player controls and avatar-loading delays.
 
 Build/run instructions and observed versus pending gates live in
 [`docs/INTEGRATE_01_REVIEW.md`](../../docs/INTEGRATE_01_REVIEW.md). Domain fault injection tests

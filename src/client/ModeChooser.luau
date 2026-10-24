@@ -75,8 +75,12 @@ function Chooser.start(role: string): ScreenGui
 	end
 	local reload = button("Reload", "Reload my saved place")
 	local stay = button("Stay", "Stay in this server")
-	local launcher = button("Modes", "Modes")
-	launcher.Parent, launcher.Position, launcher.Size = gui, UDim2.new(1, -112, 0, 12), UDim2.fromOffset(100, 44)
+	local embedded = if hud then hud:FindFirstChild("Modes", true) else nil
+	local launcher = if embedded and embedded:IsA("TextButton") then embedded else button("Modes", "Modes")
+	if launcher ~= embedded then
+		-- Clash hides the native player list; Factory/Infinite use the HUD slot.
+		launcher.Parent, launcher.Position, launcher.Size = gui, UDim2.new(1, -112, 0, 12), UDim2.fromOffset(100, 44)
+	end
 	launcher.LayoutOrder = 0
 	local open = role == "Entry" or role == "Unavailable"
 	local remote: RemoteEvent? = nil
@@ -99,6 +103,7 @@ function Chooser.start(role: string): ScreenGui
 			and role ~= "Entry"
 			and role ~= "Unavailable"
 			and (not hud or not hud:IsA("ScreenGui") or hud.Enabled)
+		launcher.Active = launcher.Visible
 		status.Text = if pending then "Requesting… please wait" else view.message
 		for _, item in buttons do
 			item.Active, item.AutoButtonColor = enabled and not blocked and view.attempts < 3, enabled and not blocked
