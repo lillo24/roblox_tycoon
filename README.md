@@ -203,7 +203,14 @@ Use this manual checkpoint for releases, integration checks, CI changes, or
 debugging. The local commands above also run the complete suite. CI uses Rokit
 1.2.0 and the pinned tools, downloads Rokit from its official release, verifies
 the archive checksum, and skips interactive trust checks only on the CI runner.
-It does not deploy or publish the game. Type analysis does not execute scripts or
+Both validation and deployment tool installation use the existing read-only
+workflow token in a temporary `~/.rokit/auth.toml`, removed in `finally` after
+installation succeeds or fails. This avoids anonymous GitHub release API limits;
+it adds no PAT, repository permission or Roblox key scope. Rokit 1.2 reads this
+[auth manifest](https://github.com/rojo-rbx/rokit/blob/v1.2.0/lib/storage/home.rs)
+rather than a `GITHUB_TOKEN` environment variable. The token stays outside the
+checkout and release artifacts and is never printed or passed as a CLI argument.
+Validation does not deploy or publish the game. Type analysis does not execute scripts or
 replace runtime playtests. Studio Script Analysis is an integration check for
 Studio-authored scripts outside Rojo, full-place/live DataModel context, suspected
 analyzer discrepancies, major integration checkpoints, and Studio-only diagnostics.
