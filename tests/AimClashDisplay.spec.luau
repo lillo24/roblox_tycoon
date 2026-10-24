@@ -25,7 +25,7 @@ return function(): number
 		return object
 	end
 	check(gui.AbsolutePosition == whole.Min, "Full-screen GUI matches measured UI coordinate origin")
-	for _, name in { "Practice", "Queue", "Leave", "Motion", "Arena", "Status", "Feedback", "Result" } do
+	for _, name in { "Practice", "Queue", "Leave", "Motion", "Modes", "Arena", "Status", "Feedback", "Result" } do
 		local object = widget(name)
 		local start, finish = object.AbsolutePosition, object.AbsolutePosition + object.AbsoluteSize
 		check(start.X >= minimum.X - 1 and finish.X <= maximum.X + 1, `{name} fits horizontal core-safe bounds`)
@@ -43,6 +43,11 @@ return function(): number
 	local feedback = widget("Feedback")
 	check(status.AbsolutePosition.Y + status.AbsoluteSize.Y <= arena.AbsolutePosition.Y, "Status clears arena")
 	check(arena.AbsolutePosition.Y + arena.AbsoluteSize.Y <= feedback.AbsolutePosition.Y, "Arena clears footer")
+	local motion, modes = widget("Motion"), widget("Modes")
+	check(
+		motion.AbsolutePosition.X + motion.AbsoluteSize.X < modes.AbsolutePosition.X,
+		"Modes has its own control slot without overlapping Motion"
+	)
 	print("EXP03 DISPLAY:", "assertions", count, "viewport", gui.AbsoluteSize, "core-safe", minimum, maximum)
 	return count
 end

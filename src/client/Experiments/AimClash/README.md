@@ -14,3 +14,7 @@ The ScreenGui keeps whole-screen input coordinates. Layout subtracts the
 below Roblox's top bar and reserving notch/home-indicator margins. It refreshes
 on viewport and top-bar changes. This avoids fixed desktop padding on portrait
 phones; the arena and target radius scale within the same usable area.
+
+View also owns the fifth control slot, Modes. The shared ModeChooser attaches
+its return handler there after startup, keeping Motion and Modes separate in
+landscape without adding another row above the arena.

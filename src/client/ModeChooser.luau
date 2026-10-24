@@ -75,10 +75,11 @@ function Chooser.start(role: string): ScreenGui
 	end
 	local reload = button("Reload", "Reload my saved place")
 	local stay = button("Stay", "Stay in this server")
-	local embedded = if hud then hud:FindFirstChild("Modes", true) else nil
+	local gameplayGui = hud or player.PlayerGui:FindFirstChild("AimClash")
+	local embedded = if gameplayGui then gameplayGui:FindFirstChild("Modes", true) else nil
 	local launcher = if embedded and embedded:IsA("TextButton") then embedded else button("Modes", "Modes")
 	if launcher ~= embedded then
-		-- Clash hides the native player list; Factory/Infinite use the HUD slot.
+		-- Unavailable/Entry do not need a visible launcher. Gameplay owns its slot.
 		launcher.Parent, launcher.Position, launcher.Size = gui, UDim2.new(1, -112, 0, 12), UDim2.fromOffset(100, 44)
 	end
 	launcher.LayoutOrder = 0

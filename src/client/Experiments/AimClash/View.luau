@@ -21,6 +21,7 @@ export type Handle = {
 	queue: TextButton,
 	leave: TextButton,
 	motion: TextButton,
+	modes: TextButton,
 	border: UIStroke,
 	targetBorder: UIStroke,
 }
@@ -65,6 +66,10 @@ function View.new(): Handle
 		button("Queue", "Duel queue", 1),
 		button("Leave", "Leave queue", 2),
 		button("Motion", "Motion: standard", 3)
+	-- ModeChooser binds this slot after Clash starts. A separate top-right
+	-- launcher overlaps Motion when the phone's landscape top inset is short.
+	local modes = button("Modes", "Modes", 4)
+	modes.Visible, modes.Active, modes.Selectable = false, false, false
 	local board = Instance.new("Frame")
 	board.Name, board.AnchorPoint, board.BackgroundColor3, board.BorderSizePixel, board.Active =
 		"Arena", Vector2.new(0.5, 0.5), Color3.fromRGB(18, 30, 45), 0, true
@@ -136,6 +141,7 @@ function View.new(): Handle
 		queue = queue,
 		leave = leave,
 		motion = motion,
+		modes = modes,
 		border = border,
 		targetBorder = targetBorder,
 	}
@@ -154,8 +160,7 @@ function View.layout(view: Handle)
 	local controlsTop = math.max(52, origin.Y + 8)
 	local centerX = origin.X + safeSize.X / 2
 	local diameter, y = Rules.boardSize(safeSize.X, height, controlsTop)
-	local top = controlsTop + (if compact then 64 else 92)
-	local bottom = if compact then 32 else 48
+	local top, bottom = Rules.verticalBounds(height, controlsTop)
 	view.board.Size, view.board.Position = UDim2.fromOffset(diameter, diameter), UDim2.fromOffset(centerX, y)
 	view.result.Size, view.result.Position =
 		UDim2.fromOffset(math.max(1, math.min(safeSize.X - 24, 640)), math.max(1, height - top - bottom)),
@@ -168,9 +173,9 @@ function View.layout(view: Handle)
 	view.feedback.Size = UDim2.fromOffset(safeSize.X * 0.96, if compact then 24 else 40)
 	view.ownResult.TextSize, view.otherResult.TextSize, view.scoreRule.TextSize =
 		if compact then 12 else 16, if compact then 12 else 16, if compact then 10 else 13
-	for slot, control in { view.practice, view.queue, view.leave, view.motion } do
-		control.Position = UDim2.fromOffset(origin.X + (0.02 + (slot - 1) * 0.24) * safeSize.X, controlsTop)
-		control.Size = UDim2.fromOffset(safeSize.X * 0.22, 44)
+	for slot, control in { view.practice, view.queue, view.leave, view.motion, view.modes } do
+		control.Position = UDim2.fromOffset(origin.X + (0.02 + (slot - 1) * 0.192) * safeSize.X, controlsTop)
+		control.Size = UDim2.fromOffset(safeSize.X * 0.176, 44)
 		control.TextSize = if safeSize.X < 450 then 11 else 14
 	end
 end

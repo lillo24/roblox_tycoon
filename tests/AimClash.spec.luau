@@ -200,5 +200,12 @@ return function(): number
 			"Inset-aware phone arena clears controls and hardware-safe footer"
 		)
 	end
+	for _, height in { 300, 380, 429, 430, 720, 861 } do
+		local top, bottom = Rules.verticalBounds(height, 66)
+		local statusBottom = 66 + (if height < 430 then 64 else 78)
+		local footerHeight = if height < 430 then 24 else 40
+		check(top >= statusBottom + 8, "Arena reserves real space below status text")
+		check(bottom >= footerHeight + 16, "Arena reserves real space above footer text")
+	end
 	return count
 end

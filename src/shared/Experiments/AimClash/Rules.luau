@@ -89,9 +89,13 @@ end
 
 -- Width/height describe usable viewport bounds. controlsTop is measured in
 -- whole-screen coordinates so camera notches and the Roblox top bar stay clear.
+function Rules.verticalBounds(height: number, controlsTop: number?): (number, number)
+	-- Keep text/footer eight pixels from the arena, including float rounding
+	-- in compact device simulation. Arena and result use the same reservation.
+	return (controlsTop or 52) + (if height < 430 then 72 else 100), if height < 430 then 40 else 56
+end
 function Rules.boardSize(width: number, height: number, controlsTop: number?): (number, number)
-	local top = (controlsTop or 52) + (if height < 430 then 64 else 92)
-	local bottom = if height < 430 then 32 else 48
+	local top, bottom = Rules.verticalBounds(height, controlsTop)
 	return math.max(1, math.min(width - 24, height - top - bottom, 560)), (top + height - bottom) / 2
 end
 
