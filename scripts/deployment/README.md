@@ -1,29 +1,12 @@
-# Development deployment boundary
+# Four-place development deployment
 
-This folder owns offline-verifiable deployment policy, gameplay artifact checks
-and the single Open Cloud publish request. It does not own map authoring or game
-behavior. Requires PowerShell 7; no extra package/deployment service is used.
+This folder owns deployment policy and source-fresh authored-map builds, separate from gameplay and map authoring. Requires PowerShell 7.
 
-- `GameplayArtifact.psm1` wraps the existing gameplay-only UI builder, verifies
-  every mapped script against disk and all other scene content against the saved
-  map, and rejects QA/fixtures and API-limited instance classes/subclasses.
-  Legacy validators run in a child scope with their original non-strict property
-  semantics; the new module itself uses strict mode. XML comparisons normalize
-  empty-element syntax symmetrically without discarding scene properties.
-- `DevelopmentDeployment.psm1` validates manual/main/target credentials, requires
-  a clean unchanged checkout, runs validation then fresh assembly, hashes exact
-  payload bytes and sends one XML POST. `Validate`, `Build`, `CheckCheckout` and
-  `Transport` scriptblocks are trusted **test seams**; the command-line wrapper
-  exposes none of them. Dry run always stops before transport. HTTP errors are
-  replaced at the transport boundary to prevent header/credential disclosure;
-  no response body or raw network exception is returned. The only success is
-  a 2xx response containing a positive integer version number.
+- `GameplayArtifact.psm1` reuses the existing gameplay-only scene assembler. `New-DevelopmentPlaces` returns exactly four role/path entries. Each build keeps the saved non-code scene and all current scripts, with one narrowly verified override: generated server `Routing/Settings` containing the validated manifest and expected role. `Assert-DevelopmentPlace` independently reconstructs that override, checks all other source/classes/paths and canonical scene fidelity, rejects links/QA/fixtures and API-limited classes including descendants. `Get-DevelopmentRoutingSource` accepts only all-zero disabled offline config or positive, distinct, exactly representable live IDs. Session maps to the existing internal `Prototype` role.
+- `DevelopmentDeployment.psm1` validates manual/main/credentials/all IDs and checkout, runs the complete validator, builds and captures four verified immutable XML buffers/hashes, then verifies same-universe membership/root place with documented public credential-free GETs (bounded pagination). It uploads Session, Infinite, Clash, then Entry; each needs a 2xx positive integer version response. No redirects, cookies, automatic retries, raw response bodies or raw network exception text. A failure stops subsequent uploads. Confirmed/unknown/unattempted statuses are recorded throughout, without claiming atomic publication or live gameplay success.
 
-`../Invoke-DevelopmentDeployment.ps1` reads credentials from process environment
-only and writes allowlisted audit fields to the GitHub job summary. The manual
-workflow uses it without overrides. `../New-DevelopmentPlace.ps1` builds the
-same scene without publishing, for the owner's first Studio publish.
-`../Test-DevelopmentDeployment.ps1` exercises these modules with mocked HTTP and
-real scene mutations; it is part of `../Validate-Project.ps1` and never needs
-Roblox credentials. Operator setup and limitations are in
-[`docs/MOBILE_DEPLOYMENT.md`](../../docs/MOBILE_DEPLOYMENT.md).
+`Validate`, `Build`, `CheckCheckout`, `Transport` and `Record` are trusted test seams; the CLI exposes none. Dry-run deliberately ignores even supplied live IDs/key, builds disabled zero-ID manifests and performs no transport. Live mode cannot use these offline builds.
+
+`../Invoke-DevelopmentDeployment.ps1` reads process environment only and writes allowlisted commit/role/place/hash/version/status fields in a final job summary even on partial failure. The single manual workflow invokes it without overrides. It retains DEPLOY-01's concurrency group, checkout/main restrictions, immutable source checks, key scope and success-only short artifact retention. The extra build/role/executed-Luau checks expand validation time, not workflow frequency; PR validation still has no duplicate main-push run, and manual Validate remains the full checkpoint.
+
+`../Test-DevelopmentDeployment.ps1` uses real fresh builds/mutations and mocked HTTP to cover complete configuration, fidelity, membership, publish ordering, redaction, immutable buffers and partial/ambiguous failures. It never calls Roblox or needs credentials. Owner creation, publishing and phone steps are in [MOBILE_DEPLOYMENT.md](../../docs/MOBILE_DEPLOYMENT.md).

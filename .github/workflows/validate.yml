@@ -15,7 +15,8 @@ permissions:
 jobs:
   validate:
     runs-on: windows-latest
-    timeout-minutes: 10
+    # Integration adds executed Luau suites and four-place publisher regressions.
+    timeout-minutes: 25
     defaults:
       run:
         shell: pwsh

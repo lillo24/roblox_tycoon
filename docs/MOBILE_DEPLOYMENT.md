@@ -1,180 +1,86 @@
-# Private development deployment to Roblox mobile
+# Private phone testing: one experience, four places
 
-After the one-time owner setup below, merge reviewed game changes to `main`, open
-[Actions → Deploy Development](https://github.com/lillo24/roblox_tycoon/actions/workflows/deploy-development.yml)
-on a PC or phone, select **Run workflow → main → Run workflow**, wait for success,
-then close and rejoin the development game in the Roblox phone app. GitHub's
-runner builds/publishes; your PC can be off. No USB, APK, running Rojo server or
-repeated Studio publish is needed.
+INTEGRATE-01 migrates the existing manual **Deploy Development** action to **Deploy Development Modes**, in the same workflow file. Merging code never publishes Roblox content. Do not rerun an old build/artifact. The new action checks out current `main`, validates its complete source, and builds all four places before uploading anything.
 
-This workflow updates **one existing start place** in a **separate private
-development experience**. It never runs on push, PR, merge, schedule or tag.
-Merging the infrastructure does not dispatch it. Draft experiment/Infinite/mode/
-performance PRs are absent until separately reviewed and merged into `main`.
+The current start place becomes **Entry**, with Factory Challenge, Infinite World and Aim Clash buttons. Their destinations are **Session**, **Infinite**, and **Clash** in the **same existing private development experience**, not separate Roblox games. Until the owner completes this setup and runs the new workflow, phone players still receive the previously published prototype. No new Roblox publication, visibility change, or live DataStore test is implied by code/CI success.
 
 ## One-time owner setup
 
-Codex can prepare these screens through enabled local Computer Use/Browser Use.
-The owner completes login/MFA and explicitly approves creation of the private
-experience immediately before its first Studio publish. API key **Save & Generate**
-requires separate explicit approval after inspecting its scope. If secure UI
-transfer without model/screenshot/log exposure is unavailable, the owner copies
-the generated key directly into GitHub while automation/capture is stopped;
-Codex then verifies only that the secret exists. The first workflow dispatch
-remains an owner-initiated action.
-
-1. Use Roblox Studio signed into the owner account. On a current clean `main`
-   checkout with the pinned tools installed, use **PowerShell 7**:
+1. Pull merged `main`, install the pinned tools (`rokit install`), then run:
 
    ```powershell
-   ./scripts/Validate-Project.ps1
    ./scripts/New-DevelopmentPlace.ps1
    ```
 
-   Open the freshly generated `build/ui-review-development.rbxlx` in Studio in
-   Edit mode. This is the saved six-lot map plus current disk scripts, with no QA
-   runners or synthetic data. A bare Rojo build omits the map; the canonical
-   snapshot alone may contain old script copies. Do not use either for publishing.
-   Never save this disposable output over `place/tycoon.rbxlx`.
+   This builds four current-source, authored-map files under `build/`:
 
-2. Use **File → Publish to Roblox** to create a **new, separate development
-   experience**, named clearly (for example, “FactoryHub Development”). Choose
-   the intended owner and enable phone/tablet support in Devices. Keep its
-   **Audience → Private** in Creator Dashboard. Do not overwrite a production
-   experience or publish from a running Play session. New experiences default
-   to Private. Account eligibility and access remain subject to Roblox's current
-   [publishing and audience requirements](https://create.roblox.com/docs/production/publishing/publish-games-and-places).
+   | File | Destination |
+   | --- | --- |
+   | `ui-review-development-entry.rbxlx` | Existing start place, after workflow setup |
+   | `ui-review-development-session.rbxlx` | New Session / Factory Challenge place |
+   | `ui-review-development-infinite.rbxlx` | New Infinite World place |
+   | `ui-review-development-clash.rbxlx` | New Aim Clash place |
 
-3. In [Creator Dashboard](https://create.roblox.com/dashboard/creations), use the
-   development experience thumbnail's **⋯ → Copy Universe ID**. Open that
-   experience's **Places**, select its **start place**, and copy the Place ID
-   from its configuration URL (`…/experiences/<UNIVERSE_ID>/places/<PLACE_ID>/configure`).
-   These are different IDs even for a single-place experience. Confirm the
-   selected place belongs to this development universe; retain its Roblox game
-   page link for your phone. Never reuse production IDs.
+   Without configured IDs these have explicit **disabled routing** and zero destination IDs. They are suitable for creating the three private places; a hosted unconfigured build shows Unavailable instead of running the wrong economy. Do not manually replace Entry with an offline file.
 
-4. In Creator Dashboard **Open Cloud → API Keys**, create a dedicated key. Keep
-   **Restrict by Experience** enabled and select **only this development
-   experience**. Add **universe-places → Write** and no other operations/scopes.
-   Save the generated value directly into GitHub's secret entry below. Never
-   paste it into chat, source, a command line, a place, logs or an artifact.
-   GitHub-hosted runners use changing IPs: a key restricted only to your home IP
-   will fail. Configure IP restrictions deliberately for your runner policy;
-   this workflow does not change them or use your browser session.
-   See [API key permissions, IP restrictions and expiry](https://create.roblox.com/docs/cloud/auth/api-keys).
+2. For each of **Session, Infinite and Clash**, open its fresh corresponding file in Roblox Studio. Choose **File → Publish to Roblox As… → select the existing private development experience → Add as a new place**. Name each place clearly. Repeat three times, keeping the existing Entry/start place. This is the owner publishing action; the repository does not create places or change account settings automatically. See [Roblox's multi-place instructions](https://create.roblox.com/docs/production/publishing/publish-games-and-places).
 
-5. In [repository Settings → Environments](https://github.com/lillo24/roblox_tycoon/settings/environments),
-   create **`roblox-development`**. Under deployment branches/tags, select only
-   the branch **`main`** (no tags). Add these **environment** entries:
+3. In Creator Dashboard → that experience → Places, copy each new Place ID from its configuration URL. Keep the experience's existing Universe ID and existing start Place ID. Set suitable per-place player caps: **Session 6, Infinite 6, Clash at least 2** (Entry can also use 6). Keep the audience private; a second human duelist needs authorized playtester access. No public launch is needed.
 
-   | Kind | Exact name | Value |
+4. In GitHub → repository Settings → Secrets and variables → Actions, retain the existing secret and variables and add three variables:
+
+   | Kind | Name | Value |
    | --- | --- | --- |
-   | Variable | `ROBLOX_DEV_UNIVERSE_ID` | Development experience's Universe ID |
-   | Variable | `ROBLOX_DEV_PLACE_ID` | That experience's start Place ID |
-   | Secret | `ROBLOX_OPEN_CLOUD_API_KEY` | The restricted key from step 4 |
+   | Secret | `ROBLOX_OPEN_CLOUD_API_KEY` | Existing restricted development-experience `universe-places` **Write** key |
+   | Variable | `ROBLOX_DEV_UNIVERSE_ID` | Existing private experience's Universe ID |
+   | Variable | `ROBLOX_DEV_PLACE_ID` | Existing **Entry/start** Place ID |
+   | Variable | `ROBLOX_DEV_SESSION_PLACE_ID` | New Session Place ID |
+   | Variable | `ROBLOX_DEV_INFINITE_PLACE_ID` | New Infinite Place ID |
+   | Variable | `ROBLOX_DEV_CLASH_PLACE_ID` | New Clash Place ID |
 
-   IDs must be positive decimal digits without spaces or leading zeros. Values
-   stay out of source. Existing **repository-level** Actions entries with these
-   same names are also inherited by this job; reuse them rather than entering the
-   key again. Environment entries take precedence if both levels are configured.
-   Environment settings are owner setup; the workflow does
-   not configure them. A required reviewer is optional; enabling one adds an
-   approval step to each run. Leave it unset if you want dispatch alone to start
-   deployment. Protect `main` and restrict who can edit Actions/environment
-   settings as appropriate for the repository.
+   IDs must be positive decimal integers below 2^53, without whitespace or leading zeros; all four Place IDs must differ. The same experience-scoped key covers its added places if its scope/expiry/IP restrictions remain valid. Do not grant all-experience access, add billing permissions, copy cookies, or place credentials in source/CLI arguments. If the existing key expired, replace it with the same limited scope. The `roblox-development` GitHub environment must permit `main`; environment variables of the same names override repository variables, so remove stale overrides.
 
-6. Explicitly perform the first **Run workflow** on `main`, then complete the
-   phone check below. No live API upload or physical-phone check was performed
-   by implementing this infrastructure.
+5. **Leave Studio API access to live DataStores disabled.** Infinite uses Roblox DataStoreService from published servers in this experience, with account keys in `InfiniteProfiles_v1`. Studio memory previews are explicitly temporary. Real Studio DataStore testing is separately gated by `Persistence/Settings.StudioTestUniverseId = 0` and requires a deliberately isolated test universe; don't enable live production access to bypass this gate. DataStores are [experience-scoped across places](https://create.roblox.com/docs/cloud-services/data-stores).
 
-## Each update and phone check
+## Deploy the integrated build
 
-1. Merge the intended reviewed game changes to `main` through their own PRs.
-2. Open **Actions → Deploy Development → Run workflow**, choose **main** and run.
-   The serialized job checks out the latest `main` when it starts. Its actual
-   checkout SHA can be newer than the dispatch event SHA if the run was queued.
-   It runs full repository validation on that checkout and assembles a new scene.
-3. Confirm the run succeeded. The job summary records **Universe ID, Place ID,
-   validated commit SHA, build SHA256 and returned published version**. Compare
-   the version with the development place's version history in Creator Dashboard.
-   A verified gameplay-only `.rbxlx` artifact is retained for **three days** after
-   a successful job; it includes no credentials or QA. Artifact retention failure
-   after publishing does not undo the Roblox version: inspect the summary/history.
-4. Sign into the **Roblox phone app** with the same owner account (or a user with
-   Edit permission). Open the saved development game page/link on the phone and
-   launch it in the Roblox app. Search/discovery is not required for a private
-   game. Check spawn/map, touch movement/jump, HUD readability, purchase prompts
-   and the supply cache, then leave and rejoin once. Record the run/version and
-   actual phone results separately from CLI/mock tests.
+On GitHub, select **Actions → Deploy Development Modes → Run workflow → main**. This manual publishing action is the owner's decision. It requires no special local phone connection.
 
-Publishing creates a version; it **does not hot-reload** a running client/server.
-Close/leave and rejoin after the successful upload. Existing servers may still
-run the previous version, so rejoining can reconnect to old code until a new
-server starts. This workflow does not restart servers. Do not repeatedly upload
-the same build to try to refresh a server.
+The workflow checks the real checkout commit and clean tree, runs the full validator, assembles and verifies all four source-fresh scenes, then captures immutable XML buffers and SHA256 hashes. Only `Routing/Settings` is generated: each server gets the same four-place manifest plus its expected build role. The public documented [universe/place listing APIs](https://create.roblox.com/docs/cloud/reference/domains/develop) verify same-experience membership and that Entry is still the root/start place, without sending the API key. Unavailable, malformed, foreign or uncertain configuration stops before uploads.
 
-Private audience allows the owner/creator team with **Edit** permission. A friend
-with only Playtest permission is not assumed to be able to join Private. Additional
-testers require a separate owner decision: suitable Edit permissions, or an
-eligible **Limited → Playtesters** audience. This setup does not grant access,
-change audience to Limited/Public, enable production DataStore access, create
-monetization, restart servers or alter production settings.
+Publication order is **Session → Infinite → Clash → Entry**. Each upload must return HTTP success and a positive integer `versionNumber` before the next starts. This is publish-response verification, not a live gameplay test. The job summary records the exact commit and every place's SHA256, confirmed version and status, including partial failures. A complete successful run retains only the four verified release files for three days. No QA/showcase/profiler fixtures enter them.
 
-## Failures and offline rehearsal
+The action stays manual-only and main-only, uses read-only GitHub permissions, and serializes the entire experience with DEPLOY-01's existing concurrency group. It never cancels an upload, follows redirects, or retries an ambiguous request. Missing new IDs causes a clear failure; there is no single-place fallback and no second misleading deploy button.
 
-Missing configuration or a wrong ref fails before any Roblox publish request.
-Check the named environment entries, select `main`, then run again. For HTTP
-401/403, verify key status, single-experience `universe-places` Write scope,
-target membership and IP restrictions. HTTP failures are redacted; raw response
-bodies, headers and exception text are not logged.
+## Test on your phone
 
-There is **one POST, a 120-second timeout, no redirects and no automatic retry**.
-A timeout/network failure or invalid/missing `versionNumber` can happen after
-Roblox created a version. Check Creator Dashboard version history before a
-manual retry to avoid unnecessary versions. A successful upload requires a 2xx
-response with a positive integer `versionNumber`; command exit alone is not proof.
+1. After the workflow reports **all four Published / Complete true**, fully leave and rejoin the same private experience in the Roblox phone app using the authorized owner account. Existing servers may still run an older version; use a fresh server when comparing versions. You should first see **Choose your game mode** and exactly three named choices.
+2. **Factory Challenge:** tap its button, then walk to your assigned factory. With enough cash, walk into Income Booster's pad without tapping a purchase prompt. It buys once and income rises from 1 to 2. Stay on an unaffordable pad while cash grows: it must not buy later; step completely off and back on to retry. Another owner's pad must not buy for you. Try an open Factory/Settings/Modes panel, respawn, and touch walking. Machinery should show activity; reduced motion keeps it calm. Supply Cache still uses its deliberate claim prompt. Factory progress ends on leaving its server.
+3. Tap **Modes → Return to mode selection**, then **Infinite World**. Wait for a Ready property and readable save status. Buy/place/move/rotate/store an object, change a theme, visit another lot, and confirm visitors cannot edit it. Return through Modes: saving pauses edits/earnings and must confirm its final checkpoint before teleport. Re-enter Infinite, and later leave/rejoin the app; confirm the arrangement and balance return. Loading/saving/ownership errors must stay explicit and must never create replacement progress. Factory cash must not appear here. There is no Supply Cache or forced reset.
+4. Return to Entry and select **Aim Clash → Practice**. Tap circles through a complete round and check Precision, combo and final breakdown. Live scores stay private. Test standard/reduced motion and portrait/landscape; Controls and Modes must stay reachable. Practice works with one account. For **Duel queue**, join the same Clash server with a second authorized human account and have both choose Duel queue. Verify the shared sequence, server results and disconnect/return cancellation without a manufactured winner. Aim input currently supports mouse/touch; gamepad can navigate menus but has no aim cursor.
+5. Test one failed/late join where reproducible: no fake arrival, automatic click loop, or overlapping teleport; source remains paused until failure is confirmed. Infinite must reload safely on failure or give an honest recovery error. Roblox documents that [real teleports cannot be exercised in Studio](https://create.roblox.com/docs/projects/teleport).
 
-From any local implementation branch, with PowerShell 7 and pinned tools:
+Record phone model, orientation, place/version, expected/observed behavior, and screenshots or an error. Phone responsiveness, network fairness, actual cross-place travel and live DataStore durability remain live QA until observed. Historical six-client Infinite hitch measurements remain an open performance risk; CLI success is not a physical-mobile performance pass.
+
+## Offline checks and local previews
 
 ```powershell
+./scripts/Validate-Project.ps1
 ./scripts/Invoke-DevelopmentDeployment.ps1 -DryRun
+./scripts/New-ModeReviewPlace.ps1 -Role Entry -IncludeQA
+./scripts/New-ModeReviewPlace.ps1 -Role Prototype -IncludeQA
+./scripts/New-ModeReviewPlace.ps1 -Role Infinite -IncludeQA
+./scripts/New-ModeReviewPlace.ps1 -Role Clash -IncludeQA
 ```
 
-This executes the full validator and fresh assembly, prints commit/build digest,
-and **never sends HTTP**, even if credentials exist. It needs no IDs/key and
-allows local uncommitted work for rehearsal. Offline publisher regressions also
-run in full validation/PR CI and can be run separately:
+Dry-run ignores credentials/IDs and makes **no HTTP requests**. It builds four explicitly unconfigured artifacts, not publishable configured releases. Local `mode-*.rbxlx` previews use fake destinations and an explicit simulated failure adapter: menu choices report the requested destination, then you open its separate file. They cannot demonstrate a real teleport. Infinite preview saves to memory and resets on Stop. These fixture-bearing previews must never be uploaded.
 
-```powershell
-./scripts/Test-DevelopmentDeployment.ps1
-```
+## Failure, retry and coordinated restore
 
-## Scene fidelity and future expansion
+Multi-place publication is **not atomic**. A failure before Entry leaves the previously published landing place intact, but earlier destinations may already be updated. A failure during Entry can have an unknown outcome. The summary distinguishes **Published** (confirmed version), **Outcome unknown** (request attempted; inspect version history), and **Built** (not attempted). Stop and inspect those exact places in Creator Dashboard before retrying. Never assume a failed/timeout request created no version.
 
-The builder reuses `New-UiReviewPlace.ps1 -GameplayOnly`. Verification requires
-every managed script's name, class and source to match the checkout, and all
-content outside those three folders (including Workspace) to match the canonical
-scene. QA/fixture instance names and extra/stale managed children fail. The
-verifier supports ordinary nested folders and `.luau`/`.lua` scripts; `init`
-mappings, metadata/models and other mapped file formats require an audited
-verifier update rather than silently accepting a new mapping convention.
+For a transient issue with unchanged intended code/configuration, verify version histories and manually rerun the current workflow; it rebuilds/validates all four and can create additional versions. There is no automatic resume or retry. For a regression, use Creator Dashboard/Studio version history to restore the last known compatible set: restore the earlier Entry first to stop new routing, then restore its matching destinations, keeping IDs and account DataStore schema compatibility. Do not reset DataStores as a rollback. If source must be reverted, do it through a reviewed PR, merge, then manually deploy the compatible four-place revision.
 
-[Roblox's Place Publishing API](https://create.roblox.com/docs/cloud/guides/usage-place-publishing)
-does not reliably update modified **EditableImage, EditableMesh, PartOperation,
-SurfaceAppearance or BaseWrap** instances. The current canonical scene contains
-**none**, including their subclasses. Deployment scans the assembled scene and
-rejects these classes and descendants from the pinned Roblox definitions (for
-example UnionOperation and WrapLayer). If one is introduced, use an explicitly
-authorized Studio publish for that change; the workflow has no override that
-silently promises fidelity. Reassess the official limitation before expanding it.
+The old single-place prototype remains available in the existing start place's version history. Restoring it is a conscious rollback that removes the integrated menu; don't redeploy its old artifact as an integration update. Restoring one destination alone may break routing or profile expectations. Audience changes, server shutdowns, key changes and external publications remain owner actions.
 
-Only the configured start place is updated through
-`POST https://apis.roblox.com/universes/v1/{universeId}/places/{placeId}/versions?versionType=Published`
-with XML bytes, `Content-Type: application/xml` and the `x-api-key` header.
-Additional MODE-01/Infinite places, TeleportService routing, cross-server state
-and DataStore persistence need a separate audited expansion with real target
-IDs and appropriate checks. No destination IDs are guessed here.
-
-Official API, audience and GitHub deployment documentation was rechecked on
-2026-10-11. See also
-[GitHub environment/deployment controls](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments).
+If publishing rejects API-limited instances, the verifier fails before upload and directs you to manual Studio publishing; it must not omit unsupported scene content. See Roblox's [Place Publishing guide and limitations](https://create.roblox.com/docs/cloud/guides/usage-place-publishing).

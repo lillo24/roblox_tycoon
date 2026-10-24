@@ -1,6 +1,6 @@
 --!strict
 
-local TycoonRuntime = require(script.Parent.TycoonRuntime)
-TycoonRuntime.start()
+local AppRuntime = require(script.Parent.AppRuntime)
+AppRuntime.start()
 
 print("[roblox_tycoon] Server bootstrap ready.")

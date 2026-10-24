@@ -1,26 +1,21 @@
 # roblox_tycoon
 
-An early-stage Roblox multiplayer tycoon. Each owner has a temporary plot and
-session cash, and can choose the order of four one-time upgrades. This catalogue
-is a reversible prototype experiment with provisional costs/effects. A compact
-HUD observes server state and private purchase results. A provisional shared
-Supply Cache opens first after 20 seconds, then every 30 seconds; the first valid
-server-processed claim receives 10 cash. Six inward-facing factory lots and a shared plaza are saved in the editable
-Studio scene; ownership, equipment, prompts and UI are created only during Play.
-See [the MAP-01 checkpoint and visual review](place/MAP_01_REVIEW.md). See [gameplay behavior,
-tuning, source responsibilities, and QA](src/README.md).
-
-The **combined draft** includes MAP-01, UI-01 and UX-02 factory guidance,
-first-purchase hints and recoverable startup states. Use the
-[UX-02 preview and consolidated QA checkpoint](docs/UX_02_REVIEW.md) for current
-startup/review instructions. The source review packets retain historical evidence;
-final approval and consolidation belong to this combined checkpoint.
+One Roblox experience with a three-button Entry menu and three separate gameplay
+places: **Factory Challenge** (six temporary factories, walk-over purchases and
+Supply Cache), **Infinite World** (persistent social properties, discovery and
+decoration), and **Aim Clash** (solo Practice or two-person Duel queue).
+Each server has one trusted role; switching modes uses server-side teleports.
+Factory and Infinite retain the authored six-lot map.
+See [source responsibilities and tuning](src/README.md) and the
+[integration evidence and remaining QA](docs/INTEGRATE_01_REVIEW.md).
 
 For wireless private phone playtesting, use the manual
 [GitHub → Roblox development deployment setup](docs/MOBILE_DEPLOYMENT.md).
-After one-time owner setup, **Actions → Deploy Development → Run workflow** on
-`main` builds the saved map with fresh code, validates it and publishes one
-development version. Close and rejoin in the Roblox phone app afterward.
+After adding three places to the existing private experience and configuring their
+IDs, **Actions → Deploy Development Modes → Run workflow** on `main` validates
+and builds all four places, then publishes the destinations before Entry.
+The previous single-place release action has been migrated in place; it cannot
+fall back to publishing the old prototype. Close and rejoin in the phone app.
 Merging code does not trigger publication.
 
 ## Prerequisites
@@ -38,6 +33,7 @@ Merging code does not trigger publication.
 | StyLua | 2.5.2 | Format Luau |
 | Selene | 0.32.0 | Lint with Roblox globals and rules |
 | luau-lsp | 1.70.1 | Standalone Luau type analysis with Roblox/Rojo resolution |
+| Lune | 0.10.5 | Execute domain and persistence regressions offline |
 
 Run all project commands from the repository root so Rokit selects these versions.
 
@@ -74,16 +70,17 @@ Clone the repository if needed, then install the pinned tools:
 git clone https://github.com/lillo24/roblox_tycoon.git
 cd roblox_tycoon
 rokit --version
-rokit trust rojo-rbx/rojo johnnymorganz/stylua kampfkarren/selene johnnymorganz/luau-lsp
+rokit trust rojo-rbx/rojo johnnymorganz/stylua kampfkarren/selene johnnymorganz/luau-lsp lune-org/lune
 rokit install
 rojo --version
 stylua --version
 selene --version
 luau-lsp --version
+lune --version
 ```
 
 If you already have the clone, just open its root and start with `rokit --version`.
-The trust command records the four upstream tool repositories explicitly.
+The trust command records the five upstream tool repositories explicitly.
 Installing tools and Selene's first Roblox definition download require internet
 access. Selene uses its normal user cache and periodically refreshes definitions.
 

@@ -5,7 +5,10 @@ native world prompts and the atomic Supply Cache snapshot remain authoritative.
 
 | File | Owns |
 | --- | --- |
-| `Bootstrap.client.luau` | Starts `Hud.start()` once |
+| `Bootstrap.client.luau` | Waits for the trusted server role, starts gameplay HUD only for dedicated modes, and starts ModeChooser |
+| `ModeChooser.luau` | Responsive entry/return controls, server transition status and bounded recovery UI; never selects a place ID or changes this server's mode |
+| `Experiments/FactoryPurchases/` | Default Factory controller, modal-safe walk-on acknowledgement, local machine activity and purchase tone |
+| `Experiments/AimClash/` | Clash-only mouse/touch play area, private score corrections, queue/practice controls and reduced motion |
 | `Hud.luau` | Subscriptions, assignment changes, independent private result lifetimes, countdown and teardown |
 | `HudView.luau` | Native controls, responsive placement, one open panel, local prompt input gate, selection and view rendering |
 | `UiState.luau` | Exact number/rate formatting and read-only economy/catalogue/event presentation |
@@ -15,6 +18,7 @@ native world prompts and the atomic Supply Cache snapshot remain authoritative.
 | `Onboarding.luau` | First-purchase hint and completion/dismissal retained in client-session module memory |
 | `RuntimeBindings.luau` | Ordered runtime subscriptions, bounded startup deadline, diagnostics and late replacement recovery |
 | `WorldLabels.luau` | Scoped local styling/visibility adapters for known factory labels in both PlotWorld hierarchies |
+| `PropertyEditor.luau` | Infinite-only discovery previews, explicit purchase, inventory, local map/ghost, cancel/commit/store and palettes |
 | `SupplyFeedback.luau` | FIX-01 supplied-time retention, snapshot matching, expiry and timeout invalidation |
 
 The default HUD shows cash, income converted from `Config.IncomeInterval`, factory
@@ -22,6 +26,14 @@ identity and public event status. Factory starts closed. It lists actual ownersh
 costs, income effects, prerequisites and availability; purchases use world pads.
 Help explains the existing loop and session reset, with hints from actual prompt
 keys and the current preferred input. No menu pauses the shared game.
+
+ModeChooser shows three named destination buttons in Entry. In gameplay, Modes
+opens a modal return panel (also M / controller Select; controller B stays).
+Its visible active actions form the controller selection order, including Infinite
+reload and Stay. The scrollable safe-area panel handles small portrait screens.
+Factory offers and Clash aim input are suppressed while Modes is open. Infinite
+editing hides the launcher so it cannot cover the editor. Teleport status remains
+server-owned; a lost response sends only a state read, never another transition.
 
 Factory's Find my factory closes the panel and resolves `FactoryHub/Lots/Lot{id}/Entrance`
 only after `TycoonRuntime/Plot{id}` has matching PlotId and local OwnerUserId.
@@ -141,3 +153,38 @@ changing server cash. They are unmapped and execute only in disposable previews.
 For the combined review, the helper's `-GameplayOnly` switch excludes every QA
 fixture; omit it to retain automatic assertions and opt-in client tests. See
 `scripts/README.md` for the Edit-only map route and preview boundary checks.
+
+## INF-01 mode boundary
+
+INF-02 changes Infinite's Factory opener to **My place**. Discover previews an
+object before a separate Buy action; Arrange selects owned instances including
+stored copies. Tap the plot map or use two-stud arrows, Rotate and Confirm.
+Cancel discards only the local candidate. The accepted world stays visible to
+visitors until a valid commit. Palette choices are free. The editor uses native
+Activated controls, minimum 48px navigation and 52px rows in a bounded scroll
+surface; normal HUD returns on Close. It locally gates prompts, never sends
+preview movement, allows one RPC at a time, fences stale responses and reports
+unconfirmed timeouts with an explicit Refresh. It closes on assignment loss.
+
+`GameMode.read()` is fixed at HUD construction. Prototype keeps its existing event
+bindings, status and session-reset help. Infinite binds only purchase feedback:
+SupplyCache state/feedback have no deadline or recovery watch. Its `Persistence`
+label shows mode/readiness and server saving status; there is no `Event` widget.
+Loading/Ready/Full/Unavailable are explicit; only a complete Ready attribute set
+enables the displayed economy. The ordinary ten-second assignment timeout does
+not misreport an explicit Loading state. Server load retries remain bounded.
+Settings, responsive placement, native prompts and guidance are shared. Owner
+names stay on nearby world signs; visitors can inspect but server ownership
+checks still decide every purchase. Infinite Help explains online-only income,
+temporary lot numbers, checkpoint loss limits and the finite first catalogue.
+
+INF-03 adds PropertyActivity: one 10 Hz local cosmetic loop over the runtime folder, with visible/distance gating, reduced-motion handling and removal/teardown cleanup. Discovery lists available choices before locked/owned unique items and previews their actual silhouette, footprint, price, effect and requirement. Session never starts this activity loop.
+
+MODE-01 keeps the Modes launcher hidden while the property editor hides the HUD,
+so it cannot cover the editor title on portrait screens. Selecting a route scrolls
+the chooser back to its joining/failure feedback. Returning from Infinite freezes
+progress until a confirmed departure or safe current-data recovery; the chooser
+never promises cancellation of an accepted teleport.
+If the trusted role does not arrive within the 20-second startup window, gameplay
+does not start. A later ready service explicitly requests a rejoin instead of
+showing a choice with no destination controls.

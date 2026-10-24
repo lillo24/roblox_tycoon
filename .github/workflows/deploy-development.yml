@@ -1,4 +1,4 @@
-name: Deploy Development
+name: Deploy Development Modes
 
 on:
   workflow_dispatch:
@@ -9,9 +9,9 @@ permissions:
 jobs:
   deploy:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     environment: roblox-development
-    # Serialize the single development start-place target; never cancel an upload.
+    # Keep DEPLOY-01's group to serialize older queued jobs too. Never cancel uploads.
     concurrency:
       group: roblox-development-start-place
       cancel-in-progress: false
@@ -22,6 +22,9 @@ jobs:
       DEPLOY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
       ROBLOX_DEV_UNIVERSE_ID: ${{ vars.ROBLOX_DEV_UNIVERSE_ID }}
       ROBLOX_DEV_PLACE_ID: ${{ vars.ROBLOX_DEV_PLACE_ID }}
+      ROBLOX_DEV_SESSION_PLACE_ID: ${{ vars.ROBLOX_DEV_SESSION_PLACE_ID }}
+      ROBLOX_DEV_INFINITE_PLACE_ID: ${{ vars.ROBLOX_DEV_INFINITE_PLACE_ID }}
+      ROBLOX_DEV_CLASH_PLACE_ID: ${{ vars.ROBLOX_DEV_CLASH_PLACE_ID }}
     steps:
       - name: Refuse any dispatch outside the default main branch
         run: |
@@ -40,7 +43,7 @@ jobs:
           ROBLOX_OPEN_CLOUD_API_KEY: ${{ secrets.ROBLOX_OPEN_CLOUD_API_KEY }}
         run: |
           Import-Module ./scripts/deployment/DevelopmentDeployment.psm1
-          Assert-DevelopmentConfiguration -EventName $env:GITHUB_EVENT_NAME -Ref $env:GITHUB_REF -DefaultBranch $env:DEPLOY_DEFAULT_BRANCH -UniverseId $env:ROBLOX_DEV_UNIVERSE_ID -PlaceId $env:ROBLOX_DEV_PLACE_ID -ApiKey $env:ROBLOX_OPEN_CLOUD_API_KEY
+          Assert-DevelopmentConfiguration -EventName $env:GITHUB_EVENT_NAME -Ref $env:GITHUB_REF -DefaultBranch $env:DEPLOY_DEFAULT_BRANCH -UniverseId $env:ROBLOX_DEV_UNIVERSE_ID -PlaceId $env:ROBLOX_DEV_PLACE_ID -SessionPlaceId $env:ROBLOX_DEV_SESSION_PLACE_ID -InfinitePlaceId $env:ROBLOX_DEV_INFINITE_PLACE_ID -ClashPlaceId $env:ROBLOX_DEV_CLASH_PLACE_ID -ApiKey $env:ROBLOX_OPEN_CLOUD_API_KEY
 
       - name: Install Rokit 1.2.0
         run: |
@@ -61,15 +64,19 @@ jobs:
           rokit install --no-trust-check
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Validate, build fresh gameplay scene and publish one version
+      - name: Validate all four fresh builds, verify places, publish destinations then Entry
         env:
           ROBLOX_OPEN_CLOUD_API_KEY: ${{ secrets.ROBLOX_OPEN_CLOUD_API_KEY }}
         run: ./scripts/Invoke-DevelopmentDeployment.ps1
 
-      - name: Retain the verified gameplay-only build for three days
+      - name: Retain only the four verified release builds for three days
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: development-place-${{ github.run_id }}
-          path: build/ui-review-development.rbxlx
+          name: development-modes-${{ github.run_id }}
+          path: |
+            build/ui-review-development-entry.rbxlx
+            build/ui-review-development-session.rbxlx
+            build/ui-review-development-infinite.rbxlx
+            build/ui-review-development-clash.rbxlx
           if-no-files-found: error
           retention-days: 3

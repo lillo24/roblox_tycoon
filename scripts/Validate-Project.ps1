@@ -42,6 +42,7 @@ try {
     }
 
     Invoke-CheckedNative -Command stylua -Arguments @('--check', 'src', 'tests')
+    Invoke-CheckedNative -Command stylua -Arguments @('--check', 'scripts/runtime')
     Invoke-CheckedNative -Command selene -Arguments @('src', 'tests')
     New-Item -ItemType Directory -Force -Path $buildDirectory | Out-Null
     Invoke-CheckedNative -Command rojo -Arguments @('build', 'default.project.json', '--output', $buildPath)
@@ -68,9 +69,12 @@ try {
         # Two small pinned Rojo builds verify that review fixtures never enter the
         # gameplay-only handoff, while the default keeps its QA coverage intact.
         ./scripts/Test-UiReviewPlace.ps1
+        ./scripts/Test-InfiniteReviewPlace.ps1
+        ./scripts/Test-ModeReviewPlace.ps1
         # Deployment infrastructure uses mocked HTTP only; this verifies a fresh
         # gameplay artifact and every publish failure gate without credentials.
         ./scripts/Test-DevelopmentDeployment.ps1
+        Invoke-CheckedNative -Command lune -Arguments @('run', 'scripts/runtime/RunTests.luau')
         Write-Output 'Canonical snapshot is tracked; Studio save/reopen/restore still requires observed evidence.'
     }
     Write-Output 'CLI checks passed: formatting, lint, fresh build/sourcemap, Luau type analysis and failure probes, source ownership, serialized structure, and Git ignore rules. Studio integration/runtime gates are separate.'

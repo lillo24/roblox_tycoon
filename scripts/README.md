@@ -2,12 +2,14 @@
 
 This folder owns the PowerShell validation used locally and by CI, plus the
 explicit manual development deployment entry points.
-It does not contain gameplay code or require additional packages.
+It does not contain production gameplay. The pinned Lune development runtime
+executes the domain suites through `runtime/RunTests.luau` (see its README).
 
-- `New-DevelopmentPlace.ps1` builds and verifies `build/ui-review-development.rbxlx`
-  for the owner's first Studio publish. It reuses the gameplay-only builder below.
-- `Invoke-DevelopmentDeployment.ps1` runs full validation, fresh assembly and one
-  published-version request, only for a configured manual Actions run on `main`.
+- `New-DevelopmentPlace.ps1` builds and verifies four `build/ui-review-development-{entry,session,infinite,clash}.rbxlx`
+  files with disabled routing, for creating destinations in the existing experience.
+- `Invoke-DevelopmentDeployment.ps1` runs full validation, four fresh builds,
+  membership verification, then destination uploads followed by Entry, only for
+  a configured manual Actions run on `main`.
   `-DryRun` needs no credentials, permits a local branch/dirty rehearsal checkout,
   runs the same validation/build gates and never sends HTTP. Both commands require
   PowerShell 7. Live credentials/target IDs are read from process environment only;
@@ -17,6 +19,15 @@ It does not contain gameplay code or require additional packages.
   rejection, API limitations, XML contract, redaction and ambiguous failures.
   Full validation runs it with no Roblox credentials. The
   [`deployment/` modules](deployment/README.md) own these policies and transport.
+
+- `New-InfiniteReviewPlace.ps1` constructs an explicit Studio Infinite preview:
+  temporary memory by default, opt-in QA/showcase examples, or a guarded real
+  DataStore backend with no fallback. `Test-InfiniteReviewPlace.ps1` checks its
+  recursive source fidelity, fixtures, bootstraps and unchanged map.
+- `New-ModeReviewPlace.ps1 -Role Entry|Prototype|Infinite|Clash -IncludeQA` creates
+  separate playable Studio files with a simulated immediate/late teleport failure.
+  `Test-ModeReviewPlace.ps1` verifies all four bootstraps/adapters and authored map.
+  They cannot actually move the player between files or prove live persistence.
 
 - `New-UiReviewPlace.ps1` creates an ignored disposable UI review copy under
   `build/`, combining the unchanged canonical scene with current mapped source.
@@ -117,7 +128,8 @@ The standalone Session, SupplyEvent and SupplyFeedback tests run in Studio again
 the actual production modules, with supplied event/feedback times. The client
 feedback helper is Instance-free and can run through the same server test route;
 fixtures remain outside production Rojo mappings. CLI/CI formats, lints, and
-type-checks them but does not execute Luau. See
+type-checks them and executes selected domain suites in Lune. Engine-only tests
+remain separate; see `runtime/README.md` and
 [`src/README.md`](../src/README.md) for execution and runtime QA procedures.
 
 ## Standalone type analysis
