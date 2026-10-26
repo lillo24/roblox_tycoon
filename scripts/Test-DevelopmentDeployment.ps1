@@ -3,6 +3,7 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = Split-Path $PSScriptRoot -Parent
 Import-Module (Join-Path $PSScriptRoot 'deployment/GameplayArtifact.psm1')
 Import-Module (Join-Path $PSScriptRoot 'deployment/DevelopmentDeployment.psm1')
+$deploymentModule = Get-Module DevelopmentDeployment
 $script:checks = 0
 function Assert-Test([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw "Deployment regression: $Message" }
@@ -58,6 +59,33 @@ $base = @{
         $state.Events.Add('http'); $state.Requests.Add($request)
         return @{ StatusCode = 200; Body = '{"versionNumber":7}' }
     }.GetNewClosure()
+}
+# Module state can be lost on same-process validator re-entry. Never turn an
+# empty, incomplete or reordered role list into a successful zero-place deploy.
+foreach ($order in @(
+    @{ Name = 'missing'; Roles = $null },
+    @{ Name = 'empty'; Roles = @() },
+    @{ Name = 'incomplete'; Roles = @('Session','Infinite','Entry') },
+    @{ Name = 'duplicate'; Roles = @('Session','Infinite','Infinite','Entry') },
+    @{ Name = 'Entry first'; Roles = @('Entry','Session','Infinite','Clash') }
+)) {
+    foreach ($dry in @($false, $true)) {
+        $state.Events.Clear(); $state.Requests.Clear(); $state.Reads.Clear()
+        $arguments = $base.Clone(); $arguments.DryRun = $dry
+        Assert-Rejected "$($order.Name) publish order (dry run: $dry)" {
+            & $deploymentModule {
+                param($arguments, $roles)
+                $previous = $script:PublishOrder
+                try {
+                    if ($null -eq $roles) { Remove-Variable -Name PublishOrder -Scope Script }
+                    else { $script:PublishOrder = $roles }
+                    Invoke-DevelopmentDeployment @arguments
+                }
+                finally { $script:PublishOrder = $previous }
+            } $arguments $order.Roles
+        } 'exact four-place publish order'
+        Assert-Test ($state.Events.Count -eq 0 -and $state.Requests.Count -eq 0 -and $state.Reads.Count -eq 0) 'invalid publish order passed preflight'
+    }
 }
 foreach ($case in @(
     @{ Name = 'missing universe'; Key = 'UniverseId'; Value = ''; Pattern = 'ROBLOX_DEV_UNIVERSE_ID' },
@@ -123,17 +151,60 @@ foreach ($class in @('EditableImage','EditableMesh','PartOperation','UnionOperat
 }
 
 $invalidPath = Join-Path $repositoryRoot ('build/deploy-regression-' + [guid]::NewGuid().ToString('N') + '.rbxlx')
+$probePath = [IO.Path]::ChangeExtension($invalidPath, '.ps1')
+$probeDataPath = [IO.Path]::ChangeExtension($invalidPath, '.json')
 try {
-    [xml]$fixture = $good.CloneNode($true)
-    $fixture.SelectSingleNode("//Item[Properties/string[@name='Name']='TestService']/Properties/string[@name='Name']").InnerText = 'RunDisplayFixture'
-    $fixture.Save($invalidPath)
+    foreach ($role in @('Entry','Session','Infinite','Clash')) {
+        [xml]$fixture = [IO.File]::ReadAllText($goodPaths[$role])
+        $fixture.SelectSingleNode("//Item[Properties/string[@name='Name']='TestService']/Properties/string[@name='Name']").InnerText = 'RunDisplayFixture'
+        $fixture.Save($invalidPath)
+        $arguments = $base.Clone()
+        $invalidPaths = $goodPaths.Clone(); $invalidPaths[$role] = $invalidPath
+        $arguments.Build = { param($config) $state.Events.Add('build'); return $invalidPaths }.GetNewClosure()
+        $state.Events.Clear(); $state.Requests.Clear(); $state.Reads.Clear()
+        Assert-Rejected "$role fixture through publisher" { Invoke-DevelopmentDeployment @arguments } 'QA/fixture'
+        Assert-Test ($state.Requests.Count -eq 0 -and $state.Reads.Count -eq 0) "$role fixture artifact reached HTTP"
+        Assert-Test (($state.Events -join ',') -ceq 'checkout,validate,build') "$role fixture passed artifact verification"
+    }
+
+    # Exercise the same private child-process boundary used by the default
+    # validator. The probe imports the active publisher and uses real fixture
+    # XML, but every transport path is a throwing mock; it cannot send HTTP.
+    @{ ParentProcessId = $PID; ModulePath = $deploymentModule.Path; Paths = $invalidPaths } |
+        ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $probeDataPath -Encoding utf8NoBOM
+    @'
+$ErrorActionPreference = 'Stop'
+$probe = Get-Content -LiteralPath ([IO.Path]::ChangeExtension($PSCommandPath, '.json')) -Raw | ConvertFrom-Json -AsHashtable
+if ($PID -eq $probe.ParentProcessId) { throw 'Validation must run in a separate PowerShell process.' }
+Import-Module $probe.ModulePath
+$calls = [Collections.Generic.List[object]]::new()
+$arguments = @{
+    EventName = 'workflow_dispatch'; Ref = 'refs/heads/main'; DefaultBranch = 'main'; CommitSha = ('a' * 40)
+    UniverseId = '123'; PlaceId = '456'; SessionPlaceId = '457'; InfinitePlaceId = '458'; ClashPlaceId = '459'; ApiKey = 'offline-credential-marker'
+    Validate = {}; CheckCheckout = {}; Build = { param($config) return $probe.Paths }.GetNewClosure()
+    Transport = { param($request) $calls.Add($request); throw 'No HTTP allowed in validator probe.' }.GetNewClosure()
+}
+$rejected = $false
+try { Invoke-DevelopmentDeployment @arguments | Out-Null }
+catch { if ($_.ToString() -notmatch 'QA/fixture') { throw }; $rejected = $true }
+if (-not $rejected -or $calls.Count -ne 0) { throw 'Nested publisher did not reject the fixture before HTTP.' }
+Write-Output 'Nested publisher fixture rejected before HTTP.'
+'@ | Set-Content -LiteralPath $probePath -Encoding utf8NoBOM
+    $probeOutput = & $deploymentModule { param($path) Invoke-DevelopmentValidation -ValidationScript $path } $probePath
+    Assert-Test ($probeOutput -contains 'Nested publisher fixture rejected before HTTP.') 'child validator did not run fixture rejection probe'
+
+    # A child validator failure must stop the outer publisher before its build.
+    'exit 23' | Set-Content -LiteralPath $probePath -Encoding utf8NoBOM
+    $state.Events.Clear(); $state.Requests.Clear(); $state.Reads.Clear()
     $arguments = $base.Clone()
-    $invalidPaths = $goodPaths.Clone(); $invalidPaths.Entry = $invalidPath
-    $arguments.Build = { param($config) return $invalidPaths }.GetNewClosure()
-    $state.Requests.Clear()
-    Assert-Rejected 'fixture through publisher' { Invoke-DevelopmentDeployment @arguments } 'QA/fixture'
-    Assert-Test ($state.Requests.Count -eq 0) 'fixture artifact reached HTTP'
-} finally { if (Test-Path -LiteralPath $invalidPath) { Remove-Item -LiteralPath $invalidPath } }
+    $arguments.Validate = { & $deploymentModule { param($path) Invoke-DevelopmentValidation -ValidationScript $path } $probePath }.GetNewClosure()
+    Assert-Rejected 'child validator failure' { Invoke-DevelopmentDeployment @arguments } 'validation failed with exit code 23'
+    Assert-Test (($state.Events -join ',') -ceq 'checkout' -and $state.Requests.Count -eq 0 -and $state.Reads.Count -eq 0) 'child validation failure reached build or HTTP'
+} finally {
+    foreach ($path in @($invalidPath, $probePath, $probeDataPath)) {
+        if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path }
+    }
+}
 
 $state.Events.Clear(); $state.Requests.Clear()
 $success = Invoke-DevelopmentDeployment @base

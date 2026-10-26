@@ -4,6 +4,15 @@ $script:RepositoryRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Import-Module (Join-Path $PSScriptRoot 'GameplayArtifact.psm1')
 $script:PublishOrder = @('Session','Infinite','Clash','Entry')
 
+function Invoke-DevelopmentValidation {
+    param([string]$ValidationScript = (Join-Path $script:RepositoryRoot 'scripts/Validate-Project.ps1'))
+    # The regression suite imports this publisher itself. A separate process
+    # prevents that re-entry from rebinding the active module's script scope.
+    $PSNativeCommandUseErrorActionPreference = $false
+    & (Join-Path $PSHOME 'pwsh') -NoProfile -NonInteractive -File $ValidationScript
+    if ($LASTEXITCODE -ne 0) { throw "Development validation failed with exit code $LASTEXITCODE. Nothing published." }
+}
+
 function Get-DevelopmentConfiguration {
     param([string]$UniverseId, [string]$PlaceId, [string]$SessionPlaceId, [string]$InfinitePlaceId, [string]$ClashPlaceId)
     $values = [ordered]@{
@@ -96,7 +105,7 @@ function Assert-ExperiencePlaces($Configuration, [scriptblock]$Transport) {
         $cursor = $body.nextPageCursor
         if ($null -ne $cursor -and $cursor -isnot [string]) { throw 'Place membership verification returned an invalid cursor.' }
         if (-not $cursor) {
-            foreach ($role in $script:PublishOrder) {
+            foreach ($role in @('Entry','Session','Infinite','Clash')) {
                 if (-not $known.ContainsKey($Configuration.Places[$role])) { throw "The $role place is not confirmed in development universe $universe. Nothing published." }
             }
             return
@@ -119,12 +128,19 @@ function Invoke-DevelopmentDeployment {
         [string]$EventName, [string]$Ref, [string]$DefaultBranch,
         [string]$UniverseId, [string]$PlaceId, [string]$SessionPlaceId, [string]$InfinitePlaceId, [string]$ClashPlaceId, [string]$ApiKey,
         [Parameter(Mandatory)][string]$CommitSha, [switch]$DryRun,
-        [scriptblock]$Validate = { Set-StrictMode -Off; & (Join-Path $script:RepositoryRoot 'scripts/Validate-Project.ps1') },
+        [scriptblock]$Validate = { Invoke-DevelopmentValidation },
         [scriptblock]$Build = { param($configuration) New-DevelopmentPlaces -Configuration $configuration },
         [scriptblock]$CheckCheckout = { param($commit) Assert-DeploymentCheckout $commit },
         [scriptblock]$Transport = { param($request) Invoke-RobloxHttp $request },
         [scriptblock]$Record = { param($result) }
     )
+    # Snapshot and validate the exact order before callbacks. Missing module
+    # state must never skip verification/uploads and report an empty success.
+    $orderState = Get-Variable -Name PublishOrder -Scope Script -ErrorAction Ignore
+    $publishOrder = @(if ($null -ne $orderState) { $orderState.Value })
+    if ($publishOrder.Count -ne 4 -or ($publishOrder -join ',') -cne 'Session,Infinite,Clash,Entry') {
+        throw 'Deployment requires the exact four-place publish order: Session, Infinite, Clash, Entry. Nothing published.'
+    }
     $configuration = @{ Enabled = $false; UniverseId = '0'; Places = @{ Entry = '0'; Session = '0'; Infinite = '0'; Clash = '0' } }
     if (-not $DryRun) {
         Assert-DevelopmentConfiguration -EventName $EventName -Ref $Ref -DefaultBranch $DefaultBranch -UniverseId $UniverseId -PlaceId $PlaceId -SessionPlaceId $SessionPlaceId -InfinitePlaceId $InfinitePlaceId -ClashPlaceId $ClashPlaceId -ApiKey $ApiKey
@@ -137,7 +153,7 @@ function Invoke-DevelopmentDeployment {
     if ($paths -isnot [System.Collections.IDictionary] -or $paths.Count -ne 4) { throw 'Deployment build must return four fresh gameplay-only place files.' }
     $buffers = @{}; $records = [Collections.Generic.List[object]]::new()
     # Read/verify/hash ALL four immutable buffers before any network operation.
-    foreach ($role in $script:PublishOrder) {
+    foreach ($role in $publishOrder) {
         if (-not $paths.Contains($role) -or $paths[$role] -isnot [string] -or -not (Test-Path -LiteralPath $paths[$role] -PathType Leaf)) { throw "Deployment build missing fresh gameplay-only $role place file." }
         [byte[]]$payload = [IO.File]::ReadAllBytes($paths[$role])
         [xml]$place = [Text.Encoding]::UTF8.GetString($payload)
