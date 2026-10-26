@@ -17,7 +17,9 @@ executes the domain suites through `runtime/RunTests.luau` (see its README).
 - `Test-DevelopmentDeployment.ps1` uses real scene mutation checks and mocked HTTP
   to cover configuration/ref gates, validation/build ordering, QA/source/fidelity
   rejection, API limitations, XML contract, redaction and ambiguous failures.
-  Full validation runs it with no Roblox credentials. The
+  It also verifies the isolated validator process and failure propagation,
+  rejects invalid four-place order, and blocks fixture XML in every release slot
+  before any network operation. Full validation needs no Roblox credentials. The
   [`deployment/` modules](deployment/README.md) own these policies and transport.
 
 - `New-InfiniteReviewPlace.ps1` constructs an explicit Studio Infinite preview:
